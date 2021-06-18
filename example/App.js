@@ -53,6 +53,10 @@ export default class App extends Component<{}> {
         return (
             <View style={styles.container}>
                 <InstaStory data={data}
+                            duration={10}
+                            customSwipeUpComponent={<View>
+                                <Text>kaldır</Text>
+                            </View>}
                             style={{marginTop: 30}}/>
             </View>
         );

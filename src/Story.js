@@ -15,7 +15,8 @@ type Props = {
     pressedBorderColor?: string,
     onClose?: function,
     onStart?: function,
-    duration?: number
+    duration?: number,
+    customSwipeUpComponent?: any
 };
 
 export const Story = (props: Props) => {
@@ -25,8 +26,10 @@ export const Story = (props: Props) => {
         pressedBorderColor,
         style,
         onClose,
-        duration
+        duration,
+        customSwipeUpComponent
     } = props;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedData, setSelectedData] = useState([]);
@@ -101,13 +104,14 @@ export const Story = (props: Props) => {
                     }}
                 >
                     {selectedData.map((x, i) => {
-                        return (<StoryListItem duration={duration}
+                        return (<StoryListItem duration={duration * 1000}
                                                key={i}
                                                profileName={x.user_name}
                                                profileImage={x.user_image}
                                                stories={x.stories}
                                                currentPage={currentPage}
                                                onFinish={onStoryFinish}
+                                               customSwipeUpComponent={customSwipeUpComponent}
                                                onClosePress={() => {
                                                    setIsModalOpen(false);
                                                    if (onClose) {
