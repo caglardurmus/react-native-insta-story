@@ -13,7 +13,8 @@ class StoryCircleListView extends Component {
             data,
             handleStoryItemPress,
             unPressedBorderColor,
-            pressedBorderColor
+            pressedBorderColor,
+            avatarSize
         } = this.props;
 
         return (
@@ -28,6 +29,7 @@ class StoryCircleListView extends Component {
                     ListFooterComponent={<View style={{flex: 1, width: 8}}/>}
                     renderItem={({item, index}) => (
                         <StoryCircleListItem
+                            avatarSize={avatarSize}
                             handleStoryItemPress={() =>
                                 handleStoryItemPress && handleStoryItemPress(item, index)
                             }

@@ -1,12 +1,11 @@
-import React, {Component, Fragment, useRef, useState} from "react";
-import {Dimensions, View} from "react-native";
+import React, {Fragment, useRef, useState} from "react";
+import {LogBox, Dimensions, View} from "react-native";
 import Modal from "react-native-modalbox";
 import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
 import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
-
 
 type Props = {
     data: IUserStory[],
@@ -16,8 +15,12 @@ type Props = {
     onClose?: function,
     onStart?: function,
     duration?: number,
-    customSwipeUpComponent?: any
+    swipeText?: string,
+    customSwipeUpComponent?: any,
+    avatarSize?: number,
 };
+
+LogBox.ignoreLogs(['Animated: `useNativeDriver`', 'Warning: componentWillReceiveProps']); // Ignore log notification by message
 
 export const Story = (props: Props) => {
     const {
@@ -25,9 +28,12 @@ export const Story = (props: Props) => {
         unPressedBorderColor,
         pressedBorderColor,
         style,
+        onStart,
         onClose,
         duration,
-        customSwipeUpComponent
+        swipeText,
+        customSwipeUpComponent,
+        avatarSize
     } = props;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +44,10 @@ export const Story = (props: Props) => {
     // Component Functions
     const _handleStoryItemPress = (item, index) => {
         const newData = data.slice(index);
+        if (onStart) {
+            onStart(item)
+        }
+
         setCurrentPage(0);
         setSelectedData(newData);
         setIsModalOpen(true);
@@ -77,6 +87,7 @@ export const Story = (props: Props) => {
                 <StoryCircleListView
                     handleStoryItemPress={_handleStoryItemPress}
                     data={data}
+                    avatarSize={avatarSize}
                     unPressedBorderColor={unPressedBorderColor}
                     pressedBorderColor={pressedBorderColor}
                 />
@@ -111,11 +122,12 @@ export const Story = (props: Props) => {
                                                stories={x.stories}
                                                currentPage={currentPage}
                                                onFinish={onStoryFinish}
+                                               swipeText={swipeText}
                                                customSwipeUpComponent={customSwipeUpComponent}
                                                onClosePress={() => {
                                                    setIsModalOpen(false);
                                                    if (onClose) {
-                                                       onClose();
+                                                       onClose(x);
                                                    }
                                                }}
                                                index={i}/>)

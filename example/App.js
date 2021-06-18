@@ -54,6 +54,8 @@ export default class App extends Component<{}> {
             <View style={styles.container}>
                 <InstaStory data={data}
                             duration={10}
+                            onStart={item => console.log(item)}
+                            onClose={item => console.log('close: ', item)}
                             customSwipeUpComponent={<View>
                                 <Text>kaldır</Text>
                             </View>}

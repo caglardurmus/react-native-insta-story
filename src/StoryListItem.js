@@ -28,7 +28,8 @@ type Props = {
     onFinish?: function,
     onClosePress: function,
     key: number,
-    customSwipeUpComponent: any,
+    swipeText?: string,
+    customSwipeUpComponent?: any,
     stories: IUserStoryItem[]
 };
 
@@ -245,7 +246,7 @@ export const StoryListItem = (props: Props) => {
                     props.customSwipeUpComponent :
                     <>
                         <Text style={{color: 'white', marginTop: 5}}></Text>
-                        <Text style={{color: 'white', marginTop: 5}}>Swipe Up</Text>
+                        <Text style={{color: 'white', marginTop: 5}}>{props.swipeText ?? 'Swipe Up'}</Text>
                     </>
                 }
             </TouchableOpacity>}
