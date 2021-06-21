@@ -9,7 +9,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {LogBox, Platform, StyleSheet, Text, View} from 'react-native';
 import InstaStory from 'react-native-insta-story';
 import {IUserStoryItem} from "../src/interfaces/IUserStory";
 
@@ -21,12 +21,12 @@ const data = [
         stories: [
             {
                 story_id: 1,
-                story_image: "https://images.pexels.com/photos/799443/pexels-photo-799443.jpeg",
+                story_image: "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
                 onPress: () => console.log('story 1 swiped'),
             },
             {
                 story_id: 2,
-                story_image: "https://www.nawpic.com/media/2020/wallpaper-for-phone-nawpic-4.jpg",
+                story_image: "https://image.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-601.jpg",
             }]
     },
     {
@@ -36,12 +36,12 @@ const data = [
         stories: [
             {
                 story_id: 1,
-                story_image: "https://images.pexels.com/photos/799443/pexels-photo-799443.jpeg",
+                story_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjORKvjcbMRGYPR3QIs3MofoWkD4wHzRd_eg&usqp=CAU",
                 onPress: () => console.log('story 1 swiped'),
             },
             {
                 story_id: 2,
-                story_image: "https://www.nawpic.com/media/2020/wallpaper-for-phone-nawpic-4.jpg",
+                story_image: "https://files.oyebesmartest.com/uploads/preview/vivo-u20-mobile-wallpaper-full-hd-(1)qm6qyz9v60.jpg",
                 onPress: () => console.log('story 2 swiped'),
             }]
     }]
