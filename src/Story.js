@@ -61,11 +61,10 @@ export const Story = (props: Props) => {
                     setCurrentPage(newPage);
                     cube?.current?.scrollTo(newPage);
                 } else {
-
                     setIsModalOpen(false);
                     setCurrentPage(0);
                     if (onClose) {
-                        onClose();
+                        onClose(selectedData[selectedData.length - 1]);
                     }
                 }
             } else if (state == "previous") {
