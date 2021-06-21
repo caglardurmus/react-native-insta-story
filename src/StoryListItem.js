@@ -30,6 +30,7 @@ type Props = {
     key: number,
     swipeText?: string,
     customSwipeUpComponent?: any,
+    customCloseComponent?: any,
     stories: IUserStoryItem[]
 };
 
@@ -203,7 +204,10 @@ export const StoryListItem = (props: Props) => {
                         }
                     }}>
                         <View style={styles.closeIconContainer}>
-                            <Text style={{color: 'white'}}>X</Text>
+                            {props.customCloseComponent ?
+                                props.customCloseComponent :
+                                <Text style={{color: 'white'}}>X</Text>
+                            }
                         </View>
                     </TouchableOpacity>
                 </View>

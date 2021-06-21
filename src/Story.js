@@ -17,6 +17,7 @@ type Props = {
     duration?: number,
     swipeText?: string,
     customSwipeUpComponent?: any,
+    customCloseComponent?: any,
     avatarSize?: number,
 };
 
@@ -33,6 +34,7 @@ export const Story = (props: Props) => {
         duration,
         swipeText,
         customSwipeUpComponent,
+        customCloseComponent,
         avatarSize
     } = props;
 
@@ -123,6 +125,7 @@ export const Story = (props: Props) => {
                                                onFinish={onStoryFinish}
                                                swipeText={swipeText}
                                                customSwipeUpComponent={customSwipeUpComponent}
+                                               customCloseComponent={customCloseComponent}
                                                onClosePress={() => {
                                                    setIsModalOpen(false);
                                                    if (onClose) {
