@@ -1,7 +1,7 @@
 # react-native-insta-story
 
 <p align="center">
-<img src="/.github/images/example.gif" height="500" />
+<img src="./images/example.gif" height="500" />
 </p>
 
 ## Install
