@@ -9,6 +9,7 @@
     "android",
     "index.js",
     "ios",
+    "src",
     "react-native-insta-story.podspec"
   ],
   "scripts": {
