@@ -1,9 +1,19 @@
 {
   "name": "react-native-insta-story",
   "title": "React Native Insta Story",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Story component for React Native.",
   "main": "index.js",
+  "files": [
+    "README.md",
+    "android",
+    "index.js",
+    "ios",
+    "src",
+    "react-native-insta-story.podspec",
+    "!ios/build",
+    "!android/build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/caglardurmus/react-native-insta-story.git",
