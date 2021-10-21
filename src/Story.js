@@ -5,7 +5,7 @@ import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
-import {CubeNavigationHorizontal} from 'react-native-3dcube-navigation';
+import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
 
 type Props = {
     data: IUserStory[],

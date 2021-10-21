@@ -86,6 +86,7 @@ export const StoryListItem = (props: Props) => {
         Animated.timing(progress, {
             toValue: 1,
             duration: props.duration,
+            useNativeDriver: false
         }).start(({finished}) => {
             if (finished) {
                 next();
