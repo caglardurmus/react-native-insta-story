@@ -1,7 +1,7 @@
 {
   "name": "react-native-insta-story",
   "title": "React Native Insta Story",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Story component for React Native.",
   "main": "index.js",
   "files": [
@@ -38,8 +38,7 @@
     "prop-types": "^15.6.2",
     "react-native-modalbox": "^2.0.2",
     "react-native-safe-area-context": "^0.7.3",
-    "react-native-swipe-gestures": "^1.0.5",
-    "react-native-3dcube-navigation": "^1.0.4"
+    "react-native-swipe-gestures": "^1.0.5"
   },
   "devDependencies": {
     "react": "^16.9.0",
