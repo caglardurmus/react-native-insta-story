@@ -11,7 +11,6 @@ import {
     View,
     Platform
 } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
 import {initialWindowSafeAreaInsets} from "react-native-safe-area-context";
 import type {IUserStoryItem} from "./interfaces/IUserStory";
 import {usePrevious} from "./helpers/StateHelpers";
@@ -174,8 +173,6 @@ export const StoryListItem = (props: Props) => {
                 </View>}
             </View>
             <View style={{flexDirection: 'column', flex: 1,}}>
-                <View style={styles.linearGradient}
-                />
                 <View style={styles.animationBarContainer}>
                     {content.map((index, key) => {
                         return (
@@ -291,17 +288,10 @@ const styles = StyleSheet.create({
         width: width,
         height: height,
     },
-    linearGradient: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: 100,
-    },
     animationBarContainer: {
         flexDirection: 'row',
         paddingTop: initialWindowSafeAreaInsets?.top ?
-            initialWindowSafeAreaInsets.top == 0 ? 10 : (initialWindowSafeAreaInsets.top + 10) : 50,
+            initialWindowSafeAreaInsets.top == 0 ? 10 : (initialWindowSafeAreaInsets.top + 10) : 15,
         paddingHorizontal: 10,
     },
     animationBackground: {

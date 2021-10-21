@@ -21,7 +21,7 @@ type Props = {
     avatarSize?: number,
 };
 
-LogBox.ignoreLogs(['Animated: `useNativeDriver`', 'Warning: componentWillReceiveProps']); // Ignore log notification by message
+LogBox.ignoreLogs(['Warning: componentWillReceiveProps']); // Ignore log notification by message
 
 export const Story = (props: Props) => {
     const {

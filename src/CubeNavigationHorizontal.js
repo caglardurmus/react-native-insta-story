@@ -22,7 +22,7 @@ export default class CubeNavigationHorizontal extends React.Component {
 
         this.state = {
             currentPage: 0,
-            scrollLockPage: this.pages[this.props.scrollLockPage]
+            scrollLockPage: this.pages[this.props.scrollLockPage],
         };
     }
 
@@ -41,25 +41,27 @@ export default class CubeNavigationHorizontal extends React.Component {
             }
             let mod = gestureState.dx > 0 ? 100 : -100;
 
-            const currentPage = this._closest(this._value.x + mod)
+            const currentPage = this._closest(this._value.x + mod);
             let goTo = this.pages[currentPage];
             this._animatedValue.flattenOffset({
                 x: this._value.x,
-                y: this._value.y
+                y: this._value.y,
             });
             Animated.spring(this._animatedValue, {
                 toValue: {x: goTo, y: 0},
                 friction: 5,
-                tension: 0.6
+                tension: 0.6,
+                useNativeDriver: false,
             }).start();
             setTimeout(() => {
                 this.setState({
-                    currentPage
+                    currentPage,
                 });
-                if (this.props.callBackAfterSwipe)
+                if (this.props.callBackAfterSwipe) {
                     this.props.callBackAfterSwipe(currentPage);
+                }
             }, 500);
-        }
+        };
 
         this._panResponder = PanResponder.create({
             //onMoveShouldSetResponderCapture: () => true,
@@ -81,7 +83,7 @@ export default class CubeNavigationHorizontal extends React.Component {
                         this._animatedValue.setOffset({x: -(this.fullWidth + width)});
                     }
                 }
-                Animated.event([null, {dx: this._animatedValue.x}])(e, gestureState);
+                Animated.event([null, {dx: this._animatedValue.x}], {useNativeDriver: false})(e, gestureState);
             },
             onPanResponderRelease: (e, gestureState) => {
                 onDoneSwiping(gestureState);
@@ -96,7 +98,7 @@ export default class CubeNavigationHorizontal extends React.Component {
         this.setState({
             scrollLockPage: props.scrollLockPage
                 ? this.pages[props.scrollLockPage]
-                : undefined
+                : undefined,
         });
     }
 
@@ -110,13 +112,13 @@ export default class CubeNavigationHorizontal extends React.Component {
             Animated.spring(this._animatedValue, {
                 toValue: {x: this.pages[page], y: 0},
                 friction: 5,
-                tension: 0.6
+                tension: 0.6,
             }).start();
         } else {
             this._animatedValue.setValue({x: this.pages[page], y: 0});
         }
         this.setState({
-            currentPage: page
+            currentPage: page,
         });
     }
 
@@ -129,26 +131,28 @@ export default class CubeNavigationHorizontal extends React.Component {
         let pageX = -width * i;
         let loopVariable = (variable, sign = 1) => variable + Math.sign(sign) * (this.fullWidth + width);
         let padInput = (variables) => {
-            if (!this.props.loop)
+            if (!this.props.loop) {
                 return variables;
+            }
             const returnedVariables = [...variables];
-            returnedVariables.unshift(...variables.map(variable => loopVariable(variable, -1)))
-            returnedVariables.push(...variables.map(variable => loopVariable(variable, 1)))
+            returnedVariables.unshift(...variables.map(variable => loopVariable(variable, -1)));
+            returnedVariables.push(...variables.map(variable => loopVariable(variable, 1)));
             return returnedVariables;
-        }
+        };
         let padOutput = (variables) => {
-            if (!this.props.loop)
+            if (!this.props.loop) {
                 return variables;
+            }
             const returnedVariables = [...variables];
-            returnedVariables.unshift(...variables)
-            returnedVariables.push(...variables)
+            returnedVariables.unshift(...variables);
+            returnedVariables.push(...variables);
             return returnedVariables;
-        }
+        };
 
         let translateX = scrollX.interpolate({
             inputRange: padInput([pageX - width, pageX, pageX + width]),
             outputRange: padOutput([(-width - 1) / TR_POSITION, 0, (width + 1) / TR_POSITION]),
-            extrapolate: 'clamp'
+            extrapolate: 'clamp',
         });
 
         let rotateY = scrollX.interpolate({
