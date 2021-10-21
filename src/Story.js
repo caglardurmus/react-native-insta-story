@@ -5,6 +5,7 @@ import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
+import AndroidCubeEffect from "./AndroidCubeEffect";
 import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
 
 type Props = {
@@ -82,6 +83,54 @@ export const Story = (props: Props) => {
         }
     }
 
+    const renderStoryList = () => selectedData.map((x, i) => {
+        return (<StoryListItem duration={duration * 1000}
+                               key={i}
+                               profileName={x.user_name}
+                               profileImage={x.user_image}
+                               stories={x.stories}
+                               currentPage={currentPage}
+                               onFinish={onStoryFinish}
+                               swipeText={swipeText}
+                               customSwipeUpComponent={customSwipeUpComponent}
+                               customCloseComponent={customCloseComponent}
+                               onClosePress={() => {
+                                   setIsModalOpen(false);
+                                   if (onClose) {
+                                       onClose(x);
+                                   }
+                               }}
+                               index={i}/>)
+    })
+
+    const renderCube = () => {
+        if(Platform.OS == 'ios'){
+            return (
+                <CubeNavigationHorizontal
+                    ref={cube}
+                    callBackAfterSwipe={(x) => {
+                        if (x != currentPage) {
+                            setCurrentPage(parseInt(x));
+                        }
+                    }}
+                >
+                    {renderStoryList()}
+                </CubeNavigationHorizontal>
+            )
+        }else {
+            return (<AndroidCubeEffect
+                ref={cube}
+                callBackAfterSwipe={(x) => {
+                    if (x != currentPage) {
+                        setCurrentPage(parseInt(x));
+                    }
+                }}
+            >
+                {renderStoryList()}
+            </AndroidCubeEffect>)
+        }
+    }
+
     return (
         <Fragment>
             <View style={style}>
@@ -107,34 +156,7 @@ export const Story = (props: Props) => {
                 backButtonClose
                 coverScreen={true}
             >
-                <CubeNavigationHorizontal
-                    ref={cube}
-                    callBackAfterSwipe={(x) => {
-                        if (x != currentPage) {
-                            setCurrentPage(parseInt(x));
-                        }
-                    }}
-                >
-                    {selectedData.map((x, i) => {
-                        return (<StoryListItem duration={duration * 1000}
-                                               key={i}
-                                               profileName={x.user_name}
-                                               profileImage={x.user_image}
-                                               stories={x.stories}
-                                               currentPage={currentPage}
-                                               onFinish={onStoryFinish}
-                                               swipeText={swipeText}
-                                               customSwipeUpComponent={customSwipeUpComponent}
-                                               customCloseComponent={customCloseComponent}
-                                               onClosePress={() => {
-                                                   setIsModalOpen(false);
-                                                   if (onClose) {
-                                                       onClose(x);
-                                                   }
-                                               }}
-                                               index={i}/>)
-                    })}
-                </CubeNavigationHorizontal>
+                {renderCube()}
             </Modal>
         </Fragment>
     );
