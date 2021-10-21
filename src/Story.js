@@ -1,11 +1,11 @@
 import React, {Fragment, useRef, useState} from "react";
 import {LogBox, Dimensions, View} from "react-native";
 import Modal from "react-native-modalbox";
-import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
 import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
+import {CubeNavigationHorizontal} from 'react-native-3dcube-navigation';
 
 type Props = {
     data: IUserStory[],
