@@ -26,7 +26,7 @@ export default class CubeNavigationHorizontal extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._animatedValue = new Animated.ValueXY();
         this._animatedValue.setValue({x: 0, y: 0});
         this._value = {x: 0, y: 0};
