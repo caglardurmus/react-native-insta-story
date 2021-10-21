@@ -1,5 +1,5 @@
 import React, {Fragment, useRef, useState} from "react";
-import {LogBox, Dimensions, View} from "react-native";
+import {LogBox, Dimensions, View, Platform} from "react-native";
 import Modal from "react-native-modalbox";
 import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
@@ -104,7 +104,7 @@ export const Story = (props: Props) => {
     })
 
     const renderCube = () => {
-        if(Platform.OS == 'ios'){
+        if (Platform.OS == 'ios') {
             return (
                 <CubeNavigationHorizontal
                     ref={cube}
@@ -117,7 +117,7 @@ export const Story = (props: Props) => {
                     {renderStoryList()}
                 </CubeNavigationHorizontal>
             )
-        }else {
+        } else {
             return (<AndroidCubeEffect
                 ref={cube}
                 callBackAfterSwipe={(x) => {
