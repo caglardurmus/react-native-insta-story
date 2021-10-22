@@ -7,10 +7,19 @@
 ## Install
 
 #### 1. Step
-`$ npm install react-native-insta-story --save` or `$ yarn add react-native-insta-story --save`  
+```javascript
+npm install react-native-insta-story --save
+```
+or
+
+```javascript
+yarn add react-native-insta-story 
+```
 
 #### 2. Step
-`cd ios && pod install`
+```javascript
+cd ios && pod install
+```
 
 ## Import
 ```javascript
