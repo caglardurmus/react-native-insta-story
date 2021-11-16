@@ -185,9 +185,9 @@ export const StoryListItem = (props: Props) => {
         })
             .fetch("GET", story_image, {})
             .then(async (res) => {
-
                 await Share.share({
                     url: 'file://' + res.path(),
+                    message: Platform.OS == 'ios'? '' : story_image,
                     type: content[current].media_type == 'IMAGE' ? 'image/png' : 'video/mp4',
                 })
                 // share.share(shareOptions)
