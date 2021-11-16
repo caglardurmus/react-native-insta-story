@@ -37,7 +37,6 @@
   "dependencies": {
     "prop-types": "^15.6.2",
     "react-native-modalbox": "^2.0.2",
-    "react-native-safe-area-context": "^0.7.3",
     "react-native-swipe-gestures": "^1.0.5"
   },
   "devDependencies": {
