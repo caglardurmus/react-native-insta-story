@@ -179,6 +179,7 @@ export const StoryListItem = (props: Props) => {
     }
 
     const onShare = async (story_image) => {
+        setLoad(false)
         setPressed(true), progress.stopAnimation()
         RNFetchBlob.config({
             fileCache: true,
@@ -267,12 +268,12 @@ export const StoryListItem = (props: Props) => {
             >
                 <View style={styles.backgroundContainer}>
                     {verifyMedia(content[current]) == true ?
-                        <Image onLoadEnd={() => start()}
+                        <Image onLoadEnd={() => { props.duration = 5000, start()}}
                             source={{ uri: content[current].image }}
                             style={styles.image}
                         />
                         :
-                        <Video onReadyForDisplay={() => start()}
+                        <Video onLoad={(data) => props.duration = data.duration * 1000} onReadyForDisplay={() => start()}
                             source={{ uri: content[current].image }}   // Can be a URL or a local file.
                             ref={(ref) => {
                                 this.player = ref
