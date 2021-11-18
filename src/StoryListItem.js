@@ -27,6 +27,7 @@ import PremiumContainer from '../../../container/premium.container';
 import CameraRoll from "@react-native-community/cameraroll";
 import RNFetchBlob from 'rn-fetch-blob'
 import Video from 'react-native-video';
+import { conditionalExpression } from '@babel/types';
 
 const { width, height } = Dimensions.get('window');
 
@@ -266,29 +267,30 @@ export const StoryListItem = (props: Props) => {
                     backgroundColor: 'black'
                 }}
             >
-                <View style={styles.backgroundContainer}>
-                    {verifyMedia(content[current]) == true ?
-                        <Image onLoadEnd={() => { props.duration = 5000, start()}}
-                            source={{ uri: content[current].image }}
-                            style={styles.image}
-                        />
-                        :
-                        <Video onLoad={(data) => props.duration = data.duration * 1000} onReadyForDisplay={() => start()}
-                            source={{ uri: content[current].image }}   // Can be a URL or a local file.
-                            ref={(ref) => {
-                                this.player = ref
-                            }}                                      // Store reference
-                            onBuffer={this.onBuffer}                // Callback when remote video is buffering
-                            onError={this.videoError}               // Callback when video cannot be loaded
-                            paused={pressed}
-                            resizeMode={"contain"}
-                            style={styles.backgroundVideo} />
-                    }
-
-                    {load && <View style={styles.spinnerContainer}>
-                        <ActivityIndicator size="large" color={'white'} />
-                    </View>}
-                </View>
+                {props.index == props.currentPage ?
+                    <View style={styles.backgroundContainer}>
+                        {verifyMedia(content[current]) == true ?
+                            <Image onLoadEnd={() => { props.duration = 5000, start() }}
+                                source={{ uri: content[current].image }}
+                                style={styles.image}
+                            />
+                            :
+                            <Video onLoad={(data) => { props.duration = data.duration * 1000, console.log(content, 'Hasta aqui', data.duration) }} onReadyForDisplay={() => start()}
+                                source={{ uri: content[current].image }}   // Can be a URL or a local file.
+                                ref={(ref) => {
+                                    this.player = ref
+                                }}                                      // Store reference
+                                onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                                onError={this.videoError}               // Callback when video cannot be loaded
+                                paused={pressed}
+                                resizeMode={"contain"}
+                                style={styles.backgroundVideo} />
+                        }
+                        {load && <View style={styles.spinnerContainer}>
+                            <ActivityIndicator size="large" color={'white'} />
+                        </View>}
+                    </View> : null
+                }
                 <View style={{ flexDirection: 'column', flex: 1, }}>
                     <View style={styles.animationBarContainer}>
                         {content.map((index, key) => {
