@@ -11,14 +11,12 @@ import {
     View,
     Platform
 } from "react-native";
-import {initialWindowSafeAreaInsets} from "react-native-safe-area-context";
 import type {IUserStoryItem} from "./interfaces/IUserStory";
 import {usePrevious} from "./helpers/StateHelpers";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 const {width, height} = Dimensions.get('window');
-
 
 type Props = {
     profileName: string,
@@ -291,8 +289,7 @@ const styles = StyleSheet.create({
     },
     animationBarContainer: {
         flexDirection: 'row',
-        paddingTop: initialWindowSafeAreaInsets?.top ?
-            initialWindowSafeAreaInsets.top == 0 ? 10 : (initialWindowSafeAreaInsets.top + 10) : 15,
+        paddingTop: 10,
         paddingHorizontal: 10,
     },
     animationBackground: {
