@@ -9,7 +9,8 @@ import {
     TouchableWithoutFeedback,
     ActivityIndicator,
     View,
-    Platform
+    Platform,
+    SafeAreaView
 } from "react-native";
 import type {IUserStoryItem} from "./interfaces/IUserStory";
 import {usePrevious} from "./helpers/StateHelpers";
@@ -162,15 +163,17 @@ export const StoryListItem = (props: Props) => {
                 backgroundColor: 'black'
             }}
         >
-            <View style={styles.backgroundContainer}>
-                <Image onLoadEnd={() => start()}
-                       source={{uri: content[current].image}}
-                       style={styles.image}
-                />
-                {load && <View style={styles.spinnerContainer}>
-                    <ActivityIndicator size="large" color={'white'}/>
-                </View>}
-            </View>
+            <SafeAreaView>
+                <View style={styles.backgroundContainer}>
+                    <Image onLoadEnd={() => start()}
+                        source={{uri: content[current].image}}
+                        style={styles.image}
+                    />
+                    {load && <View style={styles.spinnerContainer}>
+                        <ActivityIndicator size="large" color={'white'}/>
+                    </View>}
+                </View>
+            </SafeAreaView>
             <View style={{flexDirection: 'column', flex: 1,}}>
                 <View style={styles.animationBarContainer}>
                     {content.map((index, key) => {
