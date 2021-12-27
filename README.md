@@ -52,6 +52,7 @@ const data = [
             {
                 story_id: 1,
                 story_image: "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+                swipeText:'Custom swipe text for this story',
                 onPress: () => console.log('story 1 swiped'),
             },
             {
@@ -67,11 +68,13 @@ const data = [
             {
                 story_id: 1,
                 story_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjORKvjcbMRGYPR3QIs3MofoWkD4wHzRd_eg&usqp=CAU",
+                swipeText:'Custom swipe text for this story',
                 onPress: () => console.log('story 1 swiped'),
             },
             {
                 story_id: 2,
                 story_image: "https://files.oyebesmartest.com/uploads/preview/vivo-u20-mobile-wallpaper-full-hd-(1)qm6qyz9v60.jpg",
+                swipeText:'Custom swipe text for this story',
                 onPress: () => console.log('story 2 swiped'),
             }]
     }];
