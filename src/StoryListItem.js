@@ -42,6 +42,7 @@ export const StoryListItem = (props: Props) => {
             return {
                 image: x.story_image,
                 onPress: x.onPress,
+                swipeText: x.swipeText,
                 finish: 0
             }
         }));
@@ -153,6 +154,8 @@ export const StoryListItem = (props: Props) => {
         }
     }
 
+    const swipeText = content?.[current]?.swipeText || props.swipeText || 'Swipe Up';
+
     return (
         <GestureRecognizer
             onSwipeUp={(state) => onSwipeUp(state)}
@@ -249,7 +252,7 @@ export const StoryListItem = (props: Props) => {
                     props.customSwipeUpComponent :
                     <>
                         <Text style={{color: 'white', marginTop: 5}}></Text>
-                        <Text style={{color: 'white', marginTop: 5}}>{props.swipeText ?? 'Swipe Up'}</Text>
+                        <Text style={{color: 'white', marginTop: 5}}>{swipeText}</Text>
                     </>
                 }
             </TouchableOpacity>}
