@@ -64,6 +64,7 @@ class StoryCircleListItem extends Component {
                         defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
                     />
                 </TouchableOpacity>
+                <Text style={styles.itemText}>{`${item.user_name.slice(0,10)}..`}</Text>
             </View>
         );
     }
@@ -75,7 +76,7 @@ const
     styles = StyleSheet.create({
         container: {
             marginVertical: 5,
-            marginHorizontal: 8
+            marginRight: 14
         },
         unPressedAvatar: {
             borderColor: 'red'
@@ -98,7 +99,9 @@ const
             borderRadius: 100,
         },
         itemText: {
-            textAlign: "center",
-            fontSize: 9
+            marginTop: 3,
+            textAlign:"center",
+            alignItems: "center",
+            fontSize: 11
         }
     });
