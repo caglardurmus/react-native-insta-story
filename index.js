@@ -1,5 +1,6 @@
+import {requireNativeComponent} from 'react-native';
 import Story from "./src/Story";
 
-export const InstaStory = Story;
+const InstaStory = requireNativeComponent('InstaStory', Story);
 
 export default InstaStory;
