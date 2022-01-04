@@ -44,6 +44,7 @@ export const Story = (props: Props) => {
         avatarTextStyle
     } = props;
 
+    const [dataState, setDataState] = useState(data);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedData, setSelectedData] = useState([]);
@@ -51,7 +52,7 @@ export const Story = (props: Props) => {
 
     // Component Functions
     const _handleStoryItemPress = (item, index) => {
-        const newData = data.slice(index);
+        const newData = dataState.slice(index);
         if (onStart) {
             onStart(item)
         }
@@ -61,8 +62,22 @@ export const Story = (props: Props) => {
         setIsModalOpen(true);
     };
 
+    const handleSeen = () => {
+        const seen = selectedData[currentPage];
+        const seenIndex = dataState.indexOf(seen);
+        if (seenIndex > 0) {
+            let tempData = dataState;
+            dataState[seenIndex] = {
+                ...dataState[seenIndex],
+                seen: true
+            }
+            setDataState(tempData);
+        }
+    }
+
     function onStoryFinish(state) {
         if (!isNullOrWhitespace(state)) {
+            handleSeen();
             if (state == "next") {
                 const newPage = currentPage + 1;
                 if (newPage < selectedData.length) {
@@ -100,6 +115,7 @@ export const Story = (props: Props) => {
                                customSwipeUpComponent={customSwipeUpComponent}
                                customCloseComponent={customCloseComponent}
                                onClosePress={() => {
+                                   handleSeen();
                                    setIsModalOpen(false);
                                    if (onClose) {
                                        onClose(x);
@@ -141,7 +157,7 @@ export const Story = (props: Props) => {
             <View style={style}>
                 <StoryCircleListView
                     handleStoryItemPress={_handleStoryItemPress}
-                    data={data}
+                    data={dataState}
                     avatarSize={avatarSize}
                     unPressedBorderColor={unPressedBorderColor}
                     pressedBorderColor={pressedBorderColor}
