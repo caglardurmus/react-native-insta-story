@@ -1,4 +1,4 @@
-import React, {Fragment, useRef, useState} from "react";
+import React, {Fragment, useRef, useState,useEffect} from "react";
 import {LogBox, Dimensions, View, Platform} from "react-native";
 import Modal from "react-native-modalbox";
 import StoryListItem from "./StoryListItem";
@@ -62,22 +62,27 @@ export const Story = (props: Props) => {
         setIsModalOpen(true);
     };
 
+    useEffect(() => {
+        handleSeen();
+    },[currentPage]);
+
     const handleSeen = () => {
         const seen = selectedData[currentPage];
         const seenIndex = dataState.indexOf(seen);
         if (seenIndex > 0) {
-            let tempData = dataState;
-            dataState[seenIndex] = {
-                ...dataState[seenIndex],
-                seen: true
+            if(!dataState[seenIndex]?.seen){
+                let tempData = dataState;
+                dataState[seenIndex] = {
+                    ...dataState[seenIndex],
+                    seen: true
+                }
+                setDataState(tempData);
             }
-            setDataState(tempData);
         }
     }
 
     function onStoryFinish(state) {
         if (!isNullOrWhitespace(state)) {
-            handleSeen();
             if (state == "next") {
                 const newPage = currentPage + 1;
                 if (newPage < selectedData.length) {
@@ -115,7 +120,6 @@ export const Story = (props: Props) => {
                                customSwipeUpComponent={customSwipeUpComponent}
                                customCloseComponent={customCloseComponent}
                                onClosePress={() => {
-                                   handleSeen();
                                    setIsModalOpen(false);
                                    if (onClose) {
                                        onClose(x);
