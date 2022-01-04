@@ -12,7 +12,8 @@
     "src",
     "react-native-insta-story.podspec",
     "!ios/build",
-    "!android/build"
+    "!android/build",
+    "!example"
   ],
   "repository": {
     "type": "git",
