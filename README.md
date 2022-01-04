@@ -37,7 +37,7 @@ import InstaStory from 'react-native-insta-story';
 | duration | Per story duration seconds                          | number    |      10       |
 | swipeText | Text of swipe component                             | string    |   Swipe Up    |
 | customSwipeUpComponent | For use custom component for swipe area             | component |               |
-| customCloseComponent | For use custom component for cloe button            | component |               |
+| customCloseComponent | For use custom component for close button           | component |               |
 | avatarSize | Size of avatar circle                               | number    |      60       |
 | showAvatarText | For show or hide avatar text.                       | bool      |     true      |
 | textStyle | For avatar text style                               | TextStyle      |           |
