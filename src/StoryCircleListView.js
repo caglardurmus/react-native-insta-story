@@ -14,7 +14,9 @@ class StoryCircleListView extends Component {
             handleStoryItemPress,
             unPressedBorderColor,
             pressedBorderColor,
-            avatarSize
+            avatarSize,
+            showText,
+            textStyle
         } = this.props;
 
         return (
@@ -36,6 +38,8 @@ class StoryCircleListView extends Component {
                             unPressedBorderColor={unPressedBorderColor}
                             pressedBorderColor={pressedBorderColor}
                             item={item}
+                            showText={showText}
+                            textStyle={textStyle}
                         />
                     )}
                 />

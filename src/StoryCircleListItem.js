@@ -29,7 +29,14 @@ class StoryCircleListItem extends Component {
     }
 
     render() {
-        const {item, unPressedBorderColor, pressedBorderColor, avatarSize} = this.props;
+        const {
+            item,
+            unPressedBorderColor,
+            pressedBorderColor,
+            avatarSize,
+            showText,
+            textStyle
+        } = this.props;
         const {isPressed} = this.state;
         return (
             <View style={styles.container}>
@@ -64,7 +71,11 @@ class StoryCircleListItem extends Component {
                         defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
                     />
                 </TouchableOpacity>
-                <Text style={styles.itemText}>{`${item.user_name.slice(0,10)}..`}</Text>
+                {showText &&
+                    <Text style={{
+                        ...styles.text,
+                        ...textStyle
+                    }}>{`${item.user_name.slice(0, 10)}..`}</Text>}
             </View>
         );
     }
@@ -78,12 +89,6 @@ const
             marginVertical: 5,
             marginRight: 14
         },
-        unPressedAvatar: {
-            borderColor: 'red'
-        },
-        pressedAvatar: {
-            borderColor: 'grey'
-        },
         avatarWrapper: {
             borderWidth: 2,
             justifyContent: "center",
@@ -93,14 +98,9 @@ const
             height: 64,
             width: 64
         },
-        avatar: {
-            height: 60,
-            width: 60,
-            borderRadius: 100,
-        },
-        itemText: {
+        text: {
             marginTop: 3,
-            textAlign:"center",
+            textAlign: "center",
             alignItems: "center",
             fontSize: 11
         }

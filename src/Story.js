@@ -7,6 +7,7 @@ import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
 import AndroidCubeEffect from "./AndroidCubeEffect";
 import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
+import {TextStyle} from "react-native";
 
 type Props = {
     data: IUserStory[],
@@ -20,6 +21,8 @@ type Props = {
     customSwipeUpComponent?: any,
     customCloseComponent?: any,
     avatarSize?: number,
+    showAvatarText?: boolean,
+    avatarTextStyle?: TextStyle
 };
 
 LogBox.ignoreLogs(['Warning: componentWillReceiveProps']); // Ignore log notification by message
@@ -36,7 +39,9 @@ export const Story = (props: Props) => {
         swipeText,
         customSwipeUpComponent,
         customCloseComponent,
-        avatarSize
+        avatarSize,
+        showAvatarText,
+        avatarTextStyle
     } = props;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -140,6 +145,8 @@ export const Story = (props: Props) => {
                     avatarSize={avatarSize}
                     unPressedBorderColor={unPressedBorderColor}
                     pressedBorderColor={pressedBorderColor}
+                    showText={showAvatarText}
+                    textStyle={avatarTextStyle}
                 />
             </View>
             <Modal
@@ -162,3 +169,7 @@ export const Story = (props: Props) => {
     );
 };
 export default Story;
+
+Story.defaultProps = {
+    showAvatarText: true
+}
