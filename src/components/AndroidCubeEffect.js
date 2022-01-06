@@ -6,7 +6,10 @@ import {
     Dimensions,
     StyleSheet,
     Platform,
+    LogBox
 } from 'react-native';
+
+LogBox.ignoreLogs(['Warning: componentWillReceiveProps']);
 
 const {width, height} = Dimensions.get('window');
 
