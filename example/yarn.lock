@@ -4369,7 +4369,7 @@ react-native-codegen@^0.0.6:
 
 "react-native-insta-story@git+https://github.com/caglardurmus/react-native-insta-story":
   version "1.1.5"
-  resolved "git+https://github.com/caglardurmus/react-native-insta-story#9503089dffe517a90fa7a66e8d7c77309cc0d61f"
+  resolved "git+https://github.com/caglardurmus/react-native-insta-story#828d44ad90b7a00402d5387fde915312870d763e"
   dependencies:
     prop-types "^15.6.2"
     react-native-modalbox "^2.0.2"
