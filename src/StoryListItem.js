@@ -51,16 +51,30 @@ export const StoryListItem = (props: Props) => {
 
     const progress = useRef(new Animated.Value(0)).current;
 
+    const prevCurrentPage = usePrevious(props.currentPage);
+
     useEffect(() => {
-        setCurrent(0);
-        if (props.currentPage != 0) {
-            let data = [...content];
-            data.map((x, i) => {
-                x.finish = 0;
-            })
-            setContent(data)
-            start();
+        let isPrevious = prevCurrentPage > props.currentPage;
+        if (isPrevious) {
+            setCurrent(content.length - 1);
+        } else {
+            setCurrent(0);
         }
+
+        let data = [...content];
+        data.map((x, i) => {
+            if (isPrevious) {
+                x.finish = 1;
+                if (i == content.length - 1) {
+                    x.finish = 0;
+                }
+            } else {
+                x.finish = 0;
+            }
+
+        })
+        setContent(data)
+        start();
     }, [props.currentPage]);
 
     const prevCurrent = usePrevious(current);
@@ -169,8 +183,8 @@ export const StoryListItem = (props: Props) => {
             <SafeAreaView>
                 <View style={styles.backgroundContainer}>
                     <Image onLoadEnd={() => start()}
-                        source={{uri: content[current].image}}
-                        style={styles.image}
+                           source={{uri: content[current].image}}
+                           style={styles.image}
                     />
                     {load && <View style={styles.spinnerContainer}>
                         <ActivityIndicator size="large" color={'white'}/>
@@ -245,17 +259,17 @@ export const StoryListItem = (props: Props) => {
                 </View>
             </View>
             {content[current].onPress &&
-            <TouchableOpacity activeOpacity={1}
-                              onPress={onSwipeUp}
-                              style={styles.swipeUpBtn}>
-                {props.customSwipeUpComponent ?
-                    props.customSwipeUpComponent :
-                    <>
-                        <Text style={{color: 'white', marginTop: 5}}></Text>
-                        <Text style={{color: 'white', marginTop: 5}}>{swipeText}</Text>
-                    </>
-                }
-            </TouchableOpacity>}
+                <TouchableOpacity activeOpacity={1}
+                                  onPress={onSwipeUp}
+                                  style={styles.swipeUpBtn}>
+                    {props.customSwipeUpComponent ?
+                        props.customSwipeUpComponent :
+                        <>
+                            <Text style={{color: 'white', marginTop: 5}}></Text>
+                            <Text style={{color: 'white', marginTop: 5}}>{swipeText}</Text>
+                        </>
+                    }
+                </TouchableOpacity>}
         </GestureRecognizer>
     )
 }
