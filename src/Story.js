@@ -5,8 +5,8 @@ import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import type {IUserStory} from "./interfaces/IUserStory";
-import AndroidCubeEffect from "./AndroidCubeEffect";
-import CubeNavigationHorizontal from "./CubeNavigationHorizontal";
+import AndroidCubeEffect from "./components/AndroidCubeEffect";
+import CubeNavigationHorizontal from "./components/CubeNavigationHorizontal";
 import {TextStyle} from "react-native";
 
 type Props = {
