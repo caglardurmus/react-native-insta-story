@@ -37,7 +37,11 @@ class StoryCircleListItem extends Component {
             showText,
             textStyle
         } = this.props;
+
+        const size = avatarSize ?? 60;
+
         const {isPressed} = this.state;
+
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -45,8 +49,8 @@ class StoryCircleListItem extends Component {
                     style={[
                         styles.avatarWrapper,
                         {
-                            height: avatarSize ? avatarSize + 4 : 64,
-                            width: avatarSize ? avatarSize + 4 : 64,
+                            height: size + 4,
+                            width: size + 4,
                         },
                         !isPressed
                             ? {
@@ -63,8 +67,8 @@ class StoryCircleListItem extends Component {
                 >
                     <Image
                         style={{
-                            height: avatarSize ?? 60,
-                            width: avatarSize ?? 60,
+                            height: size,
+                            width: size,
                             borderRadius: 100,
                         }}
                         source={{uri: item.user_image}}
@@ -72,10 +76,14 @@ class StoryCircleListItem extends Component {
                     />
                 </TouchableOpacity>
                 {showText &&
-                    <Text style={{
-                        ...styles.text,
-                        ...textStyle
-                    }}>{`${item.user_name.slice(0, 10)}..`}</Text>}
+                    <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                        style={{
+                            width: size + 4,
+                            ...styles.text,
+                            ...textStyle
+                        }}>{item.user_name}</Text>}
             </View>
         );
     }
@@ -87,12 +95,14 @@ const
     styles = StyleSheet.create({
         container: {
             marginVertical: 5,
-            marginRight: 14
+            marginRight: 10,
+            backgroundColor: 'blue'
         },
         avatarWrapper: {
             borderWidth: 2,
             justifyContent: "center",
             alignItems: "center",
+            alignSelf: "center",
             borderColor: 'red',
             borderRadius: 100,
             height: 64,
