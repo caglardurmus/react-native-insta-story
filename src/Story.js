@@ -1,5 +1,5 @@
-import React, {Fragment, useRef, useState,useEffect} from "react";
-import {LogBox, Dimensions, View, Platform} from "react-native";
+import React, {Fragment, useRef, useState, useEffect} from "react";
+import {Dimensions, View, Platform} from "react-native";
 import Modal from "react-native-modalbox";
 import StoryListItem from "./StoryListItem";
 import StoryCircleListView from "./StoryCircleListView";
@@ -24,8 +24,6 @@ type Props = {
     showAvatarText?: boolean,
     avatarTextStyle?: TextStyle
 };
-
-LogBox.ignoreLogs(['Warning: componentWillReceiveProps']); // Ignore log notification by message
 
 export const Story = (props: Props) => {
     const {
@@ -64,13 +62,13 @@ export const Story = (props: Props) => {
 
     useEffect(() => {
         handleSeen();
-    },[currentPage]);
+    }, [currentPage]);
 
     const handleSeen = () => {
         const seen = selectedData[currentPage];
         const seenIndex = dataState.indexOf(seen);
         if (seenIndex > 0) {
-            if(!dataState[seenIndex]?.seen){
+            if (!dataState[seenIndex]?.seen) {
                 let tempData = dataState;
                 dataState[seenIndex] = {
                     ...dataState[seenIndex],
