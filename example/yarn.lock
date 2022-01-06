@@ -4290,7 +4290,16 @@ prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.2:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
+prop-types@^15.6.0, prop-types@^15.7.2:
   version "15.8.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.0.tgz#d237e624c45a9846e469f5f31117f970017ff588"
   integrity sha512-fDGekdaHh65eI3lMi5OnErU6a8Ighg2KjcjQxO7m8VHyWjcPyj5kiOgV1LQDOOOgVy3+5FgjXvdSSX7B8/5/4g==
@@ -4358,10 +4367,9 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
-react-native-insta-story@1.1.5:
+"react-native-insta-story@git+https://github.com/caglardurmus/react-native-insta-story":
   version "1.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-insta-story/-/react-native-insta-story-1.1.5.tgz#14346fb65339845ae777a973af2fe01df932403a"
-  integrity sha512-qvJZMCXQQML3WobS+/MFOcnkm1rNkj0YP2NSUZ1qhTSL12+/ncI8/ISAJ+uw5SdanYUPT07rr9gQtiLCWKY1tg==
+  resolved "git+https://github.com/caglardurmus/react-native-insta-story#9503089dffe517a90fa7a66e8d7c77309cc0d61f"
   dependencies:
     prop-types "^15.6.2"
     react-native-modalbox "^2.0.2"

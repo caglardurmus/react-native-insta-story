@@ -13,7 +13,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-insta-story": "1.1.5",
+    "react-native-insta-story": "git+https://github.com/caglardurmus/react-native-insta-story",
     "react-native-web": "0.17.1"
   },
   "devDependencies": {
