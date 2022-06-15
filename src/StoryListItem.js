@@ -16,8 +16,11 @@ import type {IUserStoryItem} from "./interfaces/IUserStory";
 import {usePrevious} from "./helpers/StateHelpers";
 import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import GestureRecognizer from 'react-native-swipe-gestures';
+import CloseButtonSVG from '../../../assets/SVG/CloseButtonSVG'
+import Constants from 'expo-constants'
 
 const {width, height} = Dimensions.get('window');
+
 
 type Props = {
     profileName: string,
@@ -199,8 +202,9 @@ export const StoryListItem = (props: Props) => {
                                 <Animated.View
                                     style={{
                                         flex: current == key ? progress : content[key].finish,
-                                        height: 2,
+                                        height: 4,
                                         backgroundColor: 'white',
+                                        
                                     }}
                                 />
                             </View>
@@ -209,10 +213,6 @@ export const StoryListItem = (props: Props) => {
                 </View>
                 <View style={styles.userContainer}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Image style={styles.avatarImage}
-                               source={{uri: props.profileImage}}
-                        />
-                        <Text style={styles.avatarText}>{props.profileName}</Text>
                     </View>
                     <TouchableOpacity onPress={() => {
                         if (props.onClosePress) {
@@ -222,7 +222,9 @@ export const StoryListItem = (props: Props) => {
                         <View style={styles.closeIconContainer}>
                             {props.customCloseComponent ?
                                 props.customCloseComponent :
-                                <Text style={{color: 'white'}}>X</Text>
+                                <View style={styles.icon}>
+                                    <CloseButtonSVG />
+                                </View>
                             }
                         </View>
                     </TouchableOpacity>
@@ -313,11 +315,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     animationBackground: {
-        height: 2,
+        height: 4,
         flex: 1,
         flexDirection: 'row',
         backgroundColor: 'rgba(117, 117, 117, 0.5)',
         marginHorizontal: 2,
+        marginTop: '8%'
     },
     userContainer: {
         height: 50,
@@ -351,5 +354,17 @@ const styles = StyleSheet.create({
         left: 0,
         alignItems: 'center',
         bottom: Platform.OS == 'ios' ? 20 : 50
-    }
+    },
+    icon: {
+        backgroundColor: "#F0F0F0",
+        borderRadius: 50,
+        width: 25,
+        height: 25,
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 900,
+        position: "absolute",
+        top: "15%",
+        left: "88%",
+      },
 });
