@@ -34,7 +34,8 @@ const StoryCircleListItem = (props) => {
         setIsPressed(true);
     };
 
-    const size = avatarSize ?? 60;
+    const size = avatarSize ?? 140;
+    const width = avatarSize ?? 105
 
     return (
         <View style={styles.container}>
@@ -44,32 +45,32 @@ const StoryCircleListItem = (props) => {
                     styles.avatarWrapper,
                     {
                         height: size + 4,
-                        width: size + 4,
+                        width: width + 4,
                     },
-                    !isPressed
-                        ? {
-                            borderColor: unPressedBorderColor
-                                ? unPressedBorderColor
-                                : 'red'
-                        }
-                        : {
-                            borderColor: pressedBorderColor
-                                ? pressedBorderColor
-                                : 'grey'
-                        }
+                    // !isPressed
+                    //     ? {
+                    //         borderColor: unPressedBorderColor
+                    //             ? unPressedBorderColor
+                    //             : 'red'
+                    //     }
+                    //     : {
+                    //         borderColor: pressedBorderColor
+                    //             ? pressedBorderColor
+                    //             : 'grey'
+                    //     }
                 ]}
             >
                 <Image
                     style={{
                         height: size,
-                        width: size,
-                        borderRadius: 100,
+                        width: width,
+                        borderRadius: 10,
                     }}
                     source={{uri: item.user_image}}
                     defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
                 />
             </TouchableOpacity>
-            {showText &&
+            {/* {showText &&
                 <Text
                     numberOfLines={1}
                     ellipsizeMode={'tail'}
@@ -77,7 +78,7 @@ const StoryCircleListItem = (props) => {
                         width: size + 4,
                         ...styles.text,
                         ...textStyle
-                    }}>{item.user_name}</Text>}
+                    }}>{item.user_name}</Text>} */}
         </View>
     );
 }
@@ -86,21 +87,21 @@ export default StoryCircleListItem;
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 5,
+        marginTop: 10,
         marginRight: 10
     },
     avatarWrapper: {
-        borderWidth: 2,
+        // borderWidth: 2,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
-        borderColor: 'red',
-        borderRadius: 100,
-        height: 64,
-        width: 64
+        // borderColor: 'red',
+        borderRadius: 10,
+        height: 140,
+        width: 105
     },
     text: {
-        marginTop: 3,
+        // marginTop: 3,
         textAlign: "center",
         alignItems: "center",
         fontSize: 11
