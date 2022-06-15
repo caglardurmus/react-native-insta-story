@@ -8,6 +8,7 @@ import type {IUserStory} from "./interfaces/IUserStory";
 import AndroidCubeEffect from "./components/AndroidCubeEffect";
 import CubeNavigationHorizontal from "./components/CubeNavigationHorizontal";
 import {TextStyle} from "react-native";
+import Constants from 'expo-constants';
 
 type Props = {
     data: IUserStory[],
