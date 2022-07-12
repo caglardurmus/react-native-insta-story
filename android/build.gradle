@@ -67,6 +67,11 @@ repositories {
         url "$rootDir/../node_modules/jsc-android/dist"
     }
     google()
+    jcenter() {
+        content {
+            includeModule("com.yqritc", "android-scalablevideoview")
+        }
+    }
 }
 
 dependencies {
