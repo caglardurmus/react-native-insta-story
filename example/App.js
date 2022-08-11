@@ -1,75 +1,55 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  Text,
-  useColorScheme,
-  View
-} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {StyleSheet, Text, View} from 'react-native';
 import InstaStory from 'react-native-insta-story';
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+export default function App() {
+    function createData() {
+        const array = []
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#000' : '#fff'
-  };
+        const userCount = 10;
+        const userStoryCount = 15;
 
-  const data = [
-    {
-      user_id: 1,
-      user_image:
-        'https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg',
-      user_name: 'Ahmet Çağlar Durmuş',
-      stories: [
-        {
-          story_id: 1,
-          story_image:
-            'https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg',
-          swipeText: 'Custom swipe text for this story',
-          onPress: () => console.log('story 1 swiped')
-        },
-        {
-          story_id: 2,
-          story_image:
-            'https://image.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-601.jpg'
+        for (let i = 1; i <= userCount; i++) {
+            const storyArray = [];
+            for (let k = 1; k <= userStoryCount; k++) {
+                storyArray.push(
+                    {
+                        story_id: i,
+                        story_image: "https://picsum.photos/500/800?random=" + Math.random(),
+                        swipeText: 'Custom swipe text for this story',
+                        onPress: () => console.log(`story ${i} swiped`),
+                    }
+                )
+            }
+
+            array.push({
+                user_id: i,
+                user_image: "https://picsum.photos/200/300?random=" + Math.random(),
+                user_name: "Test User " + i,
+                stories: storyArray
+            })
         }
-      ]
-    },
-    {
-      user_id: 2,
-      user_image:
-        'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80',
-      user_name: 'Test User',
-      stories: [
-        {
-          story_id: 1,
-          story_video:
-            'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4',
-          swipeText: 'Custom swipe text for this story',
-          onPress: () => console.log('story 1 swiped')
-        }
-      ]
+        return array;
     }
-  ];
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <InstaStory
-        data={data}
-        duration={10}
-        onStart={(item) => console.log(item)}
-        onClose={(item) => console.log('close: ', item)}
-        customSwipeUpComponent={
-          <View>
-            <Text>Swipe</Text>
-          </View>
-        }
-        style={{ marginTop: 30 }}
-      />
-    </SafeAreaView>
-  );
-};
+    return (
+        <View style={styles.container}>
+            <StatusBar style="auto"/>
+            <InstaStory data={createData()}
+                        duration={10}
+                        customSwipeUpComponent={<View>
+                            <Text>Swipe</Text>
+                        </View>}
 
-export default App;
+                        style={{marginTop: 30}}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+});
