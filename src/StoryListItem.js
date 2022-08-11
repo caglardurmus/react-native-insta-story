@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
     Animated,
     Image,
@@ -12,13 +12,12 @@ import {
     Platform,
     SafeAreaView
 } from "react-native";
-import type { IUserStoryItem } from "./interfaces/IUserStory";
-import { usePrevious } from "./helpers/StateHelpers";
-import { isNullOrWhitespace } from "./helpers/ValidationHelpers";
+import type {IUserStoryItem} from "./interfaces/IUserStory";
+import {usePrevious} from "./helpers/StateHelpers";
+import {isNullOrWhitespace} from "./helpers/ValidationHelpers";
 import GestureRecognizer from 'react-native-swipe-gestures';
-import Video from 'react-native-video';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 type Props = {
     profileName: string,
@@ -40,15 +39,8 @@ export const StoryListItem = (props: Props) => {
     const [pressed, setPressed] = useState(false);
     const [content, setContent] = useState(
         stories.map((x) => {
-            var type = "image";
-
-            if (x.story_video !== undefined) {
-                type = "video";
-            }
-
             return {
-                type: type,
-                media: type == "video" ? x.story_video : x.story_image,
+                image: x.story_image,
                 onPress: x.onPress,
                 swipeText: x.swipeText,
                 finish: 0
@@ -56,7 +48,6 @@ export const StoryListItem = (props: Props) => {
         }));
 
     const [current, setCurrent] = useState(0);
-    var baseDuration = props.duration;
 
     const progress = useRef(new Animated.Value(0)).current;
 
@@ -90,31 +81,27 @@ export const StoryListItem = (props: Props) => {
 
     useEffect(() => {
         if (!isNullOrWhitespace(prevCurrent)) {
-            if (current > prevCurrent && content[current - 1].media == content[current].media) {
+            if (current > prevCurrent && content[current - 1].image == content[current].image) {
                 start();
-            } else if (current < prevCurrent && content[current + 1].media == content[current].media) {
+            } else if (current < prevCurrent && content[current + 1].image == content[current].image) {
                 start();
             }
         }
 
     }, [current]);
 
-    function start(dr = props.duration) {
-        console.log("SENT START");
-
+    function start() {
         setLoad(false);
         progress.setValue(0);
-        startAnimation(dr);
+        startAnimation();
     }
 
-    function startAnimation(dr) {
-        console.log("ANIM", dr);
-
+    function startAnimation() {
         Animated.timing(progress, {
             toValue: 1,
-            duration: dr,
+            duration: props.duration,
             useNativeDriver: false
-        }).start(({ finished }) => {
+        }).start(({finished}) => {
             if (finished) {
                 next();
             }
@@ -195,51 +182,16 @@ export const StoryListItem = (props: Props) => {
         >
             <SafeAreaView>
                 <View style={styles.backgroundContainer}>
+                    <Image onLoadEnd={() => start()}
+                           source={{uri: content[current].image}}
+                           style={styles.image}
+                    />
                     {load && <View style={styles.spinnerContainer}>
-                        <ActivityIndicator size="large" color={'white'} />
+                        <ActivityIndicator size="large" color={'white'}/>
                     </View>}
-                    {
-                        content[current].type == "video" ? (<Video
-                            source={{ uri: content[current].media }}
-                            rate={1.0}
-                            volume={1.0}
-                            paused={pressed}
-                            resizeMode="cover"
-                            playInBackground={false}
-                            onLoadStart={() => {
-                                setLoad(true);
-                                progress.setValue(0);
-                            }}
-                            onLoad={(vidData) => {
-                                if (vidData.duration !== undefined) {
-                                    var duration = Math.round(vidData["duration"]) * 1000;
-                                    if (duration > props.duration) {
-                                        duration = props.duration;
-                                    }
-
-                                    baseDuration = duration;
-                                    start(duration);
-                                } else {
-                                    start(props.duration);
-                                }
-                            }}
-
-                            style={{
-                                width: width,
-                                height: height,
-                            }}
-                        >
-                            {load && <View style={styles.videoSpinnerContainer}>
-                                <ActivityIndicator size="large" color={'white'} />
-                            </View>}
-                        </Video>) : (<Image onLoadEnd={() => start(props.duration)}
-                            source={{ uri: content[current].media }}
-                            style={styles.image}
-                        />)
-                    }
                 </View>
             </SafeAreaView>
-            <View style={{ flexDirection: 'column', flex: 1, }}>
+            <View style={{flexDirection: 'column', flex: 1,}}>
                 <View style={styles.animationBarContainer}>
                     {content.map((index, key) => {
                         return (
@@ -256,9 +208,9 @@ export const StoryListItem = (props: Props) => {
                     })}
                 </View>
                 <View style={styles.userContainer}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image style={styles.avatarImage}
-                            source={{ uri: props.profileImage }}
+                               source={{uri: props.profileImage}}
                         />
                         <Text style={styles.avatarText}>{props.profileName}</Text>
                     </View>
@@ -270,7 +222,7 @@ export const StoryListItem = (props: Props) => {
                         <View style={styles.closeIconContainer}>
                             {props.customCloseComponent ?
                                 props.customCloseComponent :
-                                <Text style={{ color: 'white' }}>X</Text>
+                                <Text style={{color: 'white'}}>X</Text>
                             }
                         </View>
                     </TouchableOpacity>
@@ -281,7 +233,7 @@ export const StoryListItem = (props: Props) => {
                         onLongPress={() => setPressed(true)}
                         onPressOut={() => {
                             setPressed(false);
-                            startAnimation(baseDuration);
+                            startAnimation();
                         }}
                         onPress={() => {
                             if (!pressed && !load) {
@@ -289,32 +241,32 @@ export const StoryListItem = (props: Props) => {
                             }
                         }}
                     >
-                        <View style={{ flex: 1 }} />
+                        <View style={{flex: 1}}/>
                     </TouchableWithoutFeedback>
                     <TouchableWithoutFeedback onPressIn={() => progress.stopAnimation()}
-                        onLongPress={() => setPressed(true)}
-                        onPressOut={() => {
-                            setPressed(false);
-                            startAnimation(baseDuration);
-                        }}
-                        onPress={() => {
-                            if (!pressed && !load) {
-                                next()
-                            }
-                        }}>
-                        <View style={{ flex: 1 }} />
+                                              onLongPress={() => setPressed(true)}
+                                              onPressOut={() => {
+                                                  setPressed(false);
+                                                  startAnimation();
+                                              }}
+                                              onPress={() => {
+                                                  if (!pressed && !load) {
+                                                      next()
+                                                  }
+                                              }}>
+                        <View style={{flex: 1}}/>
                     </TouchableWithoutFeedback>
                 </View>
             </View>
             {content[current].onPress &&
                 <TouchableOpacity activeOpacity={1}
-                    onPress={onSwipeUp}
-                    style={styles.swipeUpBtn}>
+                                  onPress={onSwipeUp}
+                                  style={styles.swipeUpBtn}>
                     {props.customSwipeUpComponent ?
                         props.customSwipeUpComponent :
                         <>
-                            <Text style={{ color: 'white', marginTop: 5 }}></Text>
-                            <Text style={{ color: 'white', marginTop: 5 }}>{swipeText}</Text>
+                            <Text style={{color: 'white', marginTop: 5}}></Text>
+                            <Text style={{color: 'white', marginTop: 5}}>{swipeText}</Text>
                         </>
                     }
                 </TouchableOpacity>}
@@ -399,14 +351,5 @@ const styles = StyleSheet.create({
         left: 0,
         alignItems: 'center',
         bottom: Platform.OS == 'ios' ? 20 : 50
-    },
-    videoSpinnerContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
     }
 });
