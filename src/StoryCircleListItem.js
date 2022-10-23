@@ -41,7 +41,11 @@ const StoryCircleListItem = (props) => {
     setIsPressed(true);
   };
 
-  const size = avatarSize ?? 60;
+  const size = avatarSize ?? {
+    width: size.width + 4,
+    height: size.height + 4,
+    borderRadius: size.borderRadius + 4,
+  };
 
   return (
     <View style={styles.container}>
@@ -50,8 +54,9 @@ const StoryCircleListItem = (props) => {
         style={[
           styles.avatarWrapper,
           {
-            height: size + 4,
-            width: size + 4,
+            height: size.height + 4,
+            width: size.width + 4,
+            borderRadius: size.borderRadius + 4,
           },
           avatarStyle ? avatarStyle : {},
           !isPressed
@@ -66,14 +71,7 @@ const StoryCircleListItem = (props) => {
         ]}
       >
         <Image
-          style={[
-            {
-              height: size,
-              width: size,
-              borderRadius: 100,
-            },
-            avatarImageStyle ? avatarImageStyle : {},
-          ]}
+          style={[...size, avatarImageStyle ? avatarImageStyle : {}]}
           source={{ uri: item.user_image }}
           defaultSource={Platform.OS === "ios" ? DEFAULT_AVATAR : null}
         />
