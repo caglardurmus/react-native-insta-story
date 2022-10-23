@@ -20,11 +20,12 @@ type Props = {
   swipeText?: string,
   customSwipeUpComponent?: any,
   customCloseComponent?: any,
-  avatarSize?: number,
+  avatarSize?: any,
   showAvatarText?: boolean,
   avatarTextStyle?: TextStyle,
   avatarStyle?: TextStyle,
   avatarImageStyle?: TextStyle,
+  numColumns?: number,
 };
 
 export const Story = (props: Props) => {
@@ -44,6 +45,7 @@ export const Story = (props: Props) => {
     avatarTextStyle,
     avatarStyle,
     avatarImageStyle,
+    numColumns,
   } = props;
 
   const [dataState, setDataState] = useState(data);
@@ -173,13 +175,14 @@ export const Story = (props: Props) => {
         <StoryCircleListView
           handleStoryItemPress={_handleStoryItemPress}
           data={dataState}
-          avatarSize={avatarSize}
           avatarStyle={avatarStyle}
           avatarImageStyle={avatarImageStyle}
           unPressedBorderColor={unPressedBorderColor}
           pressedBorderColor={pressedBorderColor}
           showText={showAvatarText}
           textStyle={avatarTextStyle}
+          avatarSize={avatarSize}
+          numColumns={numColumns}
         />
       </View>
       <Modal

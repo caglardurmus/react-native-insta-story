@@ -42,9 +42,9 @@ const StoryCircleListItem = (props) => {
   };
 
   const size = avatarSize ?? {
-    width: size.width + 4,
-    height: size.height + 4,
-    borderRadius: size.borderRadius + 4,
+    width: 60,
+    height: 60,
+    borderRadius: 10,
   };
 
   return (
