@@ -54,14 +54,16 @@ export const Story = (props: Props) => {
 
   // Component Functions
   const _handleStoryItemPress = (item, index) => {
+    alert(`index => ${index}`);
     const newData = dataState.slice(index);
+    alert(`newData => ${JSON.stringify(newData)}`);
     if (onStart) {
       onStart(item);
     }
 
     setCurrentPage(0);
     setSelectedData(newData);
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
   };
 
   useEffect(() => {
