@@ -13,6 +13,7 @@ const StoryCircleListView = (props) => {
     avatarImageStyle,
     showText,
     textStyle,
+    numColumns,
   } = props;
 
   return (
@@ -20,7 +21,7 @@ const StoryCircleListView = (props) => {
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         data={data}
-        numColumns={3}
+        numColumns={numColumns ? numColumns : 3}
         style={{ paddingLeft: 12 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}

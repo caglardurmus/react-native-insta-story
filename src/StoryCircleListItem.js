@@ -41,11 +41,13 @@ const StoryCircleListItem = (props) => {
     setIsPressed(true);
   };
 
-  const size = avatarSize ?? {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-  };
+  const size = avatarSize?.width
+    ? avatarSize
+    : {
+        width: 60,
+        height: 60,
+        borderRadius: 10,
+      };
 
   return (
     <View style={styles.container}>
@@ -71,7 +73,7 @@ const StoryCircleListItem = (props) => {
         ]}
       >
         <Image
-          style={[...size, avatarImageStyle ? avatarImageStyle : {}]}
+          style={[size, avatarImageStyle ? avatarImageStyle : {}]}
           source={{ uri: item.user_image }}
           defaultSource={Platform.OS === "ios" ? DEFAULT_AVATAR : null}
         />
@@ -81,7 +83,7 @@ const StoryCircleListItem = (props) => {
           numberOfLines={1}
           ellipsizeMode={"tail"}
           style={{
-            width: size + 4,
+            width: size.width + 4,
             ...styles.text,
             ...textStyle,
           }}
