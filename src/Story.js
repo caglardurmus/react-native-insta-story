@@ -63,7 +63,7 @@ export const Story = (props: Props) => {
 
     setCurrentPage(0);
     setSelectedData(newData);
-    // setIsModalOpen(true);
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
