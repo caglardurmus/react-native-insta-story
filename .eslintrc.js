@@ -10,7 +10,14 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
   ],
-  overrides: [],
+  overrides: [
+    {
+      files: ['src/components/**.js'],
+      rules: {
+        'react/jsx-props-no-spreading': 'off',
+      },
+    },
+  ],
   parserOptions: {
     ecmaVersion: 'latest',
     ecmaFeatures: {

@@ -1,31 +1,32 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dimensions, View, Platform } from 'react-native';
+import PropTypes from 'prop-types';
 import Modal from 'react-native-modalbox';
 import StoryListItem from './StoryListItem';
 import StoryCircleListView from './StoryCircleListView';
 import { isNullOrWhitespace } from './helpers/ValidationHelpers';
-import type { IUserStory } from './interfaces/IUserStory';
+// import type { IUserStory } from './interfaces/IUserStory';
 import AndroidCubeEffect from './components/AndroidCubeEffect';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
-import { TextStyle } from 'react-native';
+// import { TextStyle } from 'react-native';
 
-type Props = {
-  data: IUserStory[],
-  style?: any,
-  unPressedBorderColor?: string,
-  pressedBorderColor?: string,
-  onClose?: function,
-  onStart?: function,
-  duration?: number,
-  swipeText?: string,
-  customSwipeUpComponent?: any,
-  customCloseComponent?: any,
-  avatarSize?: number,
-  showAvatarText?: boolean,
-  avatarTextStyle?: TextStyle,
-};
+// type Props = {
+//   data: IUserStory[],
+//   style?: any,
+//   unPressedBorderColor?: string,
+//   pressedBorderColor?: string,
+//   onClose?: function,
+//   onStart?: function,
+//   duration?: number,
+//   swipeText?: string,
+//   customSwipeUpComponent?: any,
+//   customCloseComponent?: any,
+//   avatarSize?: number,
+//   showAvatarText?: boolean,
+//   avatarTextStyle?: TextStyle,
+// };
 
-export const Story = (props: Props) => {
+export const Story = (props) => {
   const {
     data,
     unPressedBorderColor,
@@ -62,6 +63,7 @@ export const Story = (props: Props) => {
 
   useEffect(() => {
     handleSeen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const handleSeen = () => {
@@ -198,3 +200,35 @@ export default Story;
 Story.defaultProps = {
   showAvatarText: true,
 };
+
+Story.propTypes = {
+  data: PropTypes.array,
+  unPressedBorderColor: PropTypes.string,
+  pressedBorderColor: PropTypes.string,
+  style: PropTypes.style,
+  onStart: PropTypes.func,
+  onClose: PropTypes.func,
+  duration: PropTypes.number,
+  swipeText: PropTypes.string,
+  customSwipeUpComponent: PropTypes.node,
+  customCloseComponent: PropTypes.node,
+  avatarSize: PropTypes.number,
+  showAvatarText: PropTypes.bool,
+  avatarTextStyle: PropTypes.style,
+};
+
+// type Props = {
+//   data: IUserStory[],
+//   style?: any,
+//   unPressedBorderColor?: string,
+//   pressedBorderColor?: string,
+//   onClose?: function,
+//   onStart?: function,
+//   duration?: number,
+//   swipeText?: string,
+//   customSwipeUpComponent?: any,
+//   customCloseComponent?: any,
+//   avatarSize?: number,
+//   showAvatarText?: boolean,
+//   avatarTextStyle?: TextStyle,
+// };
