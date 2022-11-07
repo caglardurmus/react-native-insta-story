@@ -13,25 +13,11 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-// import type { IUserStoryItem } from './interfaces/IUserStory';
 import { usePrevious } from './helpers/StateHelpers';
 import { isNullOrWhitespace } from './helpers/ValidationHelpers';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 const { width, height } = Dimensions.get('window');
-
-// type Props = {
-//   profileName: string,
-//   profileImage: string,
-//   duration?: number,
-//   onFinish?: function,
-//   onClosePress: function,
-//   key: number,
-//   swipeText?: string,
-//   customSwipeUpComponent?: any,
-//   customCloseComponent?: any,
-//   stories: IUserStoryItem[],
-// };
 
 export const StoryListItem = (props) => {
   const { stories } = props;
