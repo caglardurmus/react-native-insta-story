@@ -55,3 +55,8 @@ node_modules
 ios
 android
 images
+
+*/.expo
+*/node_modules
+*/yarn.lock
+*/package

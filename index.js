@@ -1,4 +1,4 @@
-import Story from "./src/Story";
+import Story from './src/Story';
 
 export const InstaStory = Story;
 
