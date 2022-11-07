@@ -5,26 +5,8 @@ import Modal from 'react-native-modalbox';
 import StoryListItem from './StoryListItem';
 import StoryCircleListView from './StoryCircleListView';
 import { isNullOrWhitespace } from './helpers/ValidationHelpers';
-// import type { IUserStory } from './interfaces/IUserStory';
 import AndroidCubeEffect from './components/AndroidCubeEffect';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
-// import { TextStyle } from 'react-native';
-
-// type Props = {
-//   data: IUserStory[],
-//   style?: any,
-//   unPressedBorderColor?: string,
-//   pressedBorderColor?: string,
-//   onClose?: function,
-//   onStart?: function,
-//   duration?: number,
-//   swipeText?: string,
-//   customSwipeUpComponent?: any,
-//   customCloseComponent?: any,
-//   avatarSize?: number,
-//   showAvatarText?: boolean,
-//   avatarTextStyle?: TextStyle,
-// };
 
 export const Story = (props) => {
   const {
@@ -216,19 +198,3 @@ Story.propTypes = {
   showAvatarText: PropTypes.bool,
   avatarTextStyle: PropTypes.style,
 };
-
-// type Props = {
-//   data: IUserStory[],
-//   style?: any,
-//   unPressedBorderColor?: string,
-//   pressedBorderColor?: string,
-//   onClose?: function,
-//   onStart?: function,
-//   duration?: number,
-//   swipeText?: string,
-//   customSwipeUpComponent?: any,
-//   customCloseComponent?: any,
-//   avatarSize?: number,
-//   showAvatarText?: boolean,
-//   avatarTextStyle?: TextStyle,
-// };
