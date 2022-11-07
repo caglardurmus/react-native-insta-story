@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import {
   Animated,
   Image,
@@ -12,28 +13,28 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import type { IUserStoryItem } from './interfaces/IUserStory';
+// import type { IUserStoryItem } from './interfaces/IUserStory';
 import { usePrevious } from './helpers/StateHelpers';
 import { isNullOrWhitespace } from './helpers/ValidationHelpers';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 const { width, height } = Dimensions.get('window');
 
-type Props = {
-  profileName: string,
-  profileImage: string,
-  duration?: number,
-  onFinish?: function,
-  onClosePress: function,
-  key: number,
-  swipeText?: string,
-  customSwipeUpComponent?: any,
-  customCloseComponent?: any,
-  stories: IUserStoryItem[],
-};
+// type Props = {
+//   profileName: string,
+//   profileImage: string,
+//   duration?: number,
+//   onFinish?: function,
+//   onClosePress: function,
+//   key: number,
+//   swipeText?: string,
+//   customSwipeUpComponent?: any,
+//   customCloseComponent?: any,
+//   stories: IUserStoryItem[],
+// };
 
-export const StoryListItem = (props: Props) => {
-  const stories = props.stories;
+export const StoryListItem = (props) => {
+  const { stories } = props;
 
   const [load, setLoad] = useState(true);
   const [pressed, setPressed] = useState(false);
@@ -75,6 +76,7 @@ export const StoryListItem = (props: Props) => {
     });
     setContent(data);
     start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentPage]);
 
   const prevCurrent = usePrevious(current);
@@ -93,6 +95,7 @@ export const StoryListItem = (props: Props) => {
         start();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   function start() {
@@ -291,6 +294,21 @@ export const StoryListItem = (props: Props) => {
       )}
     </GestureRecognizer>
   );
+};
+
+StoryListItem.propTypes = {
+  profileName: PropTypes.string,
+  profileImage: PropTypes.string,
+  duration: PropTypes.number,
+  onFinish: PropTypes.func,
+  onClosePress: PropTypes.func,
+  key: PropTypes.number,
+  swipeText: PropTypes.string,
+  customSwipeUpComponent: PropTypes.any,
+  customCloseComponent: PropTypes.any,
+  stories: PropTypes.array,
+  currentPage: PropTypes.number,
+  index: PropTypes.number,
 };
 
 export default StoryListItem;

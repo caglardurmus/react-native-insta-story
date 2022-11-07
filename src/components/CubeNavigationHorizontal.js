@@ -6,7 +6,6 @@ import {
   Dimensions,
   StyleSheet,
   Platform,
-  LogBox,
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -64,11 +63,9 @@ export default class CubeNavigationHorizontal extends React.Component {
     };
 
     this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () =>
-        Math.abs(gestureState.dx) > this.props.responderCaptureDx,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) =>
         Math.abs(gestureState.dx) > this.props.responderCaptureDx,
-      onPanResponderGrant: (e, gestureState) => {
+      onPanResponderGrant: () => {
         if (this.props.callbackOnSwipe) {
           this.props.callbackOnSwipe(true);
         }
@@ -96,7 +93,7 @@ export default class CubeNavigationHorizontal extends React.Component {
     });
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({
       scrollLockPage: props.scrollLockPage
         ? this.pages[props.scrollLockPage]
@@ -284,6 +281,7 @@ CubeNavigationHorizontal.propTypes = {
   responderCaptureDx: PropTypes.number,
   expandView: PropTypes.bool,
   loop: PropTypes.bool,
+  children: PropTypes.array,
 };
 
 CubeNavigationHorizontal.defaultProps = {

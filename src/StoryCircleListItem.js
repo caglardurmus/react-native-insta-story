@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Image,
@@ -29,6 +30,7 @@ const StoryCircleListItem = (props) => {
     if (prevSeen != props?.item?.seen) {
       setIsPressed(props?.item?.seen);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props?.item?.seen]);
 
   const _handleItemPress = (item) => {
@@ -87,6 +89,16 @@ const StoryCircleListItem = (props) => {
       )}
     </View>
   );
+};
+
+StoryCircleListItem.propTypes = {
+  item: PropTypes.any,
+  unPressedBorderColor: PropTypes.string,
+  pressedBorderColor: PropTypes.string,
+  avatarSize: PropTypes.number,
+  showText: PropTypes.string,
+  textStyle: PropTypes.style,
+  handleStoryItemPress: PropTypes.func,
 };
 
 export default StoryCircleListItem;
