@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   Animated,
   Image,
@@ -12,37 +11,50 @@ import {
   View,
   Platform,
   SafeAreaView,
+  PanResponderGestureState,
 } from 'react-native';
-import { usePrevious } from './helpers/StateHelpers';
-import { isNullOrWhitespace } from './helpers/ValidationHelpers';
 import GestureRecognizer from 'react-native-swipe-gestures';
+
+import { usePrevious, isNullOrWhitespace } from './helpers';
+import {
+  IUserStoryItem,
+  NextOrPrevious,
+  StoryListItemProps,
+} from './interfaces';
 
 const { width, height } = Dimensions.get('window');
 
-export const StoryListItem = (props) => {
-  const { stories } = props;
-
-  const [load, setLoad] = useState(true);
-  const [pressed, setPressed] = useState(false);
-  const [content, setContent] = useState(
-    stories.map((x) => {
-      return {
-        image: x.story_image,
-        onPress: x.onPress,
-        swipeText: x.swipeText,
-        finish: 0,
-      };
-    }),
+export const StoryListItem = ({
+  index,
+  key,
+  profileImage,
+  profileName,
+  duration,
+  customCloseComponent,
+  customSwipeUpComponent,
+  onFinish,
+  onClosePress,
+  stories,
+  currentPage,
+  ...props
+}: StoryListItemProps) => {
+  const [load, setLoad] = useState<boolean>(true);
+  const [pressed, setPressed] = useState<boolean>(false);
+  const [content, setContent] = useState<IUserStoryItem[]>(
+    stories.map((x) => ({
+      ...x,
+      finish: 0,
+    })),
   );
 
   const [current, setCurrent] = useState(0);
 
   const progress = useRef(new Animated.Value(0)).current;
 
-  const prevCurrentPage = usePrevious(props.currentPage);
+  const prevCurrentPage = usePrevious(currentPage);
 
   useEffect(() => {
-    let isPrevious = prevCurrentPage > props.currentPage;
+    let isPrevious = !!prevCurrentPage && prevCurrentPage > currentPage;
     if (isPrevious) {
       setCurrent(content.length - 1);
     } else {
@@ -63,22 +75,24 @@ export const StoryListItem = (props) => {
     setContent(data);
     start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentPage]);
+  }, [currentPage]);
 
   const prevCurrent = usePrevious(current);
 
   useEffect(() => {
     if (!isNullOrWhitespace(prevCurrent)) {
-      if (
-        current > prevCurrent &&
-        content[current - 1].image == content[current].image
-      ) {
-        start();
-      } else if (
-        current < prevCurrent &&
-        content[current + 1].image == content[current].image
-      ) {
-        start();
+      if (prevCurrent) {
+        if (
+          current > prevCurrent &&
+          content[current - 1].story_image == content[current].story_image
+        ) {
+          start();
+        } else if (
+          current < prevCurrent &&
+          content[current + 1].story_image == content[current].story_image
+        ) {
+          start();
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +107,7 @@ export const StoryListItem = (props) => {
   function startAnimation() {
     Animated.timing(progress, {
       toValue: 1,
-      duration: props.duration,
+      duration: duration,
       useNativeDriver: false,
     }).start(({ finished }) => {
       if (finished) {
@@ -102,17 +116,17 @@ export const StoryListItem = (props) => {
     });
   }
 
-  function onSwipeUp() {
-    if (props.onClosePress) {
-      props.onClosePress();
+  function onSwipeUp(_props?: any) {
+    if (onClosePress) {
+      onClosePress();
     }
     if (content[current].onPress) {
-      content[current].onPress();
+      content[current].onPress?.();
     }
   }
 
-  function onSwipeDown() {
-    props?.onClosePress();
+  function onSwipeDown(_props?: any) {
+    onClosePress();
   }
 
   const config = {
@@ -150,14 +164,14 @@ export const StoryListItem = (props) => {
     }
   }
 
-  function close(state) {
+  function close(state: NextOrPrevious) {
     let data = [...content];
     data.map((x) => (x.finish = 0));
     setContent(data);
     progress.setValue(0);
-    if (props.currentPage == props.index) {
-      if (props.onFinish) {
-        props.onFinish(state);
+    if (currentPage == index) {
+      if (onFinish) {
+        onFinish(state);
       }
     }
   }
@@ -167,8 +181,9 @@ export const StoryListItem = (props) => {
 
   return (
     <GestureRecognizer
-      onSwipeUp={(state) => onSwipeUp(state)}
-      onSwipeDown={(state) => onSwipeDown(state)}
+      key={key}
+      onSwipeUp={onSwipeUp}
+      onSwipeDown={onSwipeDown}
       config={config}
       style={{
         flex: 1,
@@ -179,7 +194,7 @@ export const StoryListItem = (props) => {
         <View style={styles.backgroundContainer}>
           <Image
             onLoadEnd={() => start()}
-            source={{ uri: content[current].image }}
+            source={{ uri: content[current].story_image }}
             style={styles.image}
           />
           {load && (
@@ -207,22 +222,19 @@ export const StoryListItem = (props) => {
         </View>
         <View style={styles.userContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              style={styles.avatarImage}
-              source={{ uri: props.profileImage }}
-            />
-            <Text style={styles.avatarText}>{props.profileName}</Text>
+            <Image style={styles.avatarImage} source={{ uri: profileImage }} />
+            <Text style={styles.avatarText}>{profileName}</Text>
           </View>
           <TouchableOpacity
             onPress={() => {
-              if (props.onClosePress) {
-                props.onClosePress();
+              if (onClosePress) {
+                onClosePress();
               }
             }}
           >
             <View style={styles.closeIconContainer}>
-              {props.customCloseComponent ? (
-                props.customCloseComponent
+              {customCloseComponent ? (
+                customCloseComponent
               ) : (
                 <Text style={{ color: 'white' }}>X</Text>
               )}
@@ -268,8 +280,8 @@ export const StoryListItem = (props) => {
           onPress={onSwipeUp}
           style={styles.swipeUpBtn}
         >
-          {props.customSwipeUpComponent ? (
-            props.customSwipeUpComponent
+          {customSwipeUpComponent ? (
+            customSwipeUpComponent
           ) : (
             <>
               <Text style={{ color: 'white', marginTop: 5 }}></Text>
@@ -280,21 +292,6 @@ export const StoryListItem = (props) => {
       )}
     </GestureRecognizer>
   );
-};
-
-StoryListItem.propTypes = {
-  profileName: PropTypes.string,
-  profileImage: PropTypes.string,
-  duration: PropTypes.number,
-  onFinish: PropTypes.func,
-  onClosePress: PropTypes.func,
-  key: PropTypes.number,
-  swipeText: PropTypes.string,
-  customSwipeUpComponent: PropTypes.any,
-  customCloseComponent: PropTypes.any,
-  stories: PropTypes.array,
-  currentPage: PropTypes.number,
-  index: PropTypes.number,
 };
 
 export default StoryListItem;
