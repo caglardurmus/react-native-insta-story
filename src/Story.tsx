@@ -18,11 +18,12 @@ export const Story = ({
   onClose,
   duration,
   swipeText,
-  customSwipeUpComponent,
-  customCloseComponent,
   avatarSize,
   showAvatarText,
   avatarTextStyle,
+  renderCloseComponent,
+  renderSwipeUpComponent,
+  renderTextComponent,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -101,8 +102,9 @@ export const Story = ({
           currentPage={currentPage}
           onFinish={onStoryFinish}
           swipeText={swipeText}
-          customSwipeUpComponent={customSwipeUpComponent}
-          customCloseComponent={customCloseComponent}
+          renderSwipeUpComponent={renderSwipeUpComponent}
+          renderCloseComponent={renderCloseComponent}
+          renderTextComponent={renderTextComponent}
           onClosePress={() => {
             setIsModalOpen(false);
             if (onClose) {

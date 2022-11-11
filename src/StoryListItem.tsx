@@ -11,7 +11,6 @@ import {
   View,
   Platform,
   SafeAreaView,
-  PanResponderGestureState,
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
@@ -30,12 +29,13 @@ export const StoryListItem = ({
   profileImage,
   profileName,
   duration,
-  customCloseComponent,
-  customSwipeUpComponent,
   onFinish,
   onClosePress,
   stories,
   currentPage,
+  renderCloseComponent,
+  renderSwipeUpComponent,
+  renderTextComponent,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -223,23 +223,33 @@ export const StoryListItem = ({
         <View style={styles.userContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image style={styles.avatarImage} source={{ uri: profileImage }} />
-            <Text style={styles.avatarText}>{profileName}</Text>
+            {typeof renderTextComponent === 'function' ? (
+              renderTextComponent({
+                item: content[current],
+                profileName,
+              })
+            ) : (
+              <Text style={styles.avatarText}>{profileName}</Text>
+            )}
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              if (onClosePress) {
-                onClosePress();
-              }
-            }}
-          >
-            <View style={styles.closeIconContainer}>
-              {customCloseComponent ? (
-                customCloseComponent
-              ) : (
+          <View style={styles.closeIconContainer}>
+            {typeof renderCloseComponent === 'function' ? (
+              renderCloseComponent({
+                onPress: onClosePress,
+                item: content[current],
+              })
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  if (onClosePress) {
+                    onClosePress();
+                  }
+                }}
+              >
                 <Text style={{ color: 'white' }}>X</Text>
-              )}
-            </View>
-          </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
         <View style={styles.pressContainer}>
           <TouchableWithoutFeedback
@@ -274,20 +284,19 @@ export const StoryListItem = ({
           </TouchableWithoutFeedback>
         </View>
       </View>
-      {content[current].onPress && (
+      {typeof renderSwipeUpComponent === 'function' ? (
+        renderSwipeUpComponent({
+          onPress: onSwipeUp,
+          item: content[current],
+        })
+      ) : (
         <TouchableOpacity
           activeOpacity={1}
           onPress={onSwipeUp}
           style={styles.swipeUpBtn}
         >
-          {customSwipeUpComponent ? (
-            customSwipeUpComponent
-          ) : (
-            <>
-              <Text style={{ color: 'white', marginTop: 5 }}></Text>
-              <Text style={{ color: 'white', marginTop: 5 }}>{swipeText}</Text>
-            </>
-          )}
+          <Text style={{ color: 'white', marginTop: 5 }}></Text>
+          <Text style={{ color: 'white', marginTop: 5 }}>{swipeText}</Text>
         </TouchableOpacity>
       )}
     </GestureRecognizer>
