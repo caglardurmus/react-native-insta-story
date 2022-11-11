@@ -28,5 +28,6 @@ module.exports = {
   plugins: ['react', 'react-native'],
   rules: {
     'react/jsx-props-no-spreading': 'warn',
+    'no-unused-vars': 'error',
   },
 };
