@@ -1,38 +1,37 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Dimensions, View, Platform } from 'react-native';
-import PropTypes from 'prop-types';
 import Modal from 'react-native-modalbox';
+
 import StoryListItem from './StoryListItem';
 import StoryCircleListView from './StoryCircleListView';
-import { isNullOrWhitespace } from './helpers/ValidationHelpers';
+import { isNullOrWhitespace } from './helpers';
 import AndroidCubeEffect from './components/AndroidCubeEffect';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
+import { IUserStory, NextOrPrevious, StoryProps } from './interfaces';
 
-export const Story = (props) => {
-  const {
-    data,
-    unPressedBorderColor,
-    pressedBorderColor,
-    style,
-    onStart,
-    onClose,
-    duration,
-    swipeText,
-    customSwipeUpComponent,
-    customCloseComponent,
-    avatarSize,
-    showAvatarText,
-    avatarTextStyle,
-  } = props;
-
-  const [dataState, setDataState] = useState(data);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [selectedData, setSelectedData] = useState([]);
-  const cube = useRef();
+export const Story = ({
+  data,
+  unPressedBorderColor,
+  pressedBorderColor,
+  style,
+  onStart,
+  onClose,
+  duration,
+  swipeText,
+  customSwipeUpComponent,
+  customCloseComponent,
+  avatarSize,
+  showAvatarText,
+  avatarTextStyle,
+}: StoryProps) => {
+  const [dataState, setDataState] = useState<IUserStory[]>(data);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
+  const cube = useRef<any>();
 
   // Component Functions
-  const _handleStoryItemPress = (item, index) => {
+  const _handleStoryItemPress = (item: IUserStory, index?: number) => {
     const newData = dataState.slice(index);
     if (onStart) {
       onStart(item);
@@ -63,7 +62,7 @@ export const Story = (props) => {
     }
   };
 
-  function onStoryFinish(state) {
+  function onStoryFinish(state: NextOrPrevious) {
     if (!isNullOrWhitespace(state)) {
       if (state == 'next') {
         const newPage = currentPage + 1;
@@ -120,7 +119,7 @@ export const Story = (props) => {
       return (
         <CubeNavigationHorizontal
           ref={cube}
-          callBackAfterSwipe={(x) => {
+          callBackAfterSwipe={(x: any) => {
             if (x != currentPage) {
               setCurrentPage(parseInt(x));
             }
@@ -133,7 +132,7 @@ export const Story = (props) => {
       return (
         <AndroidCubeEffect
           ref={cube}
-          callBackAfterSwipe={(x) => {
+          callBackAfterSwipe={(x: any) => {
             if (x != currentPage) {
               setCurrentPage(parseInt(x));
             }
@@ -177,24 +176,9 @@ export const Story = (props) => {
     </Fragment>
   );
 };
+
 export default Story;
 
 Story.defaultProps = {
   showAvatarText: true,
-};
-
-Story.propTypes = {
-  data: PropTypes.array,
-  unPressedBorderColor: PropTypes.string,
-  pressedBorderColor: PropTypes.string,
-  style: PropTypes.style,
-  onStart: PropTypes.func,
-  onClose: PropTypes.func,
-  duration: PropTypes.number,
-  swipeText: PropTypes.string,
-  customSwipeUpComponent: PropTypes.node,
-  customCloseComponent: PropTypes.node,
-  avatarSize: PropTypes.number,
-  showAvatarText: PropTypes.bool,
-  avatarTextStyle: PropTypes.style,
 };
