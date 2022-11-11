@@ -79,7 +79,7 @@ export interface StoryProps {
   unPressedBorderColor?: TextStyle['color'];
   /** The color of the avatar border when seen */
   pressedBorderColor?: TextStyle['color'];
-  /** Called when story item close button is press */
+  /** Called when story item close button is pressed */
   onClose?: (props?: IUserStory) => any;
   /** Called when story item is loaded */
   onStart?: (props?: IUserStory) => any;
