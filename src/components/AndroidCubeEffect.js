@@ -6,7 +6,6 @@ import {
   Dimensions,
   StyleSheet,
   Platform,
-  LogBox,
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -37,10 +36,9 @@ export default class AndroidCubeEffect extends React.Component {
     });
 
     this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => Math.abs(gestureState.dx) > 20,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) =>
         Math.abs(gestureState.dx) > 20,
-      onPanResponderGrant: (e, gestureState) => {
+      onPanResponderGrant: () => {
         if (this.props.callbackOnSwipe) {
           this.props.callbackOnSwipe(true);
         }
@@ -103,7 +101,7 @@ export default class AndroidCubeEffect extends React.Component {
     };
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({
       scrollLockPage: props.scrollLockPage
         ? this.pages[props.scrollLockPage]
@@ -280,6 +278,9 @@ AndroidCubeEffect.propTypes = {
   callBackAfterSwipe: PropTypes.func,
   scrollLockPage: PropTypes.number,
   expandView: PropTypes.bool,
+  children: PropTypes.array,
+  callbackOnSwipe: PropTypes.func,
+  loop: PropTypes.bool,
 };
 
 AndroidCubeEffect.defaultProps = {

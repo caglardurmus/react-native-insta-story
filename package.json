@@ -43,13 +43,20 @@
   "devDependencies": {
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.0.0",
     "prettier": "^2.7.1",
     "react": "^16.9.0",
     "react-native": "^0.69.1"
   },
   "scripts": {
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx --cache"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
