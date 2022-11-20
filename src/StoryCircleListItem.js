@@ -74,7 +74,7 @@ const StoryCircleListItem = (props) => {
       >
         <Image
           style={[size, avatarImageStyle ? avatarImageStyle : {}]}
-          source={{ uri: item.user_image }}
+          source={{ uri: item.profilePic }}
           defaultSource={Platform.OS === "ios" ? DEFAULT_AVATAR : null}
         />
       </TouchableOpacity>
@@ -88,7 +88,7 @@ const StoryCircleListItem = (props) => {
             ...textStyle,
           }}
         >
-          {item.user_name}
+          {item.username}
         </Text>
       )}
     </View>

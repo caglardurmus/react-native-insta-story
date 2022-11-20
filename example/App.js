@@ -15,29 +15,34 @@ export default function App() {
       const storyArray = [];
       for (let k = 1; k <= userStoryCount; k++) {
         storyArray.push({
-          story_id: i,
-          story_image: "https://picsum.photos/500/800?random=" + Math.random(),
+          id: i,
+          media: {
+            type: "image",
+            url: "https://picsum.photos/500/800?random=" + Math.random(),
+          },
           swipeText: "Custom swipe text for this story",
           onPress: () => console.log(`story ${i} swiped`),
         });
       }
 
       array.push({
-        user_id: i,
-        user_image: "https://picsum.photos/200/300?random=" + Math.random(),
-        user_name: "Test User " + i,
-        stories: storyArray,
+        id: i,
+        profilePic: "https://picsum.photos/200/300?random=" + Math.random(),
+        username: "Test User " + i,
+        vibes: storyArray,
       });
     }
     array.push({
-      user_id: 11,
-      user_image: "https://picsum.photos/200/300?random=" + Math.random(),
-      user_name: "Wasi Ayub",
-      stories: [
+      id: 11,
+      profilePic: "https://picsum.photos/200/300?random=" + Math.random(),
+      username: "Wasi Ayub",
+      vibes: [
         {
-          story_id: 1,
-          story_video:
-            "https://firebasestorage.googleapis.com/v0/b/recgriddev.appspot.com/o/62661d77-f98b-4e6f-8acb-e5168a829a6f.MP4?alt=media&token=ea3f967d-1f1d-45ed-b9bd-e449c4572c72",
+          id: 1,
+          media: {
+            type: "image",
+            url: "https://firebasestorage.googleapis.com/v0/b/recgriddev.appspot.com/o/62661d77-f98b-4e6f-8acb-e5168a829a6f.MP4?alt=media&token=ea3f967d-1f1d-45ed-b9bd-e449c4572c72",
+          },
           swipeText: "Custom swipe text for this story",
           onPress: () => console.log(`story ${i} swiped`),
         },
@@ -48,6 +53,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {alert(`createData(): ${JSON.stringify(createData()[0])}`)}
       <StatusBar style="auto" />
       <InstaStory
         data={createData()}

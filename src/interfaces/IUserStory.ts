@@ -1,14 +1,29 @@
 export interface IUserStory {
-  user_id: number;
+  id: string;
   user_image: string;
-  user_name: string;
-  stories: IUserStoryItem[];
+  username: string;
+  profilePic: string;
+  vibes: IUserVibesItem[];
 }
 
-export interface IUserStoryItem {
-  story_id: number;
-  story_image: string;
-  story_video: string;
+export interface IUserVibesMedia {
+  type: string;
+  url: string;
+}
+
+export interface IUserVibesLocation {
+  coordinates: number[];
+  type: string;
+}
+
+export interface IUserVibesItem {
+  id: string;
+  media: IUserVibesMedia;
+  description?: string;
+  location?: IUserVibesLocation;
+  type?: string;
+  address?: string;
+  createdAt: string;
   onPress?: any;
   swipeText?: string;
 }

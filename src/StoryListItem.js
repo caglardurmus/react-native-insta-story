@@ -14,15 +14,15 @@ import {
 } from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Video from "react-native-video";
-import type { IUserStoryItem } from "./interfaces/IUserStory";
+import type { IUserVibesItem } from "./interfaces/IUserStory";
 import { usePrevious } from "./helpers/StateHelpers";
 import { isNullOrWhitespace } from "./helpers/ValidationHelpers";
 
 const { width, height } = Dimensions.get("window");
 
 type Props = {
-  profileName: string,
-  profileImage: string,
+  username: string,
+  profilePic: string,
   duration?: number,
   onFinish?: function,
   onClosePress: function,
@@ -30,18 +30,18 @@ type Props = {
   swipeText?: string,
   customSwipeUpComponent?: any,
   customCloseComponent?: any,
-  stories: IUserStoryItem[],
+  vibes: IUserVibesItem[],
 };
 
 export const StoryListItem = (props: Props) => {
-  const stories = props.stories;
+  const vibes = props.vibes;
   const [load, setLoad] = useState(true);
   const [pressed, setPressed] = useState(false);
   const [content, setContent] = useState(
-    stories.map((x) => {
+    vibes.map((x) => {
       return {
-        image: x.story_image,
-        video: x.story_video,
+        image: x.media.type === "image" ? x.media.url : "",
+        video: x.media.type === "video" ? x.media.url : "",
         onPress: x.onPress,
         swipeText: x.swipeText,
         finish: 0,
@@ -249,9 +249,9 @@ export const StoryListItem = (props: Props) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={styles.avatarImage}
-              source={{ uri: props.profileImage }}
+              source={{ uri: props.profilePic }}
             />
-            <Text style={styles.avatarText}>{props.profileName}</Text>
+            <Text style={styles.avatarText}>{props.username}</Text>
           </View>
           <TouchableOpacity
             onPress={() => {
