@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, FlatList } from 'react-native';
 import StoryCircleListItem from './StoryCircleListItem';
 
@@ -39,6 +40,16 @@ const StoryCircleListView = (props) => {
       />
     </View>
   );
+};
+
+StoryCircleListView.propTypes = {
+  data: PropTypes.array,
+  handleStoryItemPress: PropTypes.func,
+  unPressedBorderColor: PropTypes.string,
+  pressedBorderColor: PropTypes.string,
+  avatarSize: PropTypes.number,
+  showText: PropTypes.string,
+  textStyle: PropTypes.style,
 };
 
 export default StoryCircleListView;
