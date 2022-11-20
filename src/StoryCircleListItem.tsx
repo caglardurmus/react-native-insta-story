@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import {
   View,
   Image,
@@ -8,40 +7,39 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+
 import { usePrevious } from './helpers/StateHelpers';
+import { IUserStory, StoryCircleListItemProps } from './interfaces';
 
 import DEFAULT_AVATAR from './assets/images/no_avatar.png';
 
-const StoryCircleListItem = (props) => {
-  const {
-    item,
-    unPressedBorderColor,
-    pressedBorderColor,
-    avatarSize,
-    showText,
-    textStyle,
-  } = props;
+const StoryCircleListItem = ({
+  item,
+  unPressedBorderColor,
+  pressedBorderColor,
+  avatarSize = 60,
+  showText,
+  textStyle,
+  handleStoryItemPress,
+}: StoryCircleListItemProps) => {
+  const [isPressed, setIsPressed] = useState(item?.seen);
 
-  const [isPressed, setIsPressed] = useState(props?.item?.seen);
-
-  const prevSeen = usePrevious(props?.item?.seen);
+  const prevSeen = usePrevious(item?.seen);
 
   useEffect(() => {
-    if (prevSeen != props?.item?.seen) {
-      setIsPressed(props?.item?.seen);
+    if (prevSeen != item?.seen) {
+      setIsPressed(item?.seen);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props?.item?.seen]);
+  }, [item?.seen]);
 
-  const _handleItemPress = (item) => {
-    const { handleStoryItemPress } = props;
-
+  const _handleItemPress = (item: IUserStory) => {
     if (handleStoryItemPress) handleStoryItemPress(item);
 
     setIsPressed(true);
   };
 
-  const size = avatarSize ?? 60;
+  const avatarWrapperSize = avatarSize + 4;
 
   return (
     <View style={styles.container}>
@@ -50,24 +48,22 @@ const StoryCircleListItem = (props) => {
         style={[
           styles.avatarWrapper,
           {
-            height: size + 4,
-            width: size + 4,
+            height: avatarWrapperSize,
+            width: avatarWrapperSize,
           },
           !isPressed
             ? {
-                borderColor: unPressedBorderColor
-                  ? unPressedBorderColor
-                  : 'red',
+                borderColor: unPressedBorderColor ?? 'red',
               }
             : {
-                borderColor: pressedBorderColor ? pressedBorderColor : 'grey',
+                borderColor: pressedBorderColor ?? 'grey',
               },
         ]}
       >
         <Image
           style={{
-            height: size,
-            width: size,
+            height: avatarSize,
+            width: avatarSize,
             borderRadius: 100,
           }}
           source={{ uri: item.user_image }}
@@ -77,9 +73,9 @@ const StoryCircleListItem = (props) => {
       {showText && (
         <Text
           numberOfLines={1}
-          ellipsizeMode={'tail'}
+          ellipsizeMode="tail"
           style={{
-            width: size + 4,
+            width: avatarWrapperSize,
             ...styles.text,
             ...textStyle,
           }}
@@ -89,16 +85,6 @@ const StoryCircleListItem = (props) => {
       )}
     </View>
   );
-};
-
-StoryCircleListItem.propTypes = {
-  item: PropTypes.any,
-  unPressedBorderColor: PropTypes.string,
-  pressedBorderColor: PropTypes.string,
-  avatarSize: PropTypes.number,
-  showText: PropTypes.string,
-  textStyle: PropTypes.style,
-  handleStoryItemPress: PropTypes.func,
 };
 
 export default StoryCircleListItem;
