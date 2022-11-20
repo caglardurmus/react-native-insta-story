@@ -41,7 +41,17 @@
     "react-native-swipe-gestures": "^1.0.5"
   },
   "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "react": "^16.9.0",
     "react-native": "^0.69.1"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
