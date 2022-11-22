@@ -55,7 +55,7 @@ interface SharedCircleListProps {
   /** Display username below avatars in FlatList */
   showText?: boolean;
   /** Username text style below the avatar */
-  textStyle?: TextStyle;
+  avatarTextStyle?: TextStyle;
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
