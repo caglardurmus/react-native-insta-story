@@ -13,6 +13,8 @@ export const Story = ({
   data,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   style,
   onStart,
   onClose,
@@ -155,6 +157,8 @@ export const Story = ({
           avatarSize={avatarSize}
           unPressedBorderColor={unPressedBorderColor}
           pressedBorderColor={pressedBorderColor}
+          unPressedAvatarTextColor={unPressedAvatarTextColor}
+          pressedAvatarTextColor={pressedAvatarTextColor}
           showText={showAvatarText}
           textStyle={avatarTextStyle}
         />

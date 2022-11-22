@@ -8,6 +8,8 @@ const StoryCircleListView = ({
   handleStoryItemPress,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   avatarSize,
   showText,
   textStyle,
@@ -30,6 +32,8 @@ const StoryCircleListView = ({
             }
             unPressedBorderColor={unPressedBorderColor}
             pressedBorderColor={pressedBorderColor}
+            unPressedAvatarTextColor={unPressedAvatarTextColor}
+            pressedAvatarTextColor={pressedAvatarTextColor}
             item={item}
             showText={showText}
             textStyle={textStyle}

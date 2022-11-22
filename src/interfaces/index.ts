@@ -46,6 +46,10 @@ interface SharedCircleListProps {
   unPressedBorderColor?: ColorValue;
   /** The color of the avatar border when seen */
   pressedBorderColor?: ColorValue;
+  /** The color of the avatar text when unseen */
+  unPressedAvatarTextColor?: TextStyle['color'];
+  /** The color of the avatar text when seen */
+  pressedAvatarTextColor?: TextStyle['color'];
   /** A custom size for the avatar rendered in the FlatList */
   avatarSize?: number;
   /** Display username below avatars in FlatList */
@@ -108,6 +112,10 @@ export interface StoryProps {
   unPressedBorderColor?: TextStyle['color'];
   /** The color of the avatar border when seen */
   pressedBorderColor?: TextStyle['color'];
+  /** The color of the avatar text when unseen */
+  unPressedAvatarTextColor?: TextStyle['color'];
+  /** The color of the avatar text when seen */
+  pressedAvatarTextColor?: TextStyle['color'];
   /** Called when story item close button is pressed */
   onClose?: (props?: IUserStory) => any;
   /** Called when story item is loaded */
