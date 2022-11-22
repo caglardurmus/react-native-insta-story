@@ -17,6 +17,8 @@ const StoryCircleListItem = ({
   item,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   avatarSize = 60,
   showText,
   textStyle,
@@ -74,11 +76,16 @@ const StoryCircleListItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={{
-            width: avatarWrapperSize,
-            ...styles.text,
-            ...textStyle,
-          }}
+          style={[
+            {
+              width: avatarWrapperSize,
+              ...styles.text,
+              ...textStyle,
+            },
+            isPressed
+              ? { color: pressedAvatarTextColor || undefined }
+              : { color: unPressedAvatarTextColor || undefined },
+          ]}
         >
           {item.user_name}
         </Text>
