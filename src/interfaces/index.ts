@@ -97,6 +97,12 @@ export interface StoryListItemProps {
   onClosePress: (props?: any) => any;
   stories: IUserStoryItem[];
   currentPage: number;
+  /** Custom style for the animation bar when it is loading */
+  loadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bar when unloaded */
+  unloadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bars container */
+  animationBarContainerStyle?: ViewStyle;
 }
 
 export interface StoryProps {
@@ -142,4 +148,10 @@ export interface StoryProps {
   showAvatarText?: boolean;
   /** Username text style below the avatar */
   avatarTextStyle?: TextStyle;
+  /** Custom style for the animation bar when it is loading */
+  loadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bar when unloaded */
+  unloadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bars container */
+  animationBarContainerStyle?: ViewStyle;
 }
