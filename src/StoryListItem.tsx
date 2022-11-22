@@ -36,6 +36,9 @@ export const StoryListItem = ({
   renderCloseComponent,
   renderSwipeUpComponent,
   renderTextComponent,
+  loadedAnimationBarStyle,
+  unloadedAnimationBarStyle,
+  animationBarContainerStyle,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -205,16 +208,24 @@ export const StoryListItem = ({
         </View>
       </SafeAreaView>
       <View style={{ flexDirection: 'column', flex: 1 }}>
-        <View style={styles.animationBarContainer}>
+        <View
+          style={[styles.animationBarContainer, animationBarContainerStyle]}
+        >
           {content.map((index, key) => {
             return (
-              <View key={key} style={styles.animationBackground}>
+              <View
+                key={key}
+                style={[styles.animationBackground, unloadedAnimationBarStyle]}
+              >
                 <Animated.View
-                  style={{
-                    flex: current == key ? progress : content[key].finish,
-                    height: 2,
-                    backgroundColor: 'white',
-                  }}
+                  style={[
+                    {
+                      flex: current == key ? progress : content[key].finish,
+                      height: 2,
+                      backgroundColor: 'white',
+                    },
+                    loadedAnimationBarStyle,
+                  ]}
                 />
               </View>
             );
