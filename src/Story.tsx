@@ -160,7 +160,7 @@ export const Story = ({
           unPressedAvatarTextColor={unPressedAvatarTextColor}
           pressedAvatarTextColor={pressedAvatarTextColor}
           showText={showAvatarText}
-          textStyle={avatarTextStyle}
+          avatarTextStyle={avatarTextStyle}
         />
       </View>
       <Modal

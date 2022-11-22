@@ -12,7 +12,7 @@ const StoryCircleListView = ({
   pressedAvatarTextColor,
   avatarSize,
   showText,
-  textStyle,
+  avatarTextStyle,
 }: StoryCircleListViewProps) => {
   return (
     <View>
@@ -36,7 +36,7 @@ const StoryCircleListView = ({
             pressedAvatarTextColor={pressedAvatarTextColor}
             item={item}
             showText={showText}
-            textStyle={textStyle}
+            avatarTextStyle={avatarTextStyle}
           />
         )}
       />

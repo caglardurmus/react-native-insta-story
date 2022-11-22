@@ -21,7 +21,7 @@ const StoryCircleListItem = ({
   pressedAvatarTextColor,
   avatarSize = 60,
   showText,
-  textStyle,
+  avatarTextStyle,
   handleStoryItemPress,
 }: StoryCircleListItemProps) => {
   const [isPressed, setIsPressed] = useState(item?.seen);
@@ -80,7 +80,7 @@ const StoryCircleListItem = ({
             {
               width: avatarWrapperSize,
               ...styles.text,
-              ...textStyle,
+              ...avatarTextStyle,
             },
             isPressed
               ? { color: pressedAvatarTextColor || undefined }
