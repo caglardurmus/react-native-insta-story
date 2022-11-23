@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   ColorValue,
   FlatListProps,
@@ -36,7 +35,11 @@ export type CircleListViewFlatListProps = Omit<
 >;
 
 export interface CustomButtonRenderProps<T = Record<string, any>> {
+  /**
+   * Function that closes the story modal and calls `IUserStoryItem.onPress`
+   */
   onPress: (props?: any) => any;
+  /** The current story item */
   item: IUserStoryItem<T>;
 }
 
@@ -45,7 +48,9 @@ export type RenderCustomButton<T = Record<string, any>> = (
 ) => React.ReactNode;
 
 export interface TextRenderProps<T = Record<string, any>> {
+  /** Equivalent to `IUserStory.user_name` */
   profileName: string;
+  /** The current item */
   item: IUserStoryItem<T>;
 }
 
@@ -119,6 +124,7 @@ export interface StoryListItemProps {
   renderTextComponent?: RenderCustomText;
   onFinish?: (props?: any) => any;
   onClosePress: (props?: any) => any;
+  /** An array of stories from one user */
   stories: IUserStoryItem[];
   currentPage: number;
   /** Custom style for the animation bar when it is loading */
