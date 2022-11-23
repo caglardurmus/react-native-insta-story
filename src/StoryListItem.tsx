@@ -39,6 +39,7 @@ export const StoryListItem = ({
   loadedAnimationBarStyle,
   unloadedAnimationBarStyle,
   animationBarContainerStyle,
+  storyUserContainerStyle,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -231,7 +232,7 @@ export const StoryListItem = ({
             );
           })}
         </View>
-        <View style={styles.userContainer}>
+        <View style={[styles.userContainer, storyUserContainerStyle]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image style={styles.avatarImage} source={{ uri: profileImage }} />
             {typeof renderTextComponent === 'function' ? (

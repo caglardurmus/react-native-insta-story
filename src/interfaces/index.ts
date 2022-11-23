@@ -103,6 +103,8 @@ export interface StoryListItemProps {
   unloadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bars container */
   animationBarContainerStyle?: ViewStyle;
+  /** Custom styles for the user and close button container */
+  storyUserContainerStyle?: ViewStyle;
 }
 
 export interface StoryProps {
@@ -154,4 +156,6 @@ export interface StoryProps {
   unloadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bars container */
   animationBarContainerStyle?: ViewStyle;
+  /** Custom styles for the user and close button container */
+  storyUserContainerStyle?: ViewStyle;
 }
