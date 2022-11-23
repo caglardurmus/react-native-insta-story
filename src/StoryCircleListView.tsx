@@ -13,6 +13,9 @@ const StoryCircleListView = ({
   avatarSize,
   showText,
   avatarTextStyle,
+  avatarImageStyle,
+  avatarWrapperStyle,
+  avatarFlatListProps,
 }: StoryCircleListViewProps) => {
   return (
     <View>
@@ -37,8 +40,11 @@ const StoryCircleListView = ({
             item={item}
             showText={showText}
             avatarTextStyle={avatarTextStyle}
+            avatarImageStyle={avatarImageStyle}
+            avatarWrapperStyle={avatarWrapperStyle}
           />
         )}
+        {...avatarFlatListProps}
       />
     </View>
   );
