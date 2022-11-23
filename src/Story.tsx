@@ -1,5 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Dimensions, View, Platform } from 'react-native';
+import { Dimensions, View, Platform, StyleSheet } from 'react-native';
 import Modal from 'react-native-modalbox';
 
 import StoryListItem from './StoryListItem';
@@ -8,6 +8,8 @@ import { isNullOrWhitespace } from './helpers';
 import AndroidCubeEffect from './components/AndroidCubeEffect';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
 import { IUserStory, NextOrPrevious, StoryProps } from './interfaces';
+
+const { height, width } = Dimensions.get('window');
 
 export const Story = ({
   data,
@@ -184,11 +186,7 @@ export const Story = ({
         />
       </View>
       <Modal
-        style={{
-          flex: 1,
-          height: Dimensions.get('window').height,
-          width: Dimensions.get('window').width,
-        }}
+        style={styles.modal}
         isOpen={isModalOpen}
         onClosed={() => setIsModalOpen(false)}
         position="center"
@@ -202,6 +200,14 @@ export const Story = ({
     </Fragment>
   );
 };
+
+const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    height,
+    width,
+  },
+});
 
 export default Story;
 
