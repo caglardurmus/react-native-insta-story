@@ -40,6 +40,9 @@ export const StoryListItem = ({
   unloadedAnimationBarStyle,
   animationBarContainerStyle,
   storyUserContainerStyle,
+  storyImageStyle,
+  storyAvatarImageStyle,
+  storyContainerStyle,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -189,17 +192,14 @@ export const StoryListItem = ({
       onSwipeUp={onSwipeUp}
       onSwipeDown={onSwipeDown}
       config={config}
-      style={{
-        flex: 1,
-        backgroundColor: 'black',
-      }}
+      style={[styles.container, storyContainerStyle]}
     >
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
           <Image
             onLoadEnd={() => start()}
             source={{ uri: content[current].story_image }}
-            style={styles.image}
+            style={[styles.image, storyImageStyle]}
           />
           {load && (
             <View style={styles.spinnerContainer}>
@@ -234,7 +234,10 @@ export const StoryListItem = ({
         </View>
         <View style={[styles.userContainer, storyUserContainerStyle]}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image style={styles.avatarImage} source={{ uri: profileImage }} />
+            <Image
+              style={[styles.avatarImage, storyAvatarImageStyle]}
+              source={{ uri: profileImage }}
+            />
             {typeof renderTextComponent === 'function' ? (
               renderTextComponent({
                 item: content[current],

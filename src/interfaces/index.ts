@@ -105,6 +105,12 @@ export interface StoryListItemProps {
   animationBarContainerStyle?: ViewStyle;
   /** Custom styles for the user and close button container */
   storyUserContainerStyle?: ViewStyle;
+  /** Custom styles for the main story item image */
+  storyImageStyle?: ImageStyle;
+  /** Custom styles for the user avatar on the story item */
+  storyAvatarImageStyle?: ImageStyle;
+  /** Custom styles for the main story item container */
+  storyContainerStyle?: ViewStyle;
 }
 
 export interface StoryProps {
@@ -158,4 +164,10 @@ export interface StoryProps {
   animationBarContainerStyle?: ViewStyle;
   /** Custom styles for the user and close button container */
   storyUserContainerStyle?: ViewStyle;
+  /** Custom styles for the main story item image */
+  storyImageStyle?: ImageStyle;
+  /** Custom styles for the user avatar on the story item */
+  storyAvatarImageStyle?: ImageStyle;
+  /** Custom styles for the main story item container */
+  storyContainerStyle?: ViewStyle;
 }
