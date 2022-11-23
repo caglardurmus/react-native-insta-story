@@ -52,6 +52,7 @@ import InstaStory from 'react-native-insta-story';
 | loadedAnimationBarStyle    | For loaded animation bar style                      | ViewStyle |               |
 | unloadedAnimationBarStyle  | For unloaded animation bar style                    | ViewStyle |               |
 | animationBarContainerStyle | For animation bar container style                   | ViewStyle |               |
+| storyUserContainerStyle    | For story item user container style                 | ViewStyle |               |
 
 ## Usage
 

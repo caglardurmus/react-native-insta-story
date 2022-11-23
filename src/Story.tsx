@@ -29,6 +29,7 @@ export const Story = ({
   loadedAnimationBarStyle,
   unloadedAnimationBarStyle,
   animationBarContainerStyle,
+  storyUserContainerStyle,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -120,6 +121,7 @@ export const Story = ({
           unloadedAnimationBarStyle={unloadedAnimationBarStyle}
           animationBarContainerStyle={animationBarContainerStyle}
           loadedAnimationBarStyle={loadedAnimationBarStyle}
+          storyUserContainerStyle={storyUserContainerStyle}
         />
       );
     });
