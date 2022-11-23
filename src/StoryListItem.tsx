@@ -208,7 +208,7 @@ export const StoryListItem = ({
           )}
         </View>
       </SafeAreaView>
-      <View style={{ flexDirection: 'column', flex: 1 }}>
+      <View style={styles.flexCol}>
         <View
           style={[styles.animationBarContainer, animationBarContainerStyle]}
         >
@@ -233,7 +233,7 @@ export const StoryListItem = ({
           })}
         </View>
         <View style={[styles.userContainer, storyUserContainerStyle]}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.flexRowCenter}>
             <Image
               style={[styles.avatarImage, storyAvatarImageStyle]}
               source={{ uri: profileImage }}
@@ -261,7 +261,7 @@ export const StoryListItem = ({
                   }
                 }}
               >
-                <Text style={{ color: 'white' }}>X</Text>
+                <Text style={styles.whiteText}>X</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -280,7 +280,7 @@ export const StoryListItem = ({
               }
             }}
           >
-            <View style={{ flex: 1 }} />
+            <View style={styles.flex} />
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPressIn={() => progress.stopAnimation()}
@@ -295,7 +295,7 @@ export const StoryListItem = ({
               }
             }}
           >
-            <View style={{ flex: 1 }} />
+            <View style={styles.flex} />
           </TouchableWithoutFeedback>
         </View>
       </View>
@@ -310,8 +310,8 @@ export const StoryListItem = ({
           onPress={onSwipeUp}
           style={styles.swipeUpBtn}
         >
-          <Text style={{ color: 'white', marginTop: 5 }}></Text>
-          <Text style={{ color: 'white', marginTop: 5 }}>{swipeText}</Text>
+          <Text style={styles.swipeText}></Text>
+          <Text style={styles.swipeText}>{swipeText}</Text>
         </TouchableOpacity>
       )}
     </GestureRecognizer>
@@ -328,6 +328,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  flex: {
+    flex: 1,
+  },
+  flexCol: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  flexRowCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   image: {
     width: width,
@@ -394,5 +405,12 @@ const styles = StyleSheet.create({
     left: 0,
     alignItems: 'center',
     bottom: Platform.OS == 'ios' ? 20 : 50,
+  },
+  whiteText: {
+    color: 'white',
+  },
+  swipeText: {
+    color: 'white',
+    marginTop: 5,
   },
 });
