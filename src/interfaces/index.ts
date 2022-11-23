@@ -1,5 +1,11 @@
 import { ReactNode } from 'react';
-import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import {
+  ColorValue,
+  FlatListProps,
+  ImageStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type NextOrPrevious = 'next' | 'previous';
 
@@ -23,6 +29,11 @@ export interface IUserStoryItem<T = Record<string, any>> {
   /** FOR INTERNAL USE ONLY */
   finish?: number;
 }
+
+export type CircleListViewFlatListProps = Omit<
+  FlatListProps<any>,
+  'renderItem' | 'data' | 'keyExtractor'
+>;
 
 export interface CustomButtonRenderProps<T = Record<string, any>> {
   onPress: (props?: any) => any;
@@ -56,10 +67,23 @@ interface SharedCircleListProps {
   showText?: boolean;
   /** Username text style below the avatar */
   avatarTextStyle?: TextStyle;
+  /** Custom styles for the avatar image */
+  avatarImageStyle?: ImageStyle;
+  /** Custom styles for each individual avatar wrapper */
+  avatarWrapperStyle?: ViewStyle;
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
   data: IUserStory[];
+  /**
+   * Custom props for the avatar FlatList.
+   *
+   * Omitted props:
+   * - `data`
+   * - `renderItem`
+   * - `keyExtractor`
+   */
+  avatarFlatListProps?: CircleListViewFlatListProps;
 }
 
 export interface StoryCircleListItemProps extends SharedCircleListProps {
@@ -156,6 +180,19 @@ export interface StoryProps {
   showAvatarText?: boolean;
   /** Username text style below the avatar */
   avatarTextStyle?: TextStyle;
+  /** Custom styles for the avatar image */
+  avatarImageStyle?: ImageStyle;
+  /** Custom styles for each individual avatar wrapper */
+  avatarWrapperStyle?: ViewStyle;
+  /**
+   * Custom props for the avatar FlatList.
+   *
+   * Omitted props:
+   * - `data`
+   * - `renderItem`
+   * - `keyExtractor`
+   */
+  avatarFlatListProps?: CircleListViewFlatListProps;
   /** Custom style for the animation bar when it is loading */
   loadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bar when unloaded */
