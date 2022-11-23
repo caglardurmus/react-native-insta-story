@@ -255,7 +255,7 @@ export default class AndroidCubeEffect extends React.Component {
 
     return (
       <Animated.View
-        style={[{ flex: 1 }]}
+        style={{ flex: 1 }}
         ref={(view) => {
           this._scrollView = view;
         }}
