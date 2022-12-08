@@ -24,7 +24,8 @@ export const Story = ({
   showAvatarText,
   avatarTextStyle,
   ImageComponent,
-  ImageComponentStyle
+  ImageComponentStyle,
+  HeaderComponent
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -159,6 +160,7 @@ export const Story = ({
           textStyle={avatarTextStyle}
           ImageComponentStyle={ImageComponentStyle}
           ImageComponent={ImageComponent}
+          HeaderComponent={HeaderComponent}
         />
       </View>
       <Modal
@@ -185,5 +187,7 @@ export default Story;
 
 Story.defaultProps = {
   showAvatarText: true,
-  ImageComponent: Image
+  ImageComponent: Image,
+  ImageComponentStyle: {},
+  HeaderComponent: null
 };

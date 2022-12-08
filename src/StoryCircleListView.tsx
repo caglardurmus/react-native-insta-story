@@ -12,7 +12,8 @@ const StoryCircleListView = ({
   showText,
   textStyle,
   ImageComponentStyle,
-  ImageComponent
+  ImageComponent,
+  HeaderComponent
 }: StoryCircleListViewProps) => {
   return (
     <View>
@@ -23,6 +24,7 @@ const StoryCircleListView = ({
         style={{ paddingLeft: 12 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        ListHeaderComponent={HeaderComponent}
         ListFooterComponent={<View style={{ flex: 1, width: 8 }} />}
         renderItem={({ item, index }) => (
           <StoryCircleListItem

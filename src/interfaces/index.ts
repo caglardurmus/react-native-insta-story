@@ -36,6 +36,7 @@ interface SharedCircleListProps {
   textStyle?: TextStyle;
   ImageComponentStyle?: ImageStyle;
   ImageComponent?: any;
+  HeaderComponent?: any;
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
@@ -97,4 +98,5 @@ export interface StoryProps {
   avatarTextStyle?: TextStyle;
   ImageComponentStyle?: ImageStyle;
   ImageComponent?: any;
+  HeaderComponent?: any;
 }
