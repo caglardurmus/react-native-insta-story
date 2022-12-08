@@ -34,7 +34,8 @@ interface SharedCircleListProps {
   showText?: boolean;
   /** Username text style below the avatar */
   textStyle?: TextStyle;
-  avatarStyle?: ImageStyle;
+  ImageComponentStyle?: ImageStyle;
+  ImageComponent?: any;
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
@@ -94,5 +95,6 @@ export interface StoryProps {
   showAvatarText?: boolean;
   /** Username text style below the avatar */
   avatarTextStyle?: TextStyle;
-  avatarStyle?: ImageStyle;
+  ImageComponentStyle?: ImageStyle;
+  ImageComponent?: any;
 }

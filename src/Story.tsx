@@ -1,5 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Dimensions, View, Platform } from 'react-native';
+import { Dimensions, View, Platform, Image } from 'react-native';
 import Modal from 'react-native-modalbox';
 
 import StoryListItem from './StoryListItem';
@@ -23,7 +23,8 @@ export const Story = ({
   avatarSize,
   showAvatarText,
   avatarTextStyle,
-  avatarStyle
+  ImageComponent,
+  ImageComponentStyle
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -156,7 +157,8 @@ export const Story = ({
           pressedBorderColor={pressedBorderColor}
           showText={showAvatarText}
           textStyle={avatarTextStyle}
-          avatarStyle={avatarStyle}
+          ImageComponentStyle={ImageComponentStyle}
+          ImageComponent={ImageComponent}
         />
       </View>
       <Modal
@@ -183,4 +185,5 @@ export default Story;
 
 Story.defaultProps = {
   showAvatarText: true,
+  ImageComponent: Image
 };

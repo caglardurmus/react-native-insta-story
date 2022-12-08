@@ -30,7 +30,7 @@ const react_1 = __importStar(require("react"));
 const react_native_1 = require("react-native");
 const StateHelpers_1 = require("./helpers/StateHelpers");
 const no_avatar_png_1 = __importDefault(require("./assets/images/no_avatar.png"));
-const StoryCircleListItem = ({ item, unPressedBorderColor, pressedBorderColor, avatarSize = 60, showText, textStyle, handleStoryItemPress, avatarStyle = {} }) => {
+const StoryCircleListItem = ({ item, unPressedBorderColor, pressedBorderColor, avatarSize = 60, showText, textStyle, handleStoryItemPress, ImageComponentStyle, ImageComponent }) => {
     const [isPressed, setIsPressed] = (0, react_1.useState)(item?.seen);
     const prevSeen = (0, StateHelpers_1.usePrevious)(item?.seen);
     (0, react_1.useEffect)(() => {
@@ -60,11 +60,11 @@ const StoryCircleListItem = ({ item, unPressedBorderColor, pressedBorderColor, a
                     borderColor: pressedBorderColor ?? 'grey',
                 },
         ]}>
-        <react_native_1.Image style={{
+        <ImageComponent style={{
             height: avatarSize,
             width: avatarSize,
             borderRadius: 100,
-            ...avatarStyle
+            ...ImageComponentStyle
         }} source={{ uri: item.user_image }} defaultSource={react_native_1.Platform.OS === 'ios' ? no_avatar_png_1.default : null}/>
       </react_native_1.TouchableOpacity>
       {showText && (<react_native_1.Text numberOfLines={1} ellipsizeMode="tail" style={{
