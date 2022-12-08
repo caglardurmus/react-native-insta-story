@@ -65,8 +65,7 @@
   "scripts": {
     "format": "prettier --write .",
     "prepare": "husky install",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx --cache",
-    "postinstall": "tsc --outDir ./"
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx --cache"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
