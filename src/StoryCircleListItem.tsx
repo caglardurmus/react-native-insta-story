@@ -21,6 +21,7 @@ const StoryCircleListItem = ({
   showText,
   textStyle,
   handleStoryItemPress,
+  avatarStyle={}
 }: StoryCircleListItemProps) => {
   const [isPressed, setIsPressed] = useState(item?.seen);
 
@@ -65,6 +66,7 @@ const StoryCircleListItem = ({
             height: avatarSize,
             width: avatarSize,
             borderRadius: 100,
+            ...avatarStyle
           }}
           source={{ uri: item.user_image }}
           defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
