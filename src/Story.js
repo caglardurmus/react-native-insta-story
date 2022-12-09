@@ -35,12 +35,13 @@ const StoryCircleListView_1 = __importDefault(require("./StoryCircleListView"));
 const helpers_1 = require("./helpers");
 const AndroidCubeEffect_1 = __importDefault(require("./components/AndroidCubeEffect"));
 const CubeNavigationHorizontal_1 = __importDefault(require("./components/CubeNavigationHorizontal"));
-const Story = ({ data, unPressedBorderColor, pressedBorderColor, style, onStart, onClose, duration, swipeText, customSwipeUpComponent, customCloseComponent, avatarSize, showAvatarText, avatarTextStyle, ImageComponent, ImageComponentStyle, HeaderComponent }) => {
+const Story = ({ data, unPressedBorderColor, pressedBorderColor, style, onStart, onClose, duration, swipeText, customSwipeUpComponent, customCloseComponent, avatarSize, showAvatarText, avatarTextStyle, ImageComponent, ImageComponentStyle, HeaderComponent, currentStoryRef, ListItemRightHeaderComponent }) => {
     const [dataState, setDataState] = (0, react_1.useState)(data);
     const [isModalOpen, setIsModalOpen] = (0, react_1.useState)(false);
     const [currentPage, setCurrentPage] = (0, react_1.useState)(0);
     const [selectedData, setSelectedData] = (0, react_1.useState)([]);
     const cube = (0, react_1.useRef)();
+    const currentStoryIndexRef = currentStoryRef ? currentStoryRef : (0, react_1.useRef)(0);
     // Component Functions
     const _handleStoryItemPress = (item, index) => {
         const newData = dataState.slice(index);
@@ -104,7 +105,7 @@ const Story = ({ data, unPressedBorderColor, pressedBorderColor, style, onStart,
                 if (onClose) {
                     onClose(x);
                 }
-            }} index={i}/>);
+            }} index={i} currentStoryIndexRef={currentStoryIndexRef} ListItemRightHeaderComponent={ListItemRightHeaderComponent}/>);
     });
     const renderCube = () => {
         if (react_native_1.Platform.OS == 'ios') {
@@ -145,5 +146,7 @@ exports.Story.defaultProps = {
     showAvatarText: true,
     ImageComponent: react_native_1.Image,
     ImageComponentStyle: {},
-    HeaderComponent: null
+    HeaderComponent: null,
+    currentStoryRef: null,
+    ListItemRightHeaderComponent: null
 };

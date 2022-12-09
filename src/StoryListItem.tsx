@@ -36,6 +36,8 @@ export const StoryListItem = ({
   onClosePress,
   stories,
   currentPage,
+  currentStoryIndexRef,
+  ListItemRightHeaderComponent,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -95,6 +97,7 @@ export const StoryListItem = ({
         }
       }
     }
+    currentStoryIndexRef.current = current
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
@@ -225,21 +228,26 @@ export const StoryListItem = ({
             <Image style={styles.avatarImage} source={{ uri: profileImage }} />
             <Text style={styles.avatarText}>{profileName}</Text>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              if (onClosePress) {
-                onClosePress();
-              }
-            }}
-          >
-            <View style={styles.closeIconContainer}>
-              {customCloseComponent ? (
-                customCloseComponent
-              ) : (
-                <Text style={{ color: 'white' }}>X</Text>
-              )}
-            </View>
-          </TouchableOpacity>
+          <View style={{flexDirection:'row', alignItems:'center'}}>
+            {ListItemRightHeaderComponent ?(
+              <ListItemRightHeaderComponent/>
+            ):(null)}
+            <TouchableOpacity
+              onPress={() => {
+                if (onClosePress) {
+                  onClosePress();
+                }
+              }}
+            >
+              <View style={styles.closeIconContainer}>
+                {customCloseComponent ? (
+                  customCloseComponent
+                ) : (
+                  <Text style={{ color: 'white' }}>X</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.pressContainer}>
           <TouchableWithoutFeedback

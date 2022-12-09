@@ -25,13 +25,16 @@ export const Story = ({
   avatarTextStyle,
   ImageComponent,
   ImageComponentStyle,
-  HeaderComponent
+  HeaderComponent,
+  currentStoryRef,
+  ListItemRightHeaderComponent
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
   const cube = useRef<any>();
+  const currentStoryIndexRef = currentStoryRef ? currentStoryRef : useRef<number>(0)
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
@@ -113,6 +116,8 @@ export const Story = ({
             }
           }}
           index={i}
+          currentStoryIndexRef={currentStoryIndexRef}
+          ListItemRightHeaderComponent={ListItemRightHeaderComponent}
         />
       );
     });
@@ -189,5 +194,7 @@ Story.defaultProps = {
   showAvatarText: true,
   ImageComponent: Image,
   ImageComponentStyle: {},
-  HeaderComponent: null
+  HeaderComponent: null,
+  currentStoryRef: null,
+  ListItemRightHeaderComponent: null
 };
