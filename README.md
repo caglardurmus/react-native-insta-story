@@ -39,6 +39,7 @@ import InstaStory from 'react-native-insta-story';
 | pressedBorderColor     | Pressed border color of profile circle              | color     |     grey      |
 | onClose                | Todo when close                                     | function  |     null      |
 | onStart                | Todo when start                                     | function  |     null      |
+| onStorySeen            | Called each time story is seen                      | function  |     null      |
 | duration               | Per story duration seconds                          | number    |      10       |
 | swipeText              | Text of swipe component                             | string    |   Swipe Up    |
 | customSwipeUpComponent | For use custom component for swipe area             | component |               |
@@ -50,6 +51,8 @@ import InstaStory from 'react-native-insta-story';
 ## Usage
 
 ```javascript
+import InstaStory from 'react-native-insta-story';
+
 const data = [
   {
     user_id: 1,
@@ -95,11 +98,35 @@ const data = [
   },
 ];
 
+const [seenStories, setSeenStories] = useState(new Set());
+const updateSeenStories = ({ story: { story_id } }) => {
+  setSeenStories((prevSet) => {
+    prevSet.add(storyId);
+    return prevSet;
+  });
+};
+
+const handleSeenStories = async (item) => {
+  console.log(item);
+  const storyIds = [];
+  seenStories.forEach((storyId) => {
+    if (storyId) storyIds.push(storyId);
+  });
+  if (storyIds.length > 0) {
+    await fetch('myApi', {
+      method: 'POST',
+      body: JSON.stringify({ storyIds }),
+    });
+    seenStories.clear();
+  }
+};
+
 <InstaStory
   data={data}
   duration={10}
   onStart={(item) => console.log(item)}
-  onClose={(item) => console.log('close: ', item)}
+  onClose={handleSeenStories}
+  onStorySeen={updateSeenStories}
   customSwipeUpComponent={
     <View>
       <Text>Swipe</Text>

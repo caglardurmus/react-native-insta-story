@@ -23,12 +23,13 @@ export const Story = ({
   avatarSize,
   showAvatarText,
   avatarTextStyle,
+  onStorySeen,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
-  const cube = useRef<any>();
+  const cube = useRef<CubeNavigationHorizontal | AndroidCubeEffect>();
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
@@ -95,6 +96,7 @@ export const Story = ({
         <StoryListItem
           duration={duration * 1000}
           key={i}
+          userId={x.user_id}
           profileName={x.user_name}
           profileImage={x.user_image}
           stories={x.stories}
@@ -110,6 +112,7 @@ export const Story = ({
             }
           }}
           index={i}
+          onStorySeen={onStorySeen}
         />
       );
     });
@@ -118,7 +121,7 @@ export const Story = ({
     if (Platform.OS == 'ios') {
       return (
         <CubeNavigationHorizontal
-          ref={cube}
+          ref={cube as React.LegacyRef<CubeNavigationHorizontal>}
           callBackAfterSwipe={(x: any) => {
             if (x != currentPage) {
               setCurrentPage(parseInt(x));
@@ -131,7 +134,7 @@ export const Story = ({
     } else {
       return (
         <AndroidCubeEffect
-          ref={cube}
+          ref={cube as React.LegacyRef<AndroidCubeEffect>}
           callBackAfterSwipe={(x: any) => {
             if (x != currentPage) {
               setCurrentPage(parseInt(x));
