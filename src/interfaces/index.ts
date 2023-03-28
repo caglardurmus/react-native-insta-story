@@ -22,6 +22,11 @@ export interface IUserStoryItem {
   finish?: number;
 }
 
+/** User with one story representing the current story on screen */
+export interface IUserSingleStory extends Omit<IUserStory, 'stories'> {
+  story: IUserStoryItem;
+}
+
 interface SharedCircleListProps {
   handleStoryItemPress: (item: IUserStory, index?: number) => void;
   /** The color of the avatar border when unseen */
@@ -46,8 +51,11 @@ export interface StoryCircleListItemProps extends SharedCircleListProps {
 
 // TODO: add JSDoc comments where necessary
 export interface StoryListItemProps {
+  /** Index of story  */
   index: number;
   key: number;
+  /** ID of the user - IUserStory.user_id */
+  userId: number;
   /** Name of the user - IUserStory.user_name */
   profileName: string;
   /** Profile picture of the user - IUserStory.user_image */
@@ -62,6 +70,11 @@ export interface StoryListItemProps {
   customCloseComponent?: ReactNode;
   onFinish?: (props?: any) => any;
   onClosePress: (props?: any) => any;
+  /**
+   * Function which will get called every time a story is seen. Will be called
+   * every time the user swipes backwards and forwards to that screen.
+   */
+  onStorySeen?: (userStory: IUserSingleStory) => any;
   stories: IUserStoryItem[];
   currentPage: number;
 }
@@ -83,6 +96,11 @@ export interface StoryProps {
   onClose?: (props?: IUserStory) => any;
   /** Called when story item is loaded */
   onStart?: (props?: IUserStory) => any;
+  /**
+   * Function which will get called every time a story is seen. Will be called
+   * every time the user swipes backwards and forwards to that screen.
+   */
+  onStorySeen?: (userStory: IUserSingleStory) => any;
   /** Text of the swipe up button */
   swipeText?: string;
   /** A custom swipe up component */
