@@ -113,7 +113,27 @@ const data = [
   },
 ];
 
+<InstaStory
+  data={data}
+  duration={10}
+/>
+
+
+```
+
+### Custom components
+
+The render component functions are all passed `item` as a prop which is the current [IUserStoryItem](./src/interfaces/index.ts#L15) being displayed.
+
+`renderSwipeUpComponent` and `renderCloseComponent` are both passed the `onPress` prop which is a function that closes the current story item modal and calls the `IUserStoryItem.onPress` function. `onPress` is passed so you could add other buttons. This is useful when adding a button which has it's own `onPress` prop, eg. a share button, next to the close button.
+
+`renderTextComponent` is passed the `profileName` of the current story's user.
+
+```javascript
+const data = [...sameDataAsBasicExampleAbove];
+
 const [seenStories, setSeenStories] = useState(new Set());
+
 const updateSeenStories = ({ story: { story_id } }) => {
   setSeenStories((prevSet) => {
     prevSet.add(storyId);
@@ -136,18 +156,6 @@ const handleSeenStories = async (item) => {
   }
 };
 
-```
-
-### Custom components
-
-The render component functions are all passed `item` as a prop which is the current [IUserStoryItem](./src/interfaces/index.ts#L15) being displayed.
-
-`renderSwipeUpComponent` and `renderCloseComponent` are both passed the `onPress` prop which is a function that closes the current story item modal and calls the `IUserStoryItem.onPress` function. `onPress` is passed so you could add other buttons. This is useful when adding a button which has it's own `onPress` prop, eg. a share button, next to the close button.
-
-`renderTextComponent` is passed the `profileName` of the current story's user.
-
-```javascript
-const data = [...sameDataAsBasicExampleAbove];
 <InstaStory
   data={data}
   duration={10}
@@ -167,7 +175,5 @@ const data = [...sameDataAsBasicExampleAbove];
     </View>
   )}
   style={{ marginTop: 30 }}
-/>;
+/>
 ```
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](http://www.bynogame.com/tr/destekle/caglardurmus)
