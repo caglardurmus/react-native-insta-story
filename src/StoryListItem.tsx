@@ -36,6 +36,13 @@ export const StoryListItem = ({
   renderCloseComponent,
   renderSwipeUpComponent,
   renderTextComponent,
+  loadedAnimationBarStyle,
+  unloadedAnimationBarStyle,
+  animationBarContainerStyle,
+  storyUserContainerStyle,
+  storyImageStyle,
+  storyAvatarImageStyle,
+  storyContainerStyle,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -185,17 +192,14 @@ export const StoryListItem = ({
       onSwipeUp={onSwipeUp}
       onSwipeDown={onSwipeDown}
       config={config}
-      style={{
-        flex: 1,
-        backgroundColor: 'black',
-      }}
+      style={[styles.container, storyContainerStyle]}
     >
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
           <Image
             onLoadEnd={() => start()}
             source={{ uri: content[current].story_image }}
-            style={styles.image}
+            style={[styles.image, storyImageStyle]}
           />
           {load && (
             <View style={styles.spinnerContainer}>
@@ -204,25 +208,36 @@ export const StoryListItem = ({
           )}
         </View>
       </SafeAreaView>
-      <View style={{ flexDirection: 'column', flex: 1 }}>
-        <View style={styles.animationBarContainer}>
+      <View style={styles.flexCol}>
+        <View
+          style={[styles.animationBarContainer, animationBarContainerStyle]}
+        >
           {content.map((index, key) => {
             return (
-              <View key={key} style={styles.animationBackground}>
+              <View
+                key={key}
+                style={[styles.animationBackground, unloadedAnimationBarStyle]}
+              >
                 <Animated.View
-                  style={{
-                    flex: current == key ? progress : content[key].finish,
-                    height: 2,
-                    backgroundColor: 'white',
-                  }}
+                  style={[
+                    {
+                      flex: current == key ? progress : content[key].finish,
+                      height: 2,
+                      backgroundColor: 'white',
+                    },
+                    loadedAnimationBarStyle,
+                  ]}
                 />
               </View>
             );
           })}
         </View>
-        <View style={styles.userContainer}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image style={styles.avatarImage} source={{ uri: profileImage }} />
+        <View style={[styles.userContainer, storyUserContainerStyle]}>
+          <View style={styles.flexRowCenter}>
+            <Image
+              style={[styles.avatarImage, storyAvatarImageStyle]}
+              source={{ uri: profileImage }}
+            />
             {typeof renderTextComponent === 'function' ? (
               renderTextComponent({
                 item: content[current],
@@ -246,7 +261,7 @@ export const StoryListItem = ({
                   }
                 }}
               >
-                <Text style={{ color: 'white' }}>X</Text>
+                <Text style={styles.whiteText}>X</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -265,7 +280,7 @@ export const StoryListItem = ({
               }
             }}
           >
-            <View style={{ flex: 1 }} />
+            <View style={styles.flex} />
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             onPressIn={() => progress.stopAnimation()}
@@ -280,7 +295,7 @@ export const StoryListItem = ({
               }
             }}
           >
-            <View style={{ flex: 1 }} />
+            <View style={styles.flex} />
           </TouchableWithoutFeedback>
         </View>
       </View>
@@ -295,8 +310,8 @@ export const StoryListItem = ({
           onPress={onSwipeUp}
           style={styles.swipeUpBtn}
         >
-          <Text style={{ color: 'white', marginTop: 5 }}></Text>
-          <Text style={{ color: 'white', marginTop: 5 }}>{swipeText}</Text>
+          <Text style={styles.swipeText}></Text>
+          <Text style={styles.swipeText}>{swipeText}</Text>
         </TouchableOpacity>
       )}
     </GestureRecognizer>
@@ -313,6 +328,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  flex: {
+    flex: 1,
+  },
+  flexCol: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  flexRowCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   image: {
     width: width,
@@ -379,5 +405,12 @@ const styles = StyleSheet.create({
     left: 0,
     alignItems: 'center',
     bottom: Platform.OS == 'ios' ? 20 : 50,
+  },
+  whiteText: {
+    color: 'white',
+  },
+  swipeText: {
+    color: 'white',
+    marginTop: 5,
   },
 });

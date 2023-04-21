@@ -255,24 +255,31 @@ export default class CubeNavigationHorizontal extends React.Component {
 
     return (
       <Animated.View
-        style={[{ position: 'absolute' }]}
+        style={styles.absolute}
         ref={(view) => {
           this._scrollView = view;
         }}
         {...this._panResponder.panHandlers}
       >
-        <Animated.View
-          style={[
-            { backgroundColor: '#000', position: 'absolute', width, height },
-            expandStyle,
-          ]}
-        >
+        <Animated.View style={[styles.blackFullScreen, expandStyle]}>
           {this.props.children.map(this._renderChild)}
         </Animated.View>
       </Animated.View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  absolute: {
+    position: 'absolute',
+  },
+  blackFullScreen: {
+    backgroundColor: '#000',
+    position: 'absolute',
+    width,
+    height,
+  },
+});
 
 CubeNavigationHorizontal.propTypes = {
   callBackAfterSwipe: PropTypes.func,

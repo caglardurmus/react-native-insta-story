@@ -1,5 +1,10 @@
-import { ReactNode } from 'react';
-import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import {
+  ColorValue,
+  FlatListProps,
+  ImageStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type NextOrPrevious = 'next' | 'previous';
 
@@ -24,8 +29,17 @@ export interface IUserStoryItem<T = Record<string, any>> {
   finish?: number;
 }
 
+export type CircleListViewFlatListProps = Omit<
+  FlatListProps<any>,
+  'renderItem' | 'data' | 'keyExtractor'
+>;
+
 export interface CustomButtonRenderProps<T = Record<string, any>> {
+  /**
+   * Function that closes the story modal and calls `IUserStoryItem.onPress`
+   */
   onPress: (props?: any) => any;
+  /** The current story item */
   item: IUserStoryItem<T>;
 }
 
@@ -34,7 +48,9 @@ export type RenderCustomButton<T = Record<string, any>> = (
 ) => React.ReactNode;
 
 export interface TextRenderProps<T = Record<string, any>> {
+  /** Equivalent to `IUserStory.user_name` */
   profileName: string;
+  /** The current item */
   item: IUserStoryItem<T>;
 }
 
@@ -46,16 +62,33 @@ interface SharedCircleListProps {
   unPressedBorderColor?: ColorValue;
   /** The color of the avatar border when seen */
   pressedBorderColor?: ColorValue;
+  /** The color of the avatar text when unseen */
+  unPressedAvatarTextColor?: TextStyle['color'];
+  /** The color of the avatar text when seen */
+  pressedAvatarTextColor?: TextStyle['color'];
   /** A custom size for the avatar rendered in the FlatList */
   avatarSize?: number;
   /** Display username below avatars in FlatList */
   showText?: boolean;
   /** Username text style below the avatar */
-  textStyle?: TextStyle;
+  avatarTextStyle?: TextStyle;
+  /** Custom styles for the avatar image */
+  avatarImageStyle?: ImageStyle;
+  /** Custom styles for each individual avatar wrapper */
+  avatarWrapperStyle?: ViewStyle;
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
   data: IUserStory[];
+  /**
+   * Custom props for the avatar FlatList.
+   *
+   * Omitted props:
+   * - `data`
+   * - `renderItem`
+   * - `keyExtractor`
+   */
+  avatarFlatListProps?: CircleListViewFlatListProps;
 }
 
 export interface StoryCircleListItemProps extends SharedCircleListProps {
@@ -91,8 +124,23 @@ export interface StoryListItemProps {
   renderTextComponent?: RenderCustomText;
   onFinish?: (props?: any) => any;
   onClosePress: (props?: any) => any;
+  /** An array of stories from one user */
   stories: IUserStoryItem[];
   currentPage: number;
+  /** Custom style for the animation bar when it is loading */
+  loadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bar when unloaded */
+  unloadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bars container */
+  animationBarContainerStyle?: ViewStyle;
+  /** Custom styles for the user and close button container */
+  storyUserContainerStyle?: ViewStyle;
+  /** Custom styles for the main story item image */
+  storyImageStyle?: ImageStyle;
+  /** Custom styles for the user avatar on the story item */
+  storyAvatarImageStyle?: ImageStyle;
+  /** Custom styles for the main story item container */
+  storyContainerStyle?: ViewStyle;
 }
 
 export interface StoryProps {
@@ -108,6 +156,10 @@ export interface StoryProps {
   unPressedBorderColor?: TextStyle['color'];
   /** The color of the avatar border when seen */
   pressedBorderColor?: TextStyle['color'];
+  /** The color of the avatar text when unseen */
+  unPressedAvatarTextColor?: TextStyle['color'];
+  /** The color of the avatar text when seen */
+  pressedAvatarTextColor?: TextStyle['color'];
   /** Called when story item close button is pressed */
   onClose?: (props?: IUserStory) => any;
   /** Called when story item is loaded */
@@ -134,4 +186,31 @@ export interface StoryProps {
   showAvatarText?: boolean;
   /** Username text style below the avatar */
   avatarTextStyle?: TextStyle;
+  /** Custom styles for the avatar image */
+  avatarImageStyle?: ImageStyle;
+  /** Custom styles for each individual avatar wrapper */
+  avatarWrapperStyle?: ViewStyle;
+  /**
+   * Custom props for the avatar FlatList.
+   *
+   * Omitted props:
+   * - `data`
+   * - `renderItem`
+   * - `keyExtractor`
+   */
+  avatarFlatListProps?: CircleListViewFlatListProps;
+  /** Custom style for the animation bar when it is loading */
+  loadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bar when unloaded */
+  unloadedAnimationBarStyle?: ViewStyle;
+  /** Custom styles for the animation bars container */
+  animationBarContainerStyle?: ViewStyle;
+  /** Custom styles for the user and close button container */
+  storyUserContainerStyle?: ViewStyle;
+  /** Custom styles for the main story item image */
+  storyImageStyle?: ImageStyle;
+  /** Custom styles for the user avatar on the story item */
+  storyAvatarImageStyle?: ImageStyle;
+  /** Custom styles for the main story item container */
+  storyContainerStyle?: ViewStyle;
 }

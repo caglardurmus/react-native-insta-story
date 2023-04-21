@@ -255,24 +255,31 @@ export default class AndroidCubeEffect extends React.Component {
 
     return (
       <Animated.View
-        style={[{ flex: 1 }]}
+        style={styles.flex}
         ref={(view) => {
           this._scrollView = view;
         }}
         {...this._panResponder.panHandlers}
       >
-        <Animated.View
-          style={[
-            { backgroundColor: '#000', position: 'absolute', width, height },
-            expandStyle,
-          ]}
-        >
+        <Animated.View style={[styles.blackFullScreen, expandStyle]}>
           {this.props.children.map(this._renderChild)}
         </Animated.View>
       </Animated.View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+  blackFullScreen: {
+    backgroundColor: '#000',
+    position: 'absolute',
+    width,
+    height,
+  },
+});
 
 AndroidCubeEffect.propTypes = {
   callBackAfterSwipe: PropTypes.func,
