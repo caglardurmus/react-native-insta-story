@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  I18nManager,
   PanResponder,
   Animated,
   Dimensions,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+const pagesDirectionFactor = I18nManager.isRTL ? 1 : -1;
 
 const PERSPECTIVE = Platform.OS === 'ios' ? 2.38 : 2.2;
 const TR_POSITION = Platform.OS === 'ios' ? 2 : 1.4;
@@ -17,7 +19,9 @@ export default class AndroidCubeEffect extends React.Component {
   constructor(props) {
     super(props);
 
-    this.pages = this.props.children.map((child, index) => width * -index);
+    this.pages = this.props.children.map(
+      (child, index) => width * pagesDirectionFactor * index,
+    );
     this.fullWidth = (this.props.children.length - 1) * width;
 
     this.state = {
@@ -136,7 +140,7 @@ export default class AndroidCubeEffect extends React.Component {
 
   _getTransformsFor = (i) => {
     let scrollX = this._animatedValue.x;
-    let pageX = -width * i;
+    let pageX = width * pagesDirectionFactor * i;
 
     let translateX = scrollX.interpolate({
       inputRange: [pageX - width, pageX, pageX + width],
