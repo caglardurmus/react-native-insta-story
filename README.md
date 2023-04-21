@@ -41,13 +41,16 @@ import InstaStory from 'react-native-insta-story';
 | onStart                | Todo when start                                     | function  |     null      |
 | duration               | Per story duration seconds                          | number    |      10       |
 | swipeText              | Text of swipe component                             | string    |   Swipe Up    |
-| customSwipeUpComponent | For use custom component for swipe area             | component |               |
-| customCloseComponent   | For use custom component for close button           | component |               |
+| renderSwipeUpComponent | Render a custom swipe up component                  | function  |               |
+| renderCloseComponent   | Render a custom close button                        | function  |               |
+| renderTextComponent    | Render custom avatar text component                 | function  |               |
 | avatarSize             | Size of avatar circle                               | number    |      60       |
 | showAvatarText         | For show or hide avatar text.                       | bool      |     true      |
 | textStyle              | For avatar text style                               | TextStyle |               |
 
 ## Usage
+
+### Basic
 
 ```javascript
 const data = [
@@ -100,11 +103,37 @@ const data = [
   duration={10}
   onStart={(item) => console.log(item)}
   onClose={(item) => console.log('close: ', item)}
-  customSwipeUpComponent={
-    <View>
-      <Text>Swipe</Text>
+  style={{ marginTop: 30 }}
+/>;
+```
+
+### Custom components
+
+The render component functions are all passed `item` as a prop which is the current [IUserStoryItem](./src/interfaces/index.ts#L15) being displayed.
+
+`renderSwipeUpComponent` and `renderCloseComponent` are both passed the `onPress` prop which is a function that closes the current story item modal and calls the `IUserStoryItem.onPress` function. `onPress` is passed so you could add other buttons. This is useful when adding a button which has it's own `onPress` prop, eg. a share button, next to the close button.
+
+`renderTextComponent` is passed the `profileName` of the current story's user.
+
+```javascript
+const data = [...sameDataAsBasicExampleAbove];
+<InstaStory
+  data={data}
+  duration={10}
+  onStart={(item) => console.log(item)}
+  onClose={(item) => console.log('close: ', item)}
+  renderCloseComponent={({ item, onPress }) => (
+    <View style={{ flexDirection: 'row' }}>
+      <Button onPress={shareStory}>Share</Button>
+      <Button onPress={onPress}>X</Button>
     </View>
-  }
+  )}
+  renderTextComponent={({ item, profileName }) => (
+    <View>
+      <Text>{profileName}</Text>
+      <Text>{item.customProps?.yourCustomProp}</Text>
+    </View>
+  )}
   style={{ marginTop: 30 }}
 />;
 ```

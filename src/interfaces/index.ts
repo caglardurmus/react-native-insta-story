@@ -3,24 +3,42 @@ import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export type NextOrPrevious = 'next' | 'previous';
 
-export interface IUserStory {
+export interface IUserStory<T = Record<string, any>> {
   user_id: number;
   user_image: string | undefined;
   user_name: string;
-  stories: IUserStoryItem[];
+  stories: IUserStoryItem<T>[];
   /** INTERNAL USE ONLY */
   seen?: boolean;
 }
 
-export interface IUserStoryItem {
+export interface IUserStoryItem<T = Record<string, any>> {
   story_id: number;
   story_image: string | undefined;
   /** Function that gets called when the swipe up button is pressed */
   onPress?: (props?: any) => any;
   swipeText?: string;
+  /** Add your own custom props to access in the custom render methods */
+  customProps?: T;
   /** FOR INTERNAL USE ONLY */
   finish?: number;
 }
+
+export interface CustomButtonRenderProps<T = Record<string, any>> {
+  onPress: (props?: any) => any;
+  item: IUserStoryItem<T>;
+}
+
+export type RenderCustomButton<T = Record<string, any>> = (
+  props: CustomButtonRenderProps<T>,
+) => React.ReactNode;
+
+export interface TextRenderProps<T = Record<string, any>> {
+  profileName: string;
+  item: IUserStoryItem<T>;
+}
+
+export type RenderCustomText = (props: TextRenderProps) => React.ReactNode;
 
 interface SharedCircleListProps {
   handleStoryItemPress: (item: IUserStory, index?: number) => void;
@@ -56,10 +74,21 @@ export interface StoryListItemProps {
   duration: number;
   /** Text of the swipe up button */
   swipeText?: string;
-  /** A custom swipe up component */
-  customSwipeUpComponent?: ReactNode;
-  /** A custom close component */
-  customCloseComponent?: ReactNode;
+  /**
+   * Callback which returns a custom React Element to use as the
+   * swipeUpComponent. IUserStoryItem is passed as an arg.
+   */
+  renderSwipeUpComponent?: RenderCustomButton;
+  /**
+   * Callback which returns a custom React Element to use as the
+   * closeComponent. IUserStoryItem is passed as an arg.
+   */
+  renderCloseComponent?: RenderCustomButton;
+  /**
+   * Callback which returns a custom React Element to use as the textComponent.
+   * IUserStoryItem and username are passed as args.
+   */
+  renderTextComponent?: RenderCustomText;
   onFinish?: (props?: any) => any;
   onClosePress: (props?: any) => any;
   stories: IUserStoryItem[];
@@ -85,10 +114,22 @@ export interface StoryProps {
   onStart?: (props?: IUserStory) => any;
   /** Text of the swipe up button */
   swipeText?: string;
-  /** A custom swipe up component */
-  customSwipeUpComponent?: ReactNode;
-  /** A custom close component */
-  customCloseComponent?: ReactNode;
+  /**
+   * Callback which returns a custom React Element to use as the
+   * swipeUpComponent. IUserStoryItem is passed as an arg.
+   */
+  renderSwipeUpComponent?: RenderCustomButton;
+  /**
+   * Callback which returns a custom React Element to use as the
+   * closeComponent. IUserStoryItem is passed as an arg.
+   */
+  renderCloseComponent?: RenderCustomButton;
+  /**
+   * Callback which returns a custom React Element to use as the textComponent
+   * next to the small avatar on the story item page. IUserStoryItem and
+   * username are passed as args.
+   */
+  renderTextComponent?: RenderCustomText;
   /** Display username below avatars in FlatList */
   showAvatarText?: boolean;
   /** Username text style below the avatar */
