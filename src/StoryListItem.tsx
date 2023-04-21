@@ -26,6 +26,7 @@ const { width, height } = Dimensions.get('window');
 export const StoryListItem = ({
   index,
   key,
+  userId,
   profileImage,
   profileName,
   duration,
@@ -33,6 +34,7 @@ export const StoryListItem = ({
   onClosePress,
   stories,
   currentPage,
+  onStorySeen,
   renderCloseComponent,
   renderSwipeUpComponent,
   renderTextComponent,
@@ -185,6 +187,17 @@ export const StoryListItem = ({
 
   const swipeText =
     content?.[current]?.swipeText || props.swipeText || 'Swipe Up';
+
+  React.useEffect(() => {
+    if (onStorySeen && currentPage === index) {
+      onStorySeen({
+        user_id: userId,
+        user_image: profileImage,
+        user_name: profileName,
+        story: content[current],
+      });
+    }
+  }, [currentPage, index, onStorySeen, current]);
 
   return (
     <GestureRecognizer
