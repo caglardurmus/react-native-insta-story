@@ -1,5 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Dimensions, View, Platform } from 'react-native';
+import { Dimensions, View, Platform, StyleSheet } from 'react-native';
 import Modal from 'react-native-modalbox';
 
 import StoryListItem from './StoryListItem';
@@ -9,21 +9,36 @@ import AndroidCubeEffect from './components/AndroidCubeEffect';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
 import { IUserStory, NextOrPrevious, StoryProps } from './interfaces';
 
+const { height, width } = Dimensions.get('window');
+
 export const Story = ({
   data,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   style,
   onStart,
   onClose,
   duration,
   swipeText,
-  customSwipeUpComponent,
-  customCloseComponent,
   avatarSize,
   showAvatarText,
   avatarTextStyle,
   onStorySeen,
+  renderCloseComponent,
+  renderSwipeUpComponent,
+  renderTextComponent,
+  loadedAnimationBarStyle,
+  unloadedAnimationBarStyle,
+  animationBarContainerStyle,
+  storyUserContainerStyle,
+  storyImageStyle,
+  storyAvatarImageStyle,
+  storyContainerStyle,
+  avatarImageStyle,
+  avatarWrapperStyle,
+  avatarFlatListProps,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -103,8 +118,9 @@ export const Story = ({
           currentPage={currentPage}
           onFinish={onStoryFinish}
           swipeText={swipeText}
-          customSwipeUpComponent={customSwipeUpComponent}
-          customCloseComponent={customCloseComponent}
+          renderSwipeUpComponent={renderSwipeUpComponent}
+          renderCloseComponent={renderCloseComponent}
+          renderTextComponent={renderTextComponent}
           onClosePress={() => {
             setIsModalOpen(false);
             if (onClose) {
@@ -113,6 +129,13 @@ export const Story = ({
           }}
           index={i}
           onStorySeen={onStorySeen}
+          unloadedAnimationBarStyle={unloadedAnimationBarStyle}
+          animationBarContainerStyle={animationBarContainerStyle}
+          loadedAnimationBarStyle={loadedAnimationBarStyle}
+          storyUserContainerStyle={storyUserContainerStyle}
+          storyImageStyle={storyImageStyle}
+          storyAvatarImageStyle={storyAvatarImageStyle}
+          storyContainerStyle={storyContainerStyle}
         />
       );
     });
@@ -156,16 +179,17 @@ export const Story = ({
           avatarSize={avatarSize}
           unPressedBorderColor={unPressedBorderColor}
           pressedBorderColor={pressedBorderColor}
+          unPressedAvatarTextColor={unPressedAvatarTextColor}
+          pressedAvatarTextColor={pressedAvatarTextColor}
           showText={showAvatarText}
-          textStyle={avatarTextStyle}
+          avatarTextStyle={avatarTextStyle}
+          avatarWrapperStyle={avatarWrapperStyle}
+          avatarImageStyle={avatarImageStyle}
+          avatarFlatListProps={avatarFlatListProps}
         />
       </View>
       <Modal
-        style={{
-          flex: 1,
-          height: Dimensions.get('window').height,
-          width: Dimensions.get('window').width,
-        }}
+        style={styles.modal}
         isOpen={isModalOpen}
         onClosed={() => setIsModalOpen(false)}
         position="center"
@@ -179,6 +203,14 @@ export const Story = ({
     </Fragment>
   );
 };
+
+const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    height,
+    width,
+  },
+});
 
 export default Story;
 

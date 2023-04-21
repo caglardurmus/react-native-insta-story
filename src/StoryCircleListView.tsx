@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import StoryCircleListItem from './StoryCircleListItem';
 import { StoryCircleListViewProps } from 'src/interfaces';
 
@@ -8,36 +8,54 @@ const StoryCircleListView = ({
   handleStoryItemPress,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   avatarSize,
   showText,
-  textStyle,
+  avatarTextStyle,
+  avatarImageStyle,
+  avatarWrapperStyle,
+  avatarFlatListProps,
 }: StoryCircleListViewProps) => {
   return (
-    <View>
-      <FlatList
-        keyExtractor={(_item, index) => index.toString()}
-        data={data}
-        horizontal
-        style={{ paddingLeft: 12 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        ListFooterComponent={<View style={{ flex: 1, width: 8 }} />}
-        renderItem={({ item, index }) => (
-          <StoryCircleListItem
-            avatarSize={avatarSize}
-            handleStoryItemPress={() =>
-              handleStoryItemPress && handleStoryItemPress(item, index)
-            }
-            unPressedBorderColor={unPressedBorderColor}
-            pressedBorderColor={pressedBorderColor}
-            item={item}
-            showText={showText}
-            textStyle={textStyle}
-          />
-        )}
-      />
-    </View>
+    <FlatList
+      keyExtractor={(_item, index) => index.toString()}
+      data={data}
+      horizontal
+      style={styles.paddingLeft}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      ListFooterComponent={<View style={styles.footer} />}
+      renderItem={({ item, index }) => (
+        <StoryCircleListItem
+          avatarSize={avatarSize}
+          handleStoryItemPress={() =>
+            handleStoryItemPress && handleStoryItemPress(item, index)
+          }
+          unPressedBorderColor={unPressedBorderColor}
+          pressedBorderColor={pressedBorderColor}
+          unPressedAvatarTextColor={unPressedAvatarTextColor}
+          pressedAvatarTextColor={pressedAvatarTextColor}
+          item={item}
+          showText={showText}
+          avatarTextStyle={avatarTextStyle}
+          avatarImageStyle={avatarImageStyle}
+          avatarWrapperStyle={avatarWrapperStyle}
+        />
+      )}
+      {...avatarFlatListProps}
+    />
   );
 };
+
+const styles = StyleSheet.create({
+  paddingLeft: {
+    paddingLeft: 12,
+  },
+  footer: {
+    flex: 1,
+    width: 8,
+  },
+});
 
 export default StoryCircleListView;
