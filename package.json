@@ -3,11 +3,11 @@
   "title": "React Native Insta Story",
   "version": "1.1.8",
   "description": "Story component for React Native.",
-  "main": "index.js",
+  "main": "index.ts",
   "files": [
     "README.md",
     "android",
-    "index.js",
+    "index.ts",
     "ios",
     "src",
     "react-native-insta-story.podspec",
