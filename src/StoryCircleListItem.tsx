@@ -17,10 +17,14 @@ const StoryCircleListItem = ({
   item,
   unPressedBorderColor,
   pressedBorderColor,
+  unPressedAvatarTextColor,
+  pressedAvatarTextColor,
   avatarSize = 60,
   showText,
-  textStyle,
+  avatarTextStyle,
   handleStoryItemPress,
+  avatarImageStyle,
+  avatarWrapperStyle,
 }: StoryCircleListItemProps) => {
   const [isPressed, setIsPressed] = useState(item?.seen);
 
@@ -51,6 +55,7 @@ const StoryCircleListItem = ({
             height: avatarWrapperSize,
             width: avatarWrapperSize,
           },
+          avatarWrapperStyle,
           !isPressed
             ? {
                 borderColor: unPressedBorderColor ?? 'red',
@@ -61,11 +66,14 @@ const StoryCircleListItem = ({
         ]}
       >
         <Image
-          style={{
-            height: avatarSize,
-            width: avatarSize,
-            borderRadius: 100,
-          }}
+          style={[
+            {
+              height: avatarSize,
+              width: avatarSize,
+              borderRadius: 100,
+            },
+            avatarImageStyle,
+          ]}
           source={{ uri: item.user_image }}
           defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
         />
@@ -74,11 +82,16 @@ const StoryCircleListItem = ({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={{
-            width: avatarWrapperSize,
-            ...styles.text,
-            ...textStyle,
-          }}
+          style={[
+            {
+              width: avatarWrapperSize,
+              ...styles.text,
+              ...avatarTextStyle,
+            },
+            isPressed
+              ? { color: pressedAvatarTextColor || undefined }
+              : { color: unPressedAvatarTextColor || undefined },
+          ]}
         >
           {item.user_name}
         </Text>
