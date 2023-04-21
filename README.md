@@ -32,21 +32,33 @@ import InstaStory from 'react-native-insta-story';
 
 ## Props
 
-| Name                   | Description                                         | Type      | Default Value |
-| :--------------------- | :-------------------------------------------------- | :-------- | :-----------: |
-| data                   | Array of IUserStory. You can check from interfaces. | object    |               |
-| unPressedBorderColor   | Unpressed border color of profile circle            | color     |      red      |
-| pressedBorderColor     | Pressed border color of profile circle              | color     |     grey      |
-| onClose                | Todo when close                                     | function  |     null      |
-| onStart                | Todo when start                                     | function  |     null      |
-| duration               | Per story duration seconds                          | number    |      10       |
-| swipeText              | Text of swipe component                             | string    |   Swipe Up    |
-| renderSwipeUpComponent | Render a custom swipe up component                  | function  |               |
-| renderCloseComponent   | Render a custom close button                        | function  |               |
-| renderTextComponent    | Render custom avatar text component                 | function  |               |
-| avatarSize             | Size of avatar circle                               | number    |      60       |
-| showAvatarText         | For show or hide avatar text.                       | bool      |     true      |
-| textStyle              | For avatar text style                               | TextStyle |               |
+| Name                       | Description                                         | Type          | Default Value |
+| :------------------------- | :-------------------------------------------------- | :------------ | :-----------: |
+| data                       | Array of IUserStory. You can check from interfaces. | object        |               |
+| unPressedBorderColor       | Unpressed border color of profile circle            | color         |      red      |
+| pressedBorderColor         | Pressed border color of profile circle              | color         |     grey      |
+| unPressedAvatarTextColor   | Unpressed avatar text color                         | color         |      red      |
+| pressedAvatarTextColor     | Pressed avatar text color                           | color         |     grey      |
+| onClose                    | Todo when close                                     | function      |     null      |
+| onStart                    | Todo when start                                     | function      |     null      |
+| duration                   | Per story duration seconds                          | number        |      10       |
+| swipeText                  | Text of swipe component                             | string        |   Swipe Up    |
+| renderSwipeUpComponent     | Render a custom swipe up component                  | function      |               |
+| renderCloseComponent       | Render a custom close button                        | function      |               |
+| renderTextComponent        | Render custom avatar text component                 | function      |               |
+| avatarSize                 | Size of avatar circle                               | number        |      60       |
+| showAvatarText             | For show or hide avatar text.                       | bool          |     true      |
+| avatarTextStyle            | For avatar text style                               | TextStyle     |               |
+| avatarImageStyle           | For avatar image style                              | ImageStyle    |               |
+| avatarWrapperStyle         | For individual avatar wrapper style                 | ViewStyle     |               |
+| avatarFlatListProps        | Horizontal avatar flat list props                   | FlatListProps |               |
+| loadedAnimationBarStyle    | For loaded animation bar style                      | ViewStyle     |               |
+| unloadedAnimationBarStyle  | For unloaded animation bar style                    | ViewStyle     |               |
+| animationBarContainerStyle | For animation bar container style                   | ViewStyle     |               |
+| storyUserContainerStyle    | For story item user container style                 | ViewStyle     |               |
+| storyImageStyle            | For story image style                               | ImageStyle    |               |
+| storyAvatarImageStyle      | For story avatar image style                        | ImageStyle    |               |
+| storyContainerStyle        | For story container style                           | ViewStyle     |               |
 
 ## Usage
 
