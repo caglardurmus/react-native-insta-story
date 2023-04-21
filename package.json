@@ -1,7 +1,7 @@
 {
   "name": "react-native-insta-story",
   "title": "React Native Insta Story",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Story component for React Native.",
   "main": "index.ts",
   "files": [
