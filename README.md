@@ -39,6 +39,7 @@ import InstaStory from 'react-native-insta-story';
 | pressedBorderColor         | Pressed border color of profile circle              | color         |     grey      |
 | unPressedAvatarTextColor   | Unpressed avatar text color                         | color         |      red      |
 | pressedAvatarTextColor     | Pressed avatar text color                           | color         |     grey      |
+| onStorySeen                | Called each time story is seen                      | function      |     null      |
 | onClose                    | Todo when close                                     | function      |     null      |
 | onStart                    | Todo when start                                     | function      |     null      |
 | duration                   | Per story duration seconds                          | number        |      10       |
@@ -65,6 +66,8 @@ import InstaStory from 'react-native-insta-story';
 ### Basic
 
 ```javascript
+import InstaStory from 'react-native-insta-story';
+
 const data = [
   {
     user_id: 1,
@@ -110,13 +113,29 @@ const data = [
   },
 ];
 
-<InstaStory
-  data={data}
-  duration={10}
-  onStart={(item) => console.log(item)}
-  onClose={(item) => console.log('close: ', item)}
-  style={{ marginTop: 30 }}
-/>;
+const [seenStories, setSeenStories] = useState(new Set());
+const updateSeenStories = ({ story: { story_id } }) => {
+  setSeenStories((prevSet) => {
+    prevSet.add(storyId);
+    return prevSet;
+  });
+};
+
+const handleSeenStories = async (item) => {
+  console.log(item);
+  const storyIds = [];
+  seenStories.forEach((storyId) => {
+    if (storyId) storyIds.push(storyId);
+  });
+  if (storyIds.length > 0) {
+    await fetch('myApi', {
+      method: 'POST',
+      body: JSON.stringify({ storyIds }),
+    });
+    seenStories.clear();
+  }
+};
+
 ```
 
 ### Custom components
@@ -133,7 +152,8 @@ const data = [...sameDataAsBasicExampleAbove];
   data={data}
   duration={10}
   onStart={(item) => console.log(item)}
-  onClose={(item) => console.log('close: ', item)}
+  onClose={handleSeenStories}
+  onStorySeen={updateSeenStories}
   renderCloseComponent={({ item, onPress }) => (
     <View style={{ flexDirection: 'row' }}>
       <Button onPress={shareStory}>Share</Button>
