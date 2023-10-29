@@ -68,12 +68,14 @@ export const Story = ({
     const seenIndex = dataState.indexOf(seen);
     if (seenIndex > 0) {
       if (!dataState[seenIndex]?.seen) {
-        let tempData = dataState;
-        dataState[seenIndex] = {
-          ...dataState[seenIndex],
-          seen: true,
+        setDataState((prevDataState: IUserStory[]) => {
+        let tempData = [...prevDataState];
+        tempData[seenIndex] = {
+            ...prevDataState[seenIndex],
+            seen: true,
         };
-        setDataState(tempData);
+        return tempData;
+      });
       }
     }
   };
