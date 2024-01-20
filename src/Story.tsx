@@ -53,7 +53,6 @@ export const Story = forwardRef<StoryInstance, StoryProps>(
       avatarImageStyle,
       avatarWrapperStyle,
       avatarFlatListProps,
-      hideAvatarFlatList,
     },
     ref,
   ) => {
@@ -195,22 +194,20 @@ export const Story = forwardRef<StoryInstance, StoryProps>(
     return (
       <Fragment>
         <View style={style}>
-          {!hideAvatarFlatList && (
-            <StoryCircleListView
-              handleStoryItemPress={_handleStoryItemPress}
-              data={dataState}
-              avatarSize={avatarSize}
-              unPressedBorderColor={unPressedBorderColor}
-              pressedBorderColor={pressedBorderColor}
-              unPressedAvatarTextColor={unPressedAvatarTextColor}
-              pressedAvatarTextColor={pressedAvatarTextColor}
-              showText={showAvatarText}
-              avatarTextStyle={avatarTextStyle}
-              avatarWrapperStyle={avatarWrapperStyle}
-              avatarImageStyle={avatarImageStyle}
-              avatarFlatListProps={avatarFlatListProps}
-            />
-          )}
+          <StoryCircleListView
+            handleStoryItemPress={_handleStoryItemPress}
+            data={dataState}
+            avatarSize={avatarSize}
+            unPressedBorderColor={unPressedBorderColor}
+            pressedBorderColor={pressedBorderColor}
+            unPressedAvatarTextColor={unPressedAvatarTextColor}
+            pressedAvatarTextColor={pressedAvatarTextColor}
+            showText={showAvatarText}
+            avatarTextStyle={avatarTextStyle}
+            avatarWrapperStyle={avatarWrapperStyle}
+            avatarImageStyle={avatarImageStyle}
+            avatarFlatListProps={avatarFlatListProps}
+          />
         </View>
         <Modal
           style={styles.modal}

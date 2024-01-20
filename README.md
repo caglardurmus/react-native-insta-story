@@ -64,10 +64,10 @@ import InstaStory from 'react-native-insta-story';
 
 ## Ref
 
-| Name       | Description      | Type     | Default Value |
-| :--------- | :--------------- | :------- | :-----------: |
-| openStory  | Open story item. | function |               |
-| closeStory | Close story item | function |               |
+| Name       | Description      | Type     |
+| :--------- | :--------------- | :------- |
+| openStory  | Open story item  | function |
+| closeStory | Close story item | function |
 
 ## Usage
 
