@@ -53,7 +53,7 @@ import InstaStory from 'react-native-insta-story';
 | avatarImageStyle           | For avatar image style                              | ImageStyle    |               |
 | avatarWrapperStyle         | For individual avatar wrapper style                 | ViewStyle     |               |
 | avatarFlatListProps        | Horizontal avatar flat list props                   | FlatListProps |               |
-| hideAvatarFlatList         | Disable display FlatList with avatars               | bool          |               |
+| showAvatarFlatList         | Display FlatList with avatars                       | bool          |     true      |
 | loadedAnimationBarStyle    | For loaded animation bar style                      | ViewStyle     |               |
 | unloadedAnimationBarStyle  | For unloaded animation bar style                    | ViewStyle     |               |
 | animationBarContainerStyle | For animation bar container style                   | ViewStyle     |               |

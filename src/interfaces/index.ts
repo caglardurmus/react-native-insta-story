@@ -217,8 +217,8 @@ export interface StoryProps {
    * - `keyExtractor`
    */
   avatarFlatListProps?: CircleListViewFlatListProps;
-  /** Disable display FlatList with avatars */
-  hideAvatarFlatList?: boolean;
+  /** Display FlatList with avatars */
+  showAvatarFlatList?: boolean;
   /** Custom style for the animation bar when it is loading */
   loadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bar when unloaded */
