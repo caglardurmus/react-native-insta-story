@@ -53,6 +53,7 @@ import InstaStory from 'react-native-insta-story';
 | avatarImageStyle           | For avatar image style                              | ImageStyle    |               |
 | avatarWrapperStyle         | For individual avatar wrapper style                 | ViewStyle     |               |
 | avatarFlatListProps        | Horizontal avatar flat list props                   | FlatListProps |               |
+| hideAvatarFlatList         | Disable display FlatList with avatars               | bool          |               |
 | loadedAnimationBarStyle    | For loaded animation bar style                      | ViewStyle     |               |
 | unloadedAnimationBarStyle  | For unloaded animation bar style                    | ViewStyle     |               |
 | animationBarContainerStyle | For animation bar container style                   | ViewStyle     |               |
@@ -60,6 +61,13 @@ import InstaStory from 'react-native-insta-story';
 | storyImageStyle            | For story image style                               | ImageStyle    |               |
 | storyAvatarImageStyle      | For story avatar image style                        | ImageStyle    |               |
 | storyContainerStyle        | For story container style                           | ViewStyle     |               |
+
+## Ref
+
+| Name       | Description      | Type     | Default Value |
+| :--------- | :--------------- | :------- | :-----------: |
+| openStory  | Open story item. | function |               |
+| closeStory | Close story item | function |               |
 
 ## Usage
 
@@ -113,12 +121,7 @@ const data = [
   },
 ];
 
-<InstaStory
-  data={data}
-  duration={10}
-/>
-
-
+<InstaStory data={data} duration={10} />;
 ```
 
 ### Custom components
@@ -175,5 +178,19 @@ const handleSeenStories = async (item) => {
     </View>
   )}
   style={{ marginTop: 30 }}
-/>
+/>;
+```
+
+### Ref
+
+```javascript
+const data = [...sameDataAsBasicExampleAbove];
+
+const ref = useRef < StoryInstance > null;
+
+ref.openStory(data[0], 0);
+
+ref.closeStory();
+
+<InstaStory ref={ref} data={data} duration={10} />;
 ```

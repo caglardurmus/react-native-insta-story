@@ -217,6 +217,8 @@ export interface StoryProps {
    * - `keyExtractor`
    */
   avatarFlatListProps?: CircleListViewFlatListProps;
+  /** Disable display FlatList with avatars */
+  hideAvatarFlatList?: boolean;
   /** Custom style for the animation bar when it is loading */
   loadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bar when unloaded */
@@ -231,4 +233,11 @@ export interface StoryProps {
   storyAvatarImageStyle?: ImageStyle;
   /** Custom styles for the main story item container */
   storyContainerStyle?: ViewStyle;
+}
+
+export interface StoryInstance {
+  /* Open story item */
+  openStory: (storyItem: IUserStory, storyItemIndex?: number) => void;
+  /* Close story item */
+  closeStory: () => void;
 }
