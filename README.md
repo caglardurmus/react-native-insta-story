@@ -136,7 +136,7 @@ const [seenStories, setSeenStories] = useState(new Set());
 
 const updateSeenStories = ({ story: { story_id } }) => {
   setSeenStories((prevSet) => {
-    prevSet.add(storyId);
+    prevSet.add(story_id);
     return prevSet;
   });
 };
