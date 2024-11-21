@@ -226,7 +226,6 @@ export default class CubeNavigationHorizontal extends React.Component {
           this._getTransformsFor(i, false),
         ]}
         key={`child- ${i}`}
-        pointerEvents={this.state.currentPage == i ? 'auto' : 'none'}
       >
         {element}
       </Animated.View>
