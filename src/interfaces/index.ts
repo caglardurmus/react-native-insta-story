@@ -232,4 +232,5 @@ export interface StoryProps {
   storyAvatarImageStyle?: ImageStyle;
   /** Custom styles for the main story item container */
   storyContainerStyle?: ViewStyle;
+  scrollViewStyle?: ViewStyle;
 }
