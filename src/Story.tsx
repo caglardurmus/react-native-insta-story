@@ -40,6 +40,7 @@ export const Story = ({
   avatarWrapperStyle,
   avatarFlatListProps,
   onAddNewStory,
+  scrollViewStyle,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -180,6 +181,7 @@ export const Story = ({
       <View style={style}>
         <StoryCircleListView
           handleStoryItemPress={_handleStoryItemPress}
+          style={scrollViewStyle}
           data={dataState}
           avatarSize={avatarSize}
           unPressedBorderColor={unPressedBorderColor}
