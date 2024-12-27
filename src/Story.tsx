@@ -39,6 +39,7 @@ export const Story = ({
   avatarImageStyle,
   avatarWrapperStyle,
   avatarFlatListProps,
+  onAddNewStory,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -48,6 +49,10 @@ export const Story = ({
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
+    if(index === 0 && onAddNewStory){
+      onAddNewStory();
+      return;
+    }
     const newData = dataState.slice(index);
     if (onStart) {
       onStart(item);
