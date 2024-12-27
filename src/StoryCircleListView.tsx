@@ -16,13 +16,14 @@ const StoryCircleListView = ({
   avatarImageStyle,
   avatarWrapperStyle,
   avatarFlatListProps,
+  style,
 }: StoryCircleListViewProps) => {
   return (
     <FlatList
       keyExtractor={(_item, index) => index.toString()}
       data={data}
       horizontal
-      style={styles.paddingLeft}
+      style={style}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       ListFooterComponent={<View style={styles.footer} />}
