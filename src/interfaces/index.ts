@@ -177,6 +177,7 @@ export interface StoryProps {
   onClose?: (props?: IUserStory) => any;
   /** Called when story item is loaded */
   onStart?: (props?: IUserStory) => any;
+  onAddNewStory?: () => any;
   /**
    * Function which will get called every time a story is seen. Will be called
    * every time the user swipes backwards and forwards to that screen.
