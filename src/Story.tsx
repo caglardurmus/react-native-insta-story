@@ -41,6 +41,7 @@ export const Story = ({
   avatarFlatListProps,
   onAddNewStory,
   scrollViewStyle,
+  renderSwipeUpModal,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -118,6 +119,7 @@ export const Story = ({
           duration={duration * 1000}
           key={i}
           userId={x.user_id}
+          isMyStory={x.isMyStory}
           profileName={x.user_name}
           profileImage={x.user_image}
           stories={x.stories}
@@ -142,6 +144,7 @@ export const Story = ({
           storyImageStyle={storyImageStyle}
           storyAvatarImageStyle={storyAvatarImageStyle}
           storyContainerStyle={storyContainerStyle}
+          renderSwipeUpModal={renderSwipeUpModal}
         />
       );
     });
