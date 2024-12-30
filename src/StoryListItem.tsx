@@ -45,6 +45,8 @@ export const StoryListItem = ({
   storyImageStyle,
   storyAvatarImageStyle,
   storyContainerStyle,
+  renderSwipeUpModal,
+  isMyStory,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -55,6 +57,7 @@ export const StoryListItem = ({
       finish: 0,
     })),
   );
+  const [showViewModal, setShowViewsModal] = useState<boolean>(false);
 
   const [current, setCurrent] = useState(0);
 
@@ -126,12 +129,15 @@ export const StoryListItem = ({
   }
 
   function onSwipeUp(_props?: any) {
-    if (onClosePress) {
-      onClosePress();
-    }
-    if (content[current].onPress) {
-      content[current].onPress?.();
-    }
+    progress.stopAnimation();
+    setPressed(true)
+    setShowViewsModal(true);
+  }
+
+  function onViewModalClose() {
+    startAnimation();
+    setPressed(false)
+    setShowViewsModal(false);
   }
 
   function onSwipeDown(_props?: any) {
@@ -198,6 +204,7 @@ export const StoryListItem = ({
       });
     }
   }, [currentPage, index, onStorySeen, current]);
+  console.log("IS MY STORY: ", isMyStory);
 
   return (
     <GestureRecognizer
@@ -312,21 +319,13 @@ export const StoryListItem = ({
           </TouchableWithoutFeedback>
         </View>
       </View>
-      {typeof renderSwipeUpComponent === 'function' ? (
-        renderSwipeUpComponent({
-          onPress: onSwipeUp,
-          item: content[current],
-        })
-      ) : (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={onSwipeUp}
-          style={styles.swipeUpBtn}
-        >
-          <Text style={styles.swipeText}></Text>
-          <Text style={styles.swipeText}>{swipeText}</Text>
-        </TouchableOpacity>
-      )}
+      {
+         isMyStory &&
+      <TouchableOpacity style={styles.textContainer} onPress={onSwipeUp}>
+        <Text style={styles.text}>Swipe up to see views</Text>
+      </TouchableOpacity>
+      }
+      {showViewModal && isMyStory && renderSwipeUpModal(showViewModal, onViewModalClose, content[current]?.story_id)}
     </GestureRecognizer>
   );
 };
@@ -425,5 +424,17 @@ const styles = StyleSheet.create({
   swipeText: {
     color: 'white',
     marginTop: 5,
+  },textContainer: {
+    width: '100%',
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+    position: 'absolute',
+    bottom: 30,
+  },
+  text: {
+    color: '#fff', // White text
+    fontSize: 16, // Font size
+    textAlign:'center'
   },
 });
