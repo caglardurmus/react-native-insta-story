@@ -15,6 +15,7 @@ export interface IUserStory<T = Record<string, any>> {
   stories: IUserStoryItem<T>[];
   /** INTERNAL USE ONLY */
   seen?: boolean;
+  isMyStory?: boolean;
 }
 
 export interface IUserStoryItem<T = Record<string, any>> {
@@ -115,6 +116,8 @@ export interface StoryListItemProps {
   duration: number;
   /** Text of the swipe up button */
   swipeText?: string;
+  renderSwipeUpModal?: any,
+  isMyStory?: boolean,
   /**
    * Callback which returns a custom React Element to use as the
    * swipeUpComponent. IUserStoryItem is passed as an arg.
@@ -195,6 +198,8 @@ export interface StoryProps {
    * closeComponent. IUserStoryItem is passed as an arg.
    */
   renderCloseComponent?: RenderCustomButton;
+
+  renderSwipeUpModal?: any;
   /**
    * Callback which returns a custom React Element to use as the textComponent
    * next to the small avatar on the story item page. IUserStoryItem and
