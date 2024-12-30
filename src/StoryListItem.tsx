@@ -204,7 +204,6 @@ export const StoryListItem = ({
       });
     }
   }, [currentPage, index, onStorySeen, current]);
-  console.log("IS MY STORY: ", isMyStory);
 
   return (
     <GestureRecognizer
