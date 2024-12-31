@@ -126,6 +126,8 @@ export const StoryListItem = ({
         next();
       }
     });
+    if(showViewModal)
+      onSwipeUp();
   }
 
   function onSwipeUp(_props?: any) {
@@ -209,7 +211,7 @@ export const StoryListItem = ({
     <GestureRecognizer
       key={key}
       onSwipeUp={onSwipeUp}
-      onSwipeDown={onSwipeDown}
+      onSwipeDown={showViewModal? onViewModalClose: onSwipeDown}
       config={config}
       style={[styles.container, storyContainerStyle]}
     >
@@ -429,7 +431,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,
     position: 'absolute',
-    bottom: 30,
+    bottom: 0,
+    paddingBottom: 30,
   },
   text: {
     color: '#fff', // White text
