@@ -47,6 +47,7 @@ export const StoryListItem = ({
   storyContainerStyle,
   renderSwipeUpModal,
   isMyStory,
+  renderDeleteButton,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -58,6 +59,7 @@ export const StoryListItem = ({
     })),
   );
   const [showViewModal, setShowViewsModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const [current, setCurrent] = useState(0);
 
@@ -85,7 +87,7 @@ export const StoryListItem = ({
       }
     });
     setContent(data);
-    start();
+    if(!load) start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
@@ -98,12 +100,12 @@ export const StoryListItem = ({
           current > prevCurrent &&
           content[current - 1].story_image == content[current].story_image
         ) {
-          start();
+          if(!load) start();
         } else if (
           current < prevCurrent &&
           content[current + 1].story_image == content[current].story_image
         ) {
-          start();
+          if(!load) start();
         }
       }
     }
@@ -126,8 +128,6 @@ export const StoryListItem = ({
         next();
       }
     });
-    if(showViewModal)
-      onSwipeUp();
   }
 
   function onSwipeUp(_props?: any) {
@@ -136,8 +136,20 @@ export const StoryListItem = ({
     setShowViewsModal(true);
   }
 
+  function onDeleteOpen(_props?: any) {
+    progress.stopAnimation();
+    setPressed(true)
+    setShowDeleteModal(true);
+  }
+
+  function onDeleteClose() {
+    if(!load) startAnimation();
+    setPressed(false)
+    setShowDeleteModal(false);
+  }
+
   function onViewModalClose() {
-    startAnimation();
+    if(!load) startAnimation();
     setPressed(false)
     setShowViewsModal(false);
   }
@@ -152,7 +164,6 @@ export const StoryListItem = ({
   };
 
   function next() {
-    // check if the next content is not empty
     setLoad(true);
     if (current !== content.length - 1) {
       let data = [...content];
@@ -217,16 +228,17 @@ export const StoryListItem = ({
     >
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
-          <Image
-            onLoadEnd={() => start()}
-            source={{ uri: content[current].story_image }}
-            style={[styles.image, storyImageStyle]}
-          />
           {load && (
             <View style={styles.spinnerContainer}>
               <ActivityIndicator size="large" color={'white'} />
             </View>
           )}
+          <Image
+          onLoadStart={() =>  progress.stopAnimation()}
+            onLoadEnd={() => {if(!showDeleteModal && !showViewModal) start()}}
+            source={{ uri: content[current].story_image }}
+            style={[styles.image, storyImageStyle]}
+          />
         </View>
       </SafeAreaView>
       <View style={styles.flexCol}>
@@ -268,24 +280,9 @@ export const StoryListItem = ({
               <Text style={styles.avatarText}>{profileName}</Text>
             )}
           </View>
-          <View style={styles.closeIconContainer}>
-            {typeof renderCloseComponent === 'function' ? (
-              renderCloseComponent({
-                onPress: onClosePress,
-                item: content[current],
-              })
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  if (onClosePress) {
-                    onClosePress();
-                  }
-                }}
-              >
-                <Text style={styles.whiteText}>X</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          {
+            renderDeleteButton && isMyStory && renderDeleteButton(content[current]?.story_id, showDeleteModal, onDeleteOpen, onDeleteClose)
+            }
         </View>
         <View style={styles.pressContainer}>
           <TouchableWithoutFeedback
@@ -321,10 +318,10 @@ export const StoryListItem = ({
         </View>
       </View>
       {
-         isMyStory &&
-      <TouchableOpacity style={styles.textContainer} onPress={onSwipeUp}>
-        <Text style={styles.text}>Swipe up to see views</Text>
-      </TouchableOpacity>
+        content[current]?.caption !== "" && 
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{content[current]?.caption}</Text>
+      </View>
       }
       {showViewModal && isMyStory && renderSwipeUpModal(showViewModal, onViewModalClose, content[current]?.story_id)}
     </GestureRecognizer>
@@ -366,7 +363,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   spinnerContainer: {
-    zIndex: -100,
+    zIndex: 10,
     position: 'absolute',
     justifyContent: 'center',
     backgroundColor: 'black',
@@ -432,7 +429,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     position: 'absolute',
     bottom: 0,
-    paddingBottom: 30,
+    paddingBottom: 50,
   },
   text: {
     color: '#fff', // White text
