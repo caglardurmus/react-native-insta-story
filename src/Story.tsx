@@ -42,6 +42,7 @@ export const Story = ({
   onAddNewStory,
   scrollViewStyle,
   renderSwipeUpModal,
+  renderDeleteButton,
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -135,6 +136,7 @@ export const Story = ({
               onClose(x);
             }
           }}
+          renderDeleteButton={renderDeleteButton}
           index={i}
           onStorySeen={onStorySeen}
           unloadedAnimationBarStyle={unloadedAnimationBarStyle}
