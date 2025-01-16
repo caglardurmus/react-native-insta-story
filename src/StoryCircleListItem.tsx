@@ -54,9 +54,10 @@ const StoryCircleListItem = ({
           {
             height: avatarWrapperSize,
             width: avatarWrapperSize,
+            borderWidth: item?.user_id.toString() !== 'add_story' && !item?.isMyStory ? 2 : 0,
           },
           avatarWrapperStyle,
-          !isPressed
+          !item?.seen
             ? {
                 borderColor: unPressedBorderColor ?? 'red',
               }
@@ -75,6 +76,7 @@ const StoryCircleListItem = ({
             avatarImageStyle,
           ]}
           source={{ uri: item.user_image }}
+          defaultSource={item?.user_id.toString() !== 'add_story' ? DEFAULT_AVATAR : ''}
         />
       </TouchableOpacity>
       {showText && (
