@@ -85,6 +85,9 @@ interface SharedCircleListProps {
 }
 
 export interface StoryCircleListViewProps extends SharedCircleListProps {
+  style: any;
+  defaultAvatar?: Image;
+  defaultAddStory?: Image;
   data: IUserStory[];
   /**
    * Custom props for the avatar FlatList.
@@ -99,6 +102,8 @@ export interface StoryCircleListViewProps extends SharedCircleListProps {
 
 export interface StoryCircleListItemProps extends SharedCircleListProps {
   item: IUserStory;
+  defaultAvatar?: Image;
+  defaultAddStory?: Image;
 }
 
 // TODO: add JSDoc comments where necessary
@@ -161,6 +166,8 @@ export interface StoryListItemProps {
 }
 
 export interface StoryProps {
+  defaultAvatar?: Image;
+  defaultAddStory?: Image;
   /** An array of IUserStory's */
   data: IUserStory[];
   /** Time in seconds */
