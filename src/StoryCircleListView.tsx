@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import StoryCircleListItem from './StoryCircleListItem';
-import { StoryCircleListViewProps } from 'src/interfaces';
+import { StoryCircleListViewProps } from './interfaces';
 
 const StoryCircleListView = ({
   data,
@@ -17,6 +17,8 @@ const StoryCircleListView = ({
   avatarWrapperStyle,
   avatarFlatListProps,
   style,
+  defaultAvatar,
+  defaultAddStory
 }: StoryCircleListViewProps) => {
   return (
     <FlatList
@@ -42,6 +44,8 @@ const StoryCircleListView = ({
           avatarTextStyle={avatarTextStyle}
           avatarImageStyle={avatarImageStyle}
           avatarWrapperStyle={avatarWrapperStyle}
+          defaultAddStory={defaultAddStory}
+          defaultAvatar={defaultAvatar}
         />
       )}
       {...avatarFlatListProps}
