@@ -11,8 +11,6 @@ import {
 import { usePrevious } from './helpers/StateHelpers';
 import { IUserStory, StoryCircleListItemProps } from './interfaces';
 
-import DEFAULT_AVATAR from './assets/images/no_avatar.png';
-
 const StoryCircleListItem = ({
   item,
   unPressedBorderColor,
@@ -25,6 +23,8 @@ const StoryCircleListItem = ({
   handleStoryItemPress,
   avatarImageStyle,
   avatarWrapperStyle,
+  defaultAvatar,
+  defaultAddStory
 }: StoryCircleListItemProps) => {
   const [isPressed, setIsPressed] = useState(item?.seen);
 
@@ -76,7 +76,7 @@ const StoryCircleListItem = ({
             avatarImageStyle,
           ]}
           source={{ uri: item.user_image }}
-          defaultSource={item?.user_id.toString() !== 'add_story' ? DEFAULT_AVATAR : ''}
+          defaultSource={item?.user_id.toString() !== 'add_story' ? defaultAvatar : defaultAddStory}
         />
       </TouchableOpacity>
       {showText && (
