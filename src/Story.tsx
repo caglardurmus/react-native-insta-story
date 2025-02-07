@@ -43,6 +43,8 @@ export const Story = ({
   scrollViewStyle,
   renderSwipeUpModal,
   renderDeleteButton,
+  defaultAvatar,
+  defaultAddStory
 }: StoryProps) => {
   const [dataState, setDataState] = useState<IUserStory[]>(data);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -198,6 +200,8 @@ export const Story = ({
           avatarWrapperStyle={avatarWrapperStyle}
           avatarImageStyle={avatarImageStyle}
           avatarFlatListProps={avatarFlatListProps}
+          defaultAddStory={defaultAddStory}
+          defaultAvatar={defaultAvatar}
         />
       </View>
       <Modal
