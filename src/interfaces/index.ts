@@ -1,6 +1,7 @@
 import {
   ColorValue,
   FlatListProps,
+  Image,
   ImageStyle,
   TextStyle,
   ViewStyle,
@@ -128,7 +129,7 @@ export interface StoryListItemProps {
    * swipeUpComponent. IUserStoryItem is passed as an arg.
    */
   renderSwipeUpComponent?: RenderCustomButton;
-  renderDeleteButton?: any;
+  renderMoreOptions?: any;
   /**
    * Callback which returns a custom React Element to use as the
    * closeComponent. IUserStoryItem is passed as an arg.
@@ -201,7 +202,7 @@ export interface StoryProps {
    * swipeUpComponent. IUserStoryItem is passed as an arg.
    */
   renderSwipeUpComponent?: RenderCustomButton;
-  renderDeleteButton?: any;
+  renderMoreOptions?: any;
   /**
    * Callback which returns a custom React Element to use as the
    * closeComponent. IUserStoryItem is passed as an arg.
