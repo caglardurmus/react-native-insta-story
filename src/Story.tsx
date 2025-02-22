@@ -42,7 +42,7 @@ export const Story = ({
   onAddNewStory,
   scrollViewStyle,
   renderSwipeUpModal,
-  renderDeleteButton,
+  renderMoreOptions,
   defaultAvatar,
   defaultAddStory
 }: StoryProps) => {
@@ -138,7 +138,7 @@ export const Story = ({
               onClose(x);
             }
           }}
-          renderDeleteButton={renderDeleteButton}
+          renderMoreOptions={renderMoreOptions}
           index={i}
           onStorySeen={onStorySeen}
           unloadedAnimationBarStyle={unloadedAnimationBarStyle}
