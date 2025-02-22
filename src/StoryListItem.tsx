@@ -47,7 +47,7 @@ export const StoryListItem = ({
   storyContainerStyle,
   renderSwipeUpModal,
   isMyStory,
-  renderDeleteButton,
+  renderMoreOptions,
   ...props
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
@@ -281,7 +281,7 @@ export const StoryListItem = ({
             )}
           </View>
           {
-            renderDeleteButton && isMyStory && renderDeleteButton(content[current]?.story_id, showDeleteModal, onDeleteOpen, onDeleteClose)
+            renderMoreOptions && renderMoreOptions(content[current]?.story_id, showDeleteModal, onDeleteOpen, onDeleteClose, isMyStory)
             }
         </View>
         <View style={styles.pressContainer}>
