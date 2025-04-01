@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
+import DEFAULT_AVATAR from './assets/images/no_avatar.png';
+
 import { usePrevious, isNullOrWhitespace } from './helpers';
 import {
   IUserStoryItem,
@@ -249,7 +251,7 @@ export const StoryListItem = ({
           <View style={styles.flexRowCenter}>
             <Image
               style={[styles.avatarImage, storyAvatarImageStyle]}
-              source={{ uri: profileImage }}
+              source={profileImage ? { uri: profileImage } : DEFAULT_AVATAR}
             />
             {typeof renderTextComponent === 'function' ? (
               renderTextComponent({
