@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import InstaStory from 'react-native-insta-story';
 
 export default function App() {
@@ -32,17 +32,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <InstaStory data={createData()} duration={10} style={{ marginTop: 30 }} />
       <StatusBar style="auto" />
-      <InstaStory
-        data={createData()}
-        duration={10}
-        customSwipeUpComponent={
-          <View>
-            <Text>Swipe</Text>
-          </View>
-        }
-        style={{ marginTop: 30 }}
-      />
     </View>
   );
 }
