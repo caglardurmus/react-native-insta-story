@@ -32,7 +32,15 @@ To show video in stories, install [react-native-video](https://github.com/TheWid
 npm install react-native-video --save
 ```
 
-### Peer dependencies
+### Dependencies
+
+`react-native-insta-story` installs **react-native-reanimated** and **react-native-gesture-handler** automatically (cube swipe animation). After `npm install` / `yarn add`:
+
+1. Run `pod install` in the `ios` folder.
+2. **Reanimated:** Add the Babel plugin in `babel.config.js` (see [Reanimated docs](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)).
+3. **Gesture Handler:** Wrap your app with `GestureHandlerRootView` (see [RNGH docs](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/gesture-handler-root-view/)).
+
+### Peer dependencies (optional)
 
 | Package            | Required | Description                                                                                      |
 | ------------------ | -------- | ------------------------------------------------------------------------------------------------ |

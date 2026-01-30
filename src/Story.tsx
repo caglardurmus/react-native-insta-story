@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   BackHandler,
   Dimensions,
@@ -53,22 +59,35 @@ export const Story = ({
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
   const cube = useRef<CubeNavigationHorizontalRef | null>(null);
 
-  // Component Functions
-  const _handleStoryItemPress = (item: IUserStory, index?: number) => {
-    const newData = dataState.slice(index);
-    if (onStart) {
-      onStart(item);
-    }
+  const _handleStoryItemPress = useCallback(
+    (item: IUserStory, index?: number) => {
+      const newData = dataState.slice(typeof index === 'number' ? index : 0);
+      if (onStart) {
+        onStart(item);
+      }
+      setCurrentPage(0);
+      setSelectedData(newData);
+      setIsModalOpen(true);
+    },
+    [dataState, onStart]
+  );
 
-    setCurrentPage(0);
-    setSelectedData(newData);
-    setIsModalOpen(true);
-  };
+  const handleSeen = useCallback(() => {
+    setDataState((prev) => {
+      const seen = selectedData[currentPage];
+      const seenIndex = prev.indexOf(seen);
+      if (seenIndex > 0 && !prev[seenIndex]?.seen) {
+        const next = [...prev];
+        next[seenIndex] = { ...next[seenIndex], seen: true };
+        return next;
+      }
+      return prev;
+    });
+  }, [selectedData, currentPage]);
 
   useEffect(() => {
     handleSeen();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [currentPage, handleSeen]);
 
   useEffect(() => {
     if (!isModalOpen || Platform.OS !== 'android') return;
@@ -88,96 +107,78 @@ export const Story = ({
     return () => subscription.remove();
   }, [isModalOpen, onClose, selectedData, currentPage]);
 
-  const handleSeen = () => {
-    const seen = selectedData[currentPage];
-    const seenIndex = dataState.indexOf(seen);
-    if (seenIndex > 0 && !dataState[seenIndex]?.seen) {
-      setDataState((prev) => {
-        const next = [...prev];
-        next[seenIndex] = {
-          ...next[seenIndex],
-          seen: true,
-        };
-        return next;
-      });
-    }
-  };
+  const handleCloseModal = useCallback(
+    (user: IUserStory) => {
+      setIsModalOpen(false);
+      if (onClose) {
+        onClose(user);
+      }
+    },
+    [onClose]
+  );
 
-  function onStoryFinish(state: NextOrPrevious) {
-    if (!isNullOrWhitespace(state)) {
-      if (state == 'next') {
-        const newPage = currentPage + 1;
-        if (newPage < selectedData.length) {
-          setCurrentPage(newPage);
-          cube?.current?.scrollTo(newPage);
-        } else {
-          setIsModalOpen(false);
-          setCurrentPage(0);
-          if (onClose) {
-            onClose(selectedData[selectedData.length - 1]);
+  const onStoryFinish = useCallback(
+    (state: NextOrPrevious) => {
+      if (!isNullOrWhitespace(state)) {
+        if (state == 'next') {
+          const newPage = currentPage + 1;
+          if (newPage < selectedData.length) {
+            setCurrentPage(newPage);
+            cube?.current?.scrollTo(newPage);
+          } else {
+            setIsModalOpen(false);
+            setCurrentPage(0);
+            if (onClose) {
+              onClose(selectedData[selectedData.length - 1]);
+            }
+          }
+        } else if (state == 'previous') {
+          const newPage = currentPage - 1;
+          if (newPage < 0) {
+            setIsModalOpen(false);
+            setCurrentPage(0);
+          } else {
+            setCurrentPage(newPage);
+            cube?.current?.scrollTo(newPage);
           }
         }
-      } else if (state == 'previous') {
-        const newPage = currentPage - 1;
-        if (newPage < 0) {
-          setIsModalOpen(false);
-          setCurrentPage(0);
-        } else {
-          setCurrentPage(newPage);
-          cube?.current?.scrollTo(newPage);
-        }
       }
-    }
-  }
-
-  const renderStoryList = () =>
-    selectedData.map((x, i) => {
-      return (
-        <StoryListItem
-          duration={duration * 1000}
-          key={i}
-          userId={x.user_id}
-          profileName={x.user_name}
-          profileImage={x.user_image}
-          stories={x.stories}
-          currentPage={currentPage}
-          isModalOpen={isModalOpen}
-          onFinish={onStoryFinish}
-          swipeText={swipeText}
-          renderSwipeUpComponent={renderSwipeUpComponent}
-          renderCloseComponent={renderCloseComponent}
-          renderTextComponent={renderTextComponent}
-          onClosePress={() => {
-            setIsModalOpen(false);
-            if (onClose) {
-              onClose(x);
-            }
-          }}
-          index={i}
-          onStorySeen={onStorySeen}
-          unloadedAnimationBarStyle={unloadedAnimationBarStyle}
-          animationBarContainerStyle={animationBarContainerStyle}
-          loadedAnimationBarStyle={loadedAnimationBarStyle}
-          storyUserContainerStyle={storyUserContainerStyle}
-          storyImageStyle={storyImageStyle}
-          storyAvatarImageStyle={storyAvatarImageStyle}
-          storyContainerStyle={storyContainerStyle}
-        />
-      );
-    });
-
-  const renderCube = () => (
-    <CubeNavigationHorizontal
-      ref={cube}
-      callBackAfterSwipe={(x: string | number) => {
-        if (Number(x) !== currentPage) {
-          setCurrentPage(Number(x));
-        }
-      }}
-    >
-      {renderStoryList()}
-    </CubeNavigationHorizontal>
+    },
+    [currentPage, selectedData, onClose]
   );
+
+  const callBackAfterSwipe = useCallback((x: string | number) => {
+    const page = Number(x);
+    setCurrentPage((prev) => (prev !== page ? page : prev));
+  }, []);
+
+  const storyListElements = selectedData.map((x, i) => (
+    <StoryListItem
+      key={x.user_id}
+      duration={duration * 1000}
+      userId={x.user_id}
+      profileName={x.user_name}
+      profileImage={x.user_image}
+      stories={x.stories}
+      currentPage={currentPage}
+      isModalOpen={isModalOpen}
+      onFinish={onStoryFinish}
+      swipeText={swipeText}
+      renderSwipeUpComponent={renderSwipeUpComponent}
+      renderCloseComponent={renderCloseComponent}
+      renderTextComponent={renderTextComponent}
+      onClosePress={() => handleCloseModal(x)}
+      index={i}
+      onStorySeen={onStorySeen}
+      unloadedAnimationBarStyle={unloadedAnimationBarStyle}
+      animationBarContainerStyle={animationBarContainerStyle}
+      loadedAnimationBarStyle={loadedAnimationBarStyle}
+      storyUserContainerStyle={storyUserContainerStyle}
+      storyImageStyle={storyImageStyle}
+      storyAvatarImageStyle={storyAvatarImageStyle}
+      storyContainerStyle={storyContainerStyle}
+    />
+  ));
 
   return (
     <Fragment>
@@ -206,7 +207,12 @@ export const Story = ({
         swipeArea={250}
         coverScreen={true}
       >
-        {renderCube()}
+        <CubeNavigationHorizontal
+          ref={cube}
+          callBackAfterSwipe={callBackAfterSwipe}
+        >
+          {storyListElements}
+        </CubeNavigationHorizontal>
       </Modal>
     </Fragment>
   );

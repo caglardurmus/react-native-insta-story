@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import {
   Animated,
   Image,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
-import { usePrevious, isNullOrWhitespace, getStoryMediaType } from './helpers';
+import { usePrevious, getStoryMediaType } from './helpers';
 import {
   IUserStoryItem,
   NextOrPrevious,
@@ -23,6 +23,11 @@ import {
 import Video from 'react-native-video';
 
 const { width, height } = Dimensions.get('window');
+
+const SWIPE_CONFIG = {
+  velocityThreshold: 0.3,
+  directionalOffsetThreshold: 80,
+};
 
 export const StoryListItem = ({
   index,
@@ -62,6 +67,7 @@ export const StoryListItem = ({
   );
 
   const [current, setCurrent] = useState(0);
+  const [barContainerWidth, setBarContainerWidth] = useState(0);
 
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -76,57 +82,94 @@ export const StoryListItem = ({
       setCurrent(0);
     }
 
-    let data = [...content];
-    data.map((x, i) => {
-      if (isPrevious) {
-        x.finish = 1;
-        if (i == content.length - 1) {
-          x.finish = 0;
-        }
-      } else {
-        x.finish = 0;
-      }
-    });
+    const data = content.map((x, i) => ({
+      ...x,
+      finish: isPrevious ? (i === content.length - 1 ? 0 : 1) : 0,
+    }));
     setContent(data);
     start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const prevCurrent = usePrevious(current);
+  const prevCurrentRef = useRef(current);
 
+  // Single effect for current change: go back => start(); same-image neighbor => start()
   useEffect(() => {
-    if (!isNullOrWhitespace(prevCurrent)) {
-      if (typeof prevCurrent === 'number') {
-        if (
-          current > prevCurrent &&
-          content[current - 1].story_image == content[current].story_image
-        ) {
-          start();
-        } else if (
-          current < prevCurrent &&
-          content[current + 1].story_image == content[current].story_image
-        ) {
-          start();
-        }
+    const prevRef = prevCurrentRef.current;
+    prevCurrentRef.current = current;
+    if (current < prevRef) {
+      start();
+      return;
+    }
+    if (typeof prevCurrent === 'number' && prevCurrent !== current) {
+      const sameImagePrev =
+        content[current - 1]?.story_image === content[current]?.story_image;
+      const sameImageNext =
+        content[current + 1]?.story_image === content[current]?.story_image;
+      if (
+        (current > prevCurrent && sameImagePrev) ||
+        (current < prevCurrent && sameImageNext)
+      ) {
+        start();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-
-  // When going back to a previous story (cached image may not fire onLoadEnd again), start explicitly
-  const prevCurrentRef = useRef(current);
-  useEffect(() => {
-    if (current < prevCurrentRef.current) {
-      start();
-    }
-    prevCurrentRef.current = current;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run when current changes
   }, [current]);
 
   const currentMediaType = getStoryMediaType(content[current]);
   const isVideo = currentMediaType === 'video' && Video;
 
-  function start() {
+  const close = useCallback(
+    (state: NextOrPrevious) => {
+      setContent((prev) => prev.map((x) => ({ ...x, finish: 0 })));
+      progress.setValue(0);
+      if (currentPage === index && onFinish) {
+        onFinish(state);
+      }
+    },
+    [currentPage, index, onFinish, progress]
+  );
+
+  const next = useCallback(() => {
+    setLoad(true);
+    if (current !== content.length - 1) {
+      setContent((prev) =>
+        prev.map((x, i) => (i === current ? { ...x, finish: 1 } : x))
+      );
+      setCurrent(current + 1);
+      progress.setValue(0);
+    } else {
+      close('next');
+    }
+  }, [content, current, close, progress]);
+
+  const previous = useCallback(() => {
+    setLoad(true);
+    if (current - 1 >= 0) {
+      setContent((prev) =>
+        prev.map((x, i) => (i === current ? { ...x, finish: 0 } : x))
+      );
+      setCurrent(current - 1);
+      progress.setValue(0);
+    } else {
+      close('previous');
+    }
+  }, [current, close, progress]);
+
+  const startAnimation = useCallback(() => {
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: duration,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) {
+        next();
+      }
+    });
+  }, [duration, next, progress]);
+
+  const start = useCallback(() => {
     setLoad(false);
     progress.setValue(0);
     const isCurrentVideo =
@@ -134,79 +177,20 @@ export const StoryListItem = ({
     if (!isCurrentVideo) {
       startAnimation();
     }
-  }
+  }, [content, current, progress, startAnimation]);
 
-  function startAnimation() {
-    Animated.timing(progress, {
-      toValue: 1,
-      duration: duration,
-      useNativeDriver: false,
-    }).start(({ finished }) => {
-      if (finished) {
-        next();
-      }
-    });
-  }
-
-  function onSwipeUp(_props?: any) {
+  const onSwipeUp = useCallback(() => {
     if (onClosePress) {
       onClosePress();
     }
-    if (content[current].onPress) {
+    if (content[current]?.onPress) {
       content[current].onPress?.();
     }
-  }
+  }, [onClosePress, content, current]);
 
-  function onSwipeDown(_props?: any) {
-    onClosePress();
-  }
-
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
-
-  function next() {
-    // check if the next content is not empty
-    setLoad(true);
-    if (current !== content.length - 1) {
-      let data = [...content];
-      data[current].finish = 1;
-      setContent(data);
-      setCurrent(current + 1);
-      progress.setValue(0);
-    } else {
-      // the next content is empty
-      close('next');
-    }
-  }
-
-  function previous() {
-    // checking if the previous content is not empty
-    setLoad(true);
-    if (current - 1 >= 0) {
-      let data = [...content];
-      data[current].finish = 0;
-      setContent(data);
-      setCurrent(current - 1);
-      progress.setValue(0);
-    } else {
-      // the previous content is empty
-      close('previous');
-    }
-  }
-
-  function close(state: NextOrPrevious) {
-    let data = [...content];
-    data.map((x) => (x.finish = 0));
-    setContent(data);
-    progress.setValue(0);
-    if (currentPage == index) {
-      if (onFinish) {
-        onFinish(state);
-      }
-    }
-  }
+  const onSwipeDown = useCallback(() => {
+    onClosePress?.();
+  }, [onClosePress]);
 
   const swipeText =
     content?.[current]?.swipeText || props.swipeText || 'Swipe Up';
@@ -232,7 +216,7 @@ export const StoryListItem = ({
       key={key}
       onSwipeUp={onSwipeUp}
       onSwipeDown={onSwipeDown}
-      config={config}
+      config={SWIPE_CONFIG}
       style={[styles.container, storyContainerStyle]}
     >
       <SafeAreaView style={styles.safeArea}>
@@ -305,24 +289,75 @@ export const StoryListItem = ({
         <View style={styles.flexCol}>
           <View
             style={[styles.animationBarContainer, animationBarContainerStyle]}
+            onLayout={(e) => setBarContainerWidth(e.nativeEvent.layout.width)}
           >
-            {content.map((storyItem, idx) => (
-              <View
-                key={storyItem.story_id}
-                style={[styles.animationBackground, unloadedAnimationBarStyle]}
-              >
-                <Animated.View
+            {content.map((storyItem, idx) => {
+              const segmentWidth =
+                barContainerWidth > 0 && content.length > 0
+                  ? (barContainerWidth - 20 - content.length * 4) /
+                    content.length
+                  : 0;
+              const fillWidth = Math.max(0, segmentWidth);
+              const isActive = current === idx;
+              const isFinished = storyItem.finish === 1;
+              return (
+                <View
+                  key={storyItem.story_id}
                   style={[
-                    {
-                      flex: current === idx ? progress : storyItem.finish,
-                      height: 2,
-                      backgroundColor: 'white',
+                    styles.animationBackground,
+                    unloadedAnimationBarStyle,
+                    segmentWidth > 0 && {
+                      width: segmentWidth + 4,
+                      flex: undefined,
+                      overflow: 'hidden',
                     },
-                    loadedAnimationBarStyle,
                   ]}
-                />
-              </View>
-            ))}
+                >
+                  {segmentWidth > 0 && isActive ? (
+                    <Animated.View
+                      style={[
+                        {
+                          width: fillWidth,
+                          height: 2,
+                          backgroundColor: 'white',
+                          transform: [
+                            {
+                              translateX: progress.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-fillWidth, 0],
+                              }),
+                            },
+                          ],
+                        },
+                        loadedAnimationBarStyle,
+                      ]}
+                    />
+                  ) : isFinished ? (
+                    <View
+                      style={[
+                        {
+                          width: fillWidth,
+                          height: 2,
+                          backgroundColor: 'white',
+                        },
+                        loadedAnimationBarStyle,
+                      ]}
+                    />
+                  ) : (
+                    <View
+                      style={[
+                        {
+                          height: 2,
+                          flex: 1,
+                          backgroundColor: 'rgba(117, 117, 117, 0.5)',
+                        },
+                        unloadedAnimationBarStyle,
+                      ]}
+                    />
+                  )}
+                </View>
+              );
+            })}
           </View>
           <View style={[styles.userContainer, storyUserContainerStyle]}>
             <View style={styles.flexRowCenter}>

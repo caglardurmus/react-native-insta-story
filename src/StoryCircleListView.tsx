@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Platform } from 'react-native';
 import StoryCircleListItem from './StoryCircleListItem';
-import { StoryCircleListViewProps } from './interfaces';
+import { IUserStory, StoryCircleListViewProps } from './interfaces';
+
+const ListFooter = () => <View style={styles.footer} />;
 
 const StoryCircleListView = ({
   data,
@@ -19,24 +21,27 @@ const StoryCircleListView = ({
 }: StoryCircleListViewProps) => {
   return (
     <FlatList
-      keyExtractor={(_item, index) => index.toString()}
+      keyExtractor={(item: IUserStory) => item.user_id.toString()}
       data={data}
       horizontal
       style={styles.paddingLeft}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      ListFooterComponent={<View style={styles.footer} />}
+      ListFooterComponent={ListFooter}
+      initialNumToRender={8}
+      maxToRenderPerBatch={8}
+      windowSize={5}
+      removeClippedSubviews={Platform.OS === 'android'}
       renderItem={({ item, index }) => (
         <StoryCircleListItem
           avatarSize={avatarSize}
-          handleStoryItemPress={() =>
-            handleStoryItemPress && handleStoryItemPress(item, index)
-          }
+          handleStoryItemPress={handleStoryItemPress}
           unPressedBorderColor={unPressedBorderColor}
           pressedBorderColor={pressedBorderColor}
           unPressedAvatarTextColor={unPressedAvatarTextColor}
           pressedAvatarTextColor={pressedAvatarTextColor}
           item={item}
+          index={index}
           showText={showText}
           avatarTextStyle={avatarTextStyle}
           avatarImageStyle={avatarImageStyle}

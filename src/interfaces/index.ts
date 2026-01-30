@@ -101,6 +101,8 @@ export interface StoryCircleListViewProps extends SharedCircleListProps {
 
 export interface StoryCircleListItemProps extends SharedCircleListProps {
   item: IUserStory;
+  /** Index in the circle list; passed to handleStoryItemPress */
+  index?: number;
 }
 
 // TODO: add JSDoc comments where necessary

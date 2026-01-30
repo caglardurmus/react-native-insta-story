@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 
 import { usePrevious } from './helpers/StateHelpers';
-import { IUserStory, StoryCircleListItemProps } from './interfaces';
+import { StoryCircleListItemProps } from './interfaces';
 
 import DEFAULT_AVATAR from './assets/images/no_avatar.png';
 
-const StoryCircleListItem = ({
+const StoryCircleListItemComponent = ({
   item,
+  index,
   unPressedBorderColor,
   pressedBorderColor,
   unPressedAvatarTextColor,
@@ -37,9 +38,8 @@ const StoryCircleListItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item?.seen]);
 
-  const _handleItemPress = (item: IUserStory) => {
-    if (handleStoryItemPress) handleStoryItemPress(item);
-
+  const _handleItemPress = () => {
+    if (handleStoryItemPress) handleStoryItemPress(item, index);
     setIsPressed(true);
   };
 
@@ -48,7 +48,7 @@ const StoryCircleListItem = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => _handleItemPress(item)}
+        onPress={_handleItemPress}
         style={[
           styles.avatarWrapper,
           {
@@ -100,6 +100,7 @@ const StoryCircleListItem = ({
   );
 };
 
+const StoryCircleListItem = React.memo(StoryCircleListItemComponent);
 export default StoryCircleListItem;
 
 const styles = StyleSheet.create({
