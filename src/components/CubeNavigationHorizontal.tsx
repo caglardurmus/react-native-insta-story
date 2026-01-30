@@ -324,7 +324,7 @@ const CubeNavigationHorizontal = forwardRef<
   );
 
   const renderChild = useCallback(
-    (child: React.ReactElement, i: number) => {
+    (child: React.ReactElement<{ style?: unknown }>, i: number) => {
       const expandStyle = expandView
         ? { paddingTop: 100, paddingBottom: 100, height: height + 200 }
         : { width, height };
