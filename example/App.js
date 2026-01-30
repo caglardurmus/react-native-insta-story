@@ -36,11 +36,11 @@ export default function App() {
       <InstaStory
         data={createData()}
         duration={10}
-        customSwipeUpComponent={
+        renderSwipeUpComponent={({ onPress, item }) => (
           <View>
             <Text>Swipe</Text>
           </View>
-        }
+        )}
         style={{ marginTop: 30 }}
       />
     </View>
