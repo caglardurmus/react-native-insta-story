@@ -32,6 +32,21 @@ To show video in stories, install [react-native-video](https://github.com/TheWid
 npm install react-native-video --save
 ```
 
+### Peer dependencies
+
+| Package            | Required | Description                                                                                      |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| react-native-video | No       | **Video stories:** Install only if you use `story_video`. Without it, video items will not play. |
+
+```bash
+# Only if you use video in stories (story_video)
+npm install react-native-video --save
+# or
+yarn add react-native-video
+```
+
+Then run `pod install` in the `ios` folder.
+
 ## Import
 
 ```javascript
