@@ -1,4 +1,12 @@
-import React from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   Dimensions,
@@ -26,122 +34,155 @@ export interface CubeNavigationHorizontalProps {
   loop?: boolean;
 }
 
-interface CubeNavigationHorizontalState {
-  currentPage: number;
-  scrollLockPage?: number;
-}
-
 export interface CubeNavigationHorizontalRef {
   scrollTo: (page: number, animated?: boolean) => void;
 }
 
-export default class CubeNavigationHorizontal extends React.Component<
-  CubeNavigationHorizontalProps,
-  CubeNavigationHorizontalState
-> {
-  pages: number[] = [];
-  fullWidth: number = 0;
-  _animatedValue!: Animated.ValueXY;
-  _value: { x: number; y: number } = { x: 0, y: 0 };
-  _panResponder!: ReturnType<typeof PanResponder.create>;
-  _scrollView: React.ComponentRef<typeof Animated.View> | null = null;
-
-  constructor(props: CubeNavigationHorizontalProps) {
-    super(props);
-
-    const children = React.Children.toArray(props.children);
-    this.pages = children.map((_, index) => width * -index);
-    this.fullWidth = (children.length - 1) * width;
-
-    this._animatedValue = new Animated.ValueXY();
-    this._animatedValue.setValue({ x: 0, y: 0 });
-    this._value = { x: 0, y: 0 };
-
-    this.state = {
-      currentPage: 0,
-      scrollLockPage:
-        props.scrollLockPage != null
-          ? this.pages[props.scrollLockPage]
-          : undefined,
-    };
+const closest = (num: number, pages: number[]): number => {
+  let minDiff = 1000;
+  let ans = 0;
+  for (let i = 0; i < pages.length; i++) {
+    const m = Math.abs(num - pages[i]);
+    if (m < minDiff) {
+      minDiff = m;
+      ans = i;
+    }
   }
+  return ans;
+};
 
-  componentDidMount() {
-    this._animatedValue.addListener((value: { x: number; y: number }) => {
-      this._value = value;
-    });
+const CubeNavigationHorizontal = forwardRef<
+  CubeNavigationHorizontalRef,
+  CubeNavigationHorizontalProps
+>(function CubeNavigationHorizontal(
+  {
+    children,
+    callBackAfterSwipe,
+    callbackOnSwipe,
+    scrollLockPage,
+    responderCaptureDx: responderCaptureDxProp,
+    expandView,
+    loop,
+  },
+  ref
+) {
+  const childrenArray = React.Children.toArray(children);
+  const pages = childrenArray.map((_, index) => width * -index);
+  const fullWidth = (childrenArray.length - 1) * width;
 
+  const pagesRef = useRef(pages);
+  const fullWidthRef = useRef(fullWidth);
+  pagesRef.current = pages;
+  fullWidthRef.current = fullWidth;
+
+  const animatedValue = useMemo(() => {
+    const v = new Animated.ValueXY();
+    v.setValue({ x: 0, y: 0 });
+    return v;
+  }, []);
+  const valueRef = useRef({ x: 0, y: 0 });
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [_scrollLockPageState, setScrollLockPageState] = useState<
+    number | undefined
+  >(scrollLockPage != null ? pages[scrollLockPage] : undefined);
+  const [, setPanHandlersReady] = useState(false);
+
+  const callBackAfterSwipeRef = useRef(callBackAfterSwipe);
+  const callbackOnSwipeRef = useRef(callbackOnSwipe);
+  callBackAfterSwipeRef.current = callBackAfterSwipe;
+  callbackOnSwipeRef.current = callbackOnSwipe;
+
+  const panResponderRef = useRef<ReturnType<typeof PanResponder.create> | null>(
+    null
+  );
+
+  useEffect(() => {
+    const listener = animatedValue.addListener(
+      (value: { x: number; y: number }) => {
+        valueRef.current = value;
+      }
+    );
+    return () => animatedValue.removeListener(listener);
+  }, [animatedValue]);
+
+  useEffect(() => {
     const responderCaptureDx =
-      this.props.responderCaptureDx ?? getDefaultResponderCaptureDx();
+      responderCaptureDxProp ?? getDefaultResponderCaptureDx();
 
     const onDoneSwiping = (gestureState: PanResponderGestureState) => {
-      if (this.props.callbackOnSwipe) {
-        this.props.callbackOnSwipe(false);
+      if (callbackOnSwipeRef.current) {
+        callbackOnSwipeRef.current(false);
       }
       const mod = gestureState.dx > 0 ? 100 : -100;
-      const currentPage = this._closest(this._value.x + mod);
-      const goTo = this.pages[currentPage];
+      const currentPages = pagesRef.current;
+      const nextPage = closest(valueRef.current.x + mod, currentPages);
+      const goTo = currentPages[nextPage];
       (
-        this._animatedValue as Animated.ValueXY & {
+        animatedValue as Animated.ValueXY & {
           flattenOffset(v: { x: number; y: number }): void;
         }
       ).flattenOffset({
-        x: this._value.x,
-        y: this._value.y,
+        x: valueRef.current.x,
+        y: valueRef.current.y,
       });
-      Animated.spring(this._animatedValue, {
+      Animated.spring(animatedValue, {
         toValue: { x: goTo, y: 0 },
         friction: 5,
         tension: 0.6,
         useNativeDriver: false,
       }).start();
       setTimeout(() => {
-        this.setState({ currentPage });
-        if (this.props.callBackAfterSwipe) {
-          this.props.callBackAfterSwipe(currentPage);
+        setCurrentPage(nextPage);
+        if (callBackAfterSwipeRef.current) {
+          callBackAfterSwipeRef.current(nextPage);
         }
       }, 500);
     };
 
-    this._panResponder = PanResponder.create({
+    const panResponder = PanResponder.create({
       onMoveShouldSetPanResponderCapture: (
         _evt: GestureResponderEvent,
         gestureState: PanResponderGestureState
       ) => Math.abs(gestureState.dx) > responderCaptureDx,
       onPanResponderGrant: () => {
-        if (this.props.callbackOnSwipe) {
-          this.props.callbackOnSwipe(true);
+        if (callbackOnSwipeRef.current) {
+          callbackOnSwipeRef.current(true);
         }
-        this._animatedValue.stopAnimation();
+        animatedValue.stopAnimation();
         (
-          this._animatedValue as Animated.ValueXY & {
+          animatedValue as Animated.ValueXY & {
             setOffset(v: { x: number; y: number }): void;
           }
-        ).setOffset({ x: this._value.x, y: this._value.y });
+        ).setOffset({
+          x: valueRef.current.x,
+          y: valueRef.current.y,
+        });
       },
       onPanResponderMove: (
         e: GestureResponderEvent,
         gestureState: PanResponderGestureState
       ) => {
-        if (this.props.loop) {
-          if (gestureState.dx < 0 && this._value.x < -this.fullWidth) {
+        if (loop) {
+          const currentFullWidth = fullWidthRef.current;
+          if (gestureState.dx < 0 && valueRef.current.x < -currentFullWidth) {
             (
-              this._animatedValue as Animated.ValueXY & {
+              animatedValue as Animated.ValueXY & {
                 setOffset(v: { x: number; y: number }): void;
               }
             ).setOffset({ x: width, y: 0 });
-          } else if (gestureState.dx > 0 && this._value.x > 0) {
+          } else if (gestureState.dx > 0 && valueRef.current.x > 0) {
             (
-              this._animatedValue as Animated.ValueXY & {
+              animatedValue as Animated.ValueXY & {
                 setOffset(v: { x: number; y: number }): void;
               }
             ).setOffset({
-              x: -(this.fullWidth + width),
+              x: -(currentFullWidth + width),
               y: 0,
             });
           }
         }
-        Animated.event([null, { dx: this._animatedValue.x }], {
+        Animated.event([null, { dx: animatedValue.x }], {
           useNativeDriver: false,
         })(e, gestureState);
       },
@@ -159,181 +200,179 @@ export default class CubeNavigationHorizontal extends React.Component<
       },
     });
 
-    this.setState({});
-  }
+    panResponderRef.current = panResponder;
+    setPanHandlersReady(true);
+  }, [animatedValue, loop, responderCaptureDxProp]);
 
-  componentDidUpdate(prevProps: CubeNavigationHorizontalProps) {
+  useEffect(() => {
     if (
-      this.props.scrollLockPage !== prevProps.scrollLockPage &&
-      this.props.scrollLockPage != null
+      scrollLockPage != null &&
+      scrollLockPage >= 0 &&
+      scrollLockPage < pages.length
     ) {
-      this.setState({
-        scrollLockPage: this.pages[this.props.scrollLockPage],
-      });
+      setScrollLockPageState(pages[scrollLockPage]);
     }
-  }
+  }, [scrollLockPage, pages]);
 
-  scrollTo(page: number, animated: boolean = true): void {
-    if (animated) {
-      Animated.spring(this._animatedValue, {
-        toValue: { x: this.pages[page], y: 0 },
-        friction: 5,
-        tension: 0.6,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      this._animatedValue.setValue({ x: this.pages[page], y: 0 });
-    }
-    this.setState({ currentPage: page });
-  }
-
-  _getTransformsFor = (i: number) => {
-    const scrollX = this._animatedValue.x;
-    const pageX = -width * i;
-    const loopVariable = (variable: number, sign: number = 1): number =>
-      variable + Math.sign(sign) * (this.fullWidth + width);
-    const padInput = (variables: number[]): number[] => {
-      if (!this.props.loop) return variables;
-      const returnedVariables = [...variables];
-      returnedVariables.unshift(
-        ...variables.map((variable) => loopVariable(variable, -1))
-      );
-      returnedVariables.push(
-        ...variables.map((variable) => loopVariable(variable, 1))
-      );
-      return returnedVariables;
-    };
-    const padOutput = <T,>(variables: T[]): T[] => {
-      if (!this.props.loop) return variables;
-      const returnedVariables = [...variables];
-      returnedVariables.unshift(...variables);
-      returnedVariables.push(...variables);
-      return returnedVariables;
-    };
-
-    const translateX = scrollX.interpolate({
-      inputRange: padInput([pageX - width, pageX, pageX + width]),
-      outputRange: padOutput([
-        (-width - 1) / getTR_POSITION(),
-        0,
-        (width + 1) / getTR_POSITION(),
-      ]),
-      extrapolate: 'clamp',
-    });
-
-    const rotateY = scrollX.interpolate({
-      inputRange: padInput([pageX - width, pageX, pageX + width]),
-      outputRange: padOutput(['-60deg', '0deg', '60deg']),
-      extrapolate: 'clamp',
-    });
-
-    const translateXAfterRotate = scrollX.interpolate({
-      inputRange: padInput([
-        pageX - width,
-        pageX - width + 0.1,
-        pageX,
-        pageX + width - 0.1,
-        pageX + width,
-      ]),
-      outputRange: padOutput([
-        -width - 1,
-        (-width - 1) / getPERSPECTIVE(),
-        0,
-        (width + 1) / getPERSPECTIVE(),
-        width + 1,
-      ]),
-      extrapolate: 'clamp',
-    });
-
-    const opacity = scrollX.interpolate({
-      inputRange: padInput([
-        pageX - width,
-        pageX - width + 10,
-        pageX,
-        pageX + width - 250,
-        pageX + width,
-      ]),
-      outputRange: padOutput([0, 0.6, 1, 0.6, 0]),
-      extrapolate: 'clamp',
-    });
-
-    return {
-      transform: [
-        { perspective: width },
-        { translateX },
-        { rotateY },
-        { translateX: translateXAfterRotate },
-      ],
-      opacity,
-    };
-  };
-
-  _renderChild = (child: React.ReactElement, i: number) => {
-    const expandStyle = this.props.expandView
-      ? { paddingTop: 100, paddingBottom: 100, height: height + 200 }
-      : { width, height };
-    const style = [child.props.style, expandStyle].filter(Boolean);
-    const element = React.cloneElement(child, { i, style } as Record<
-      string,
-      unknown
-    >);
-
-    return (
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          { backgroundColor: 'transparent' },
-          this._getTransformsFor(i),
-        ]}
-        key={`child-${i}`}
-        pointerEvents={this.state.currentPage === i ? 'auto' : 'none'}
-      >
-        {element}
-      </Animated.View>
-    );
-  };
-
-  _closest = (num: number): number => {
-    const array = this.pages;
-    let minDiff = 1000;
-    let ans = 0;
-    for (let i = 0; i < array.length; i++) {
-      const m = Math.abs(num - array[i]);
-      if (m < minDiff) {
-        minDiff = m;
-        ans = i;
+  const scrollTo = useCallback(
+    (page: number, animated: boolean = true) => {
+      if (animated) {
+        Animated.spring(animatedValue, {
+          toValue: { x: pages[page], y: 0 },
+          friction: 5,
+          tension: 0.6,
+          useNativeDriver: false,
+        }).start();
+      } else {
+        animatedValue.setValue({ x: pages[page], y: 0 });
       }
-    }
-    return ans;
-  };
+      setCurrentPage(page);
+    },
+    [animatedValue, pages]
+  );
 
-  render() {
-    const expandStyle = this.props.expandView
-      ? { top: -100, left: 0, width, height: height + 200 }
-      : { width, height };
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollTo,
+    }),
+    [scrollTo]
+  );
 
-    const children = React.Children.toArray(this.props.children);
+  const getTransformsFor = useCallback(
+    (i: number) => {
+      const scrollX = animatedValue.x;
+      const pageX = -width * i;
+      const loopVariable = (variable: number, sign: number = 1): number =>
+        variable + Math.sign(sign) * (fullWidth + width);
+      const padInput = (variables: number[]): number[] => {
+        if (!loop) return variables;
+        const returnedVariables = [...variables];
+        returnedVariables.unshift(
+          ...variables.map((variable) => loopVariable(variable, -1))
+        );
+        returnedVariables.push(
+          ...variables.map((variable) => loopVariable(variable, 1))
+        );
+        return returnedVariables;
+      };
+      const padOutput = <T,>(variables: T[]): T[] => {
+        if (!loop) return variables;
+        const returnedVariables = [...variables];
+        returnedVariables.unshift(...variables);
+        returnedVariables.push(...variables);
+        return returnedVariables;
+      };
 
-    const containerStyle =
-      Platform.OS === 'android' ? styles.flex : styles.absolute;
+      const translateX = scrollX.interpolate({
+        inputRange: padInput([pageX - width, pageX, pageX + width]),
+        outputRange: padOutput([
+          (-width - 1) / getTR_POSITION(),
+          0,
+          (width + 1) / getTR_POSITION(),
+        ]),
+        extrapolate: 'clamp',
+      });
 
-    return (
-      <Animated.View
-        style={containerStyle}
-        ref={(view) => {
-          this._scrollView = view;
-        }}
-        {...(this._panResponder ? this._panResponder.panHandlers : {})}
-      >
-        <Animated.View style={[styles.blackFullScreen, expandStyle]}>
-          {children.map((child, i) =>
-            this._renderChild(child as React.ReactElement, i)
-          )}
+      const rotateY = scrollX.interpolate({
+        inputRange: padInput([pageX - width, pageX, pageX + width]),
+        outputRange: padOutput(['-60deg', '0deg', '60deg']),
+        extrapolate: 'clamp',
+      });
+
+      const translateXAfterRotate = scrollX.interpolate({
+        inputRange: padInput([
+          pageX - width,
+          pageX - width + 0.1,
+          pageX,
+          pageX + width - 0.1,
+          pageX + width,
+        ]),
+        outputRange: padOutput([
+          -width - 1,
+          (-width - 1) / getPERSPECTIVE(),
+          0,
+          (width + 1) / getPERSPECTIVE(),
+          width + 1,
+        ]),
+        extrapolate: 'clamp',
+      });
+
+      const opacity = scrollX.interpolate({
+        inputRange: padInput([
+          pageX - width,
+          pageX - width + 10,
+          pageX,
+          pageX + width - 250,
+          pageX + width,
+        ]),
+        outputRange: padOutput([0, 0.6, 1, 0.6, 0]),
+        extrapolate: 'clamp',
+      });
+
+      return {
+        transform: [
+          { perspective: width },
+          { translateX },
+          { rotateY },
+          { translateX: translateXAfterRotate },
+        ],
+        opacity,
+      };
+    },
+    [animatedValue, fullWidth, loop]
+  );
+
+  const renderChild = useCallback(
+    (child: React.ReactElement, i: number) => {
+      const expandStyle = expandView
+        ? { paddingTop: 100, paddingBottom: 100, height: height + 200 }
+        : { width, height };
+      const style = [child.props.style, expandStyle].filter(Boolean);
+      const element = React.cloneElement(child, { i, style } as Record<
+        string,
+        unknown
+      >);
+
+      return (
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            { backgroundColor: 'transparent' },
+            getTransformsFor(i),
+          ]}
+          key={`child-${i}`}
+          pointerEvents={currentPage === i ? 'auto' : 'none'}
+        >
+          {element}
         </Animated.View>
+      );
+    },
+    [expandView, getTransformsFor, currentPage]
+  );
+
+  const expandStyle = expandView
+    ? { top: -100, left: 0, width, height: height + 200 }
+    : { width, height };
+
+  const containerStyle =
+    Platform.OS === 'android' ? styles.flex : styles.absolute;
+
+  const panHandlers = panResponderRef.current?.panHandlers ?? {};
+
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading -- PanResponder handlers
+    <Animated.View style={containerStyle} {...panHandlers}>
+      <Animated.View style={[styles.blackFullScreen, expandStyle]}>
+        {childrenArray.map((child, i) =>
+          renderChild(child as React.ReactElement, i)
+        )}
       </Animated.View>
-    );
-  }
-}
+    </Animated.View>
+  );
+});
+
+CubeNavigationHorizontal.displayName = 'CubeNavigationHorizontal';
 
 const styles = StyleSheet.create({
   absolute: {
@@ -349,3 +388,5 @@ const styles = StyleSheet.create({
     height,
   },
 });
+
+export default CubeNavigationHorizontal;
