@@ -73,7 +73,8 @@ export const StoryListItem = ({
   const prevCurrentPage = usePrevious(currentPage);
 
   useEffect(() => {
-    let isPrevious = !!prevCurrentPage && prevCurrentPage > currentPage;
+    let isPrevious =
+      typeof prevCurrentPage === 'number' && prevCurrentPage > currentPage;
     if (isPrevious) {
       setCurrent(content.length - 1);
     } else {
@@ -100,7 +101,7 @@ export const StoryListItem = ({
 
   useEffect(() => {
     if (!isNullOrWhitespace(prevCurrent)) {
-      if (prevCurrent) {
+      if (typeof prevCurrent === 'number') {
         if (
           current > prevCurrent &&
           content[current - 1].story_image == content[current].story_image
