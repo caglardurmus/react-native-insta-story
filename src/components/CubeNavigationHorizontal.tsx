@@ -1,18 +1,20 @@
 import React from 'react';
 import {
-  PanResponder,
   Animated,
   Dimensions,
-  StyleSheet,
-  Platform,
-  PanResponderGestureState,
   GestureResponderEvent,
+  PanResponder,
+  PanResponderGestureState,
+  Platform,
+  StyleSheet,
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const PERSPECTIVE = Platform.OS === 'ios' ? 2.38 : 1.7;
-const TR_POSITION = Platform.OS === 'ios' ? 2 : 1.5;
+const getPERSPECTIVE = () => (Platform.OS === 'ios' ? 2.38 : 2.2);
+const getTR_POSITION = () => (Platform.OS === 'ios' ? 2 : 1.4);
+const getDefaultResponderCaptureDx = () =>
+  Platform.OS === 'android' ? 20 : 60;
 
 export interface CubeNavigationHorizontalProps {
   children: React.ReactNode[];
@@ -69,7 +71,8 @@ export default class CubeNavigationHorizontal extends React.Component<
       this._value = value;
     });
 
-    const responderCaptureDx = this.props.responderCaptureDx ?? 60;
+    const responderCaptureDx =
+      this.props.responderCaptureDx ?? getDefaultResponderCaptureDx();
 
     const onDoneSwiping = (gestureState: PanResponderGestureState) => {
       if (this.props.callbackOnSwipe) {
@@ -211,9 +214,9 @@ export default class CubeNavigationHorizontal extends React.Component<
     const translateX = scrollX.interpolate({
       inputRange: padInput([pageX - width, pageX, pageX + width]),
       outputRange: padOutput([
-        (-width - 1) / TR_POSITION,
+        (-width - 1) / getTR_POSITION(),
         0,
-        (width + 1) / TR_POSITION,
+        (width + 1) / getTR_POSITION(),
       ]),
       extrapolate: 'clamp',
     });
@@ -234,9 +237,9 @@ export default class CubeNavigationHorizontal extends React.Component<
       ]),
       outputRange: padOutput([
         -width - 1,
-        (-width - 1) / PERSPECTIVE,
+        (-width - 1) / getPERSPECTIVE(),
         0,
-        (width + 1) / PERSPECTIVE,
+        (width + 1) / getPERSPECTIVE(),
         width + 1,
       ]),
       extrapolate: 'clamp',
@@ -311,9 +314,12 @@ export default class CubeNavigationHorizontal extends React.Component<
 
     const children = React.Children.toArray(this.props.children);
 
+    const containerStyle =
+      Platform.OS === 'android' ? styles.flex : styles.absolute;
+
     return (
       <Animated.View
-        style={styles.absolute}
+        style={containerStyle}
         ref={(view) => {
           this._scrollView = view;
         }}
@@ -332,6 +338,9 @@ export default class CubeNavigationHorizontal extends React.Component<
 const styles = StyleSheet.create({
   absolute: {
     position: 'absolute',
+  },
+  flex: {
+    flex: 1,
   },
   blackFullScreen: {
     backgroundColor: '#000',
