@@ -135,10 +135,10 @@ export default class CubeNavigationHorizontal extends React.Component {
       if (!this.props.loop) return variables;
       const returnedVariables = [...variables];
       returnedVariables.unshift(
-        ...variables.map((variable) => loopVariable(variable, -1)),
+        ...variables.map((variable) => loopVariable(variable, -1))
       );
       returnedVariables.push(
-        ...variables.map((variable) => loopVariable(variable, 1)),
+        ...variables.map((variable) => loopVariable(variable, 1))
       );
       return returnedVariables;
     };

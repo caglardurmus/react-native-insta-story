@@ -53,7 +53,7 @@ export const StoryListItem = ({
     stories.map((x) => ({
       ...x,
       finish: 0,
-    })),
+    }))
   );
 
   const [current, setCurrent] = useState(0);

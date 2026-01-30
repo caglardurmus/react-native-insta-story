@@ -63,10 +63,13 @@
   },
   "scripts": {
     "format": "prettier --write .",
-    "prepare": "husky install",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx --cache"
+    "format:check": "prettier --check .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache --ignore-pattern node_modules --ignore-pattern lib",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --cache --ignore-pattern node_modules --ignore-pattern lib",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*.{js,jsx,ts,tsx,json,md}": "prettier --write",
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   }
 }

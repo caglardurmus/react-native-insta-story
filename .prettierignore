@@ -52,9 +52,13 @@ react-native-insta-story.podspec
 .gitignore
 .gitattributes
 node_modules
+lib
 ios
 android
 images
+example/node_modules
+example/package-lock.json
+example/yarn.lock
 
 */.expo
 */node_modules
