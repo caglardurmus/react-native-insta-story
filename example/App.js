@@ -36,7 +36,7 @@ export default function App() {
       <InstaStory
         data={createData()}
         duration={10}
-        renderSwipeUpComponent={({ onPress, item }) => (
+        renderSwipeUpComponent={({ onPress: _onPress, item: _item }) => (
           <View>
             <Text>Swipe</Text>
           </View>

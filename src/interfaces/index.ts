@@ -50,7 +50,7 @@ export interface CustomButtonRenderProps<T = Record<string, any>> {
 }
 
 export type RenderCustomButton<T = Record<string, any>> = (
-  props: CustomButtonRenderProps<T>,
+  props: CustomButtonRenderProps<T>
 ) => ReactNode;
 
 export interface TextRenderProps<T = Record<string, any>> {
