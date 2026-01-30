@@ -12,9 +12,15 @@ export default function App() {
     for (let i = 1; i <= userCount; i++) {
       const storyArray = [];
       for (let k = 1; k <= userStoryCount; k++) {
+        // First user's first story is a video (requires react-native-video installed)
+        const isVideo = i === 1 && k === 1;
         storyArray.push({
           story_id: i,
           story_image: 'https://picsum.photos/500/800?random=' + Math.random(),
+          ...(isVideo && {
+            story_video:
+              'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+          }),
           swipeText: 'Custom swipe text for this story',
           onPress: () => console.log(`story ${i} swiped`),
         });
