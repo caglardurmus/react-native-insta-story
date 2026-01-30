@@ -1,5 +1,11 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import {
+  BackHandler,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Modal from 'react-native-modalbox';
 
 import StoryCircleListView from './StoryCircleListView';
@@ -63,6 +69,24 @@ export const Story = ({
     handleSeen();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
+  useEffect(() => {
+    if (!isModalOpen || Platform.OS !== 'android') return;
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        setIsModalOpen(false);
+        if (onClose && selectedData.length > 0) {
+          onClose(
+            selectedData[currentPage] ?? selectedData[selectedData.length - 1]
+          );
+        }
+        setCurrentPage(0);
+        return true;
+      }
+    );
+    return () => subscription.remove();
+  }, [isModalOpen, onClose, selectedData, currentPage]);
 
   const handleSeen = () => {
     const seen = selectedData[currentPage];
@@ -179,7 +203,6 @@ export const Story = ({
         position="center"
         swipeToClose
         swipeArea={250}
-        backButtonClose
         coverScreen={true}
       >
         {renderCube()}
