@@ -4,3 +4,4 @@ declare module '*.png' {
 }
 
 declare module 'react-native-modalbox';
+declare module 'react-native-video';

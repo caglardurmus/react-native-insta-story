@@ -20,13 +20,7 @@ import {
   NextOrPrevious,
   StoryListItemProps,
 } from './interfaces';
-
-let VideoComponent: React.ComponentType<any> | null = null;
-try {
-  VideoComponent = require('react-native-video').default;
-} catch {
-  VideoComponent = null;
-}
+import Video from 'react-native-video';
 
 const { width, height } = Dimensions.get('window');
 
@@ -129,13 +123,13 @@ export const StoryListItem = ({
   }, [current]);
 
   const currentMediaType = getStoryMediaType(content[current]);
-  const isVideo = currentMediaType === 'video' && VideoComponent;
+  const isVideo = currentMediaType === 'video' && Video;
 
   function start() {
     setLoad(false);
     progress.setValue(0);
     const isCurrentVideo =
-      getStoryMediaType(content[current]) === 'video' && VideoComponent;
+      getStoryMediaType(content[current]) === 'video' && Video;
     if (!isCurrentVideo) {
       startAnimation();
     }
@@ -239,8 +233,8 @@ export const StoryListItem = ({
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
           {isVideo && content[current].story_video ? (
-            VideoComponent && (
-              <VideoComponent
+            Video && (
+              <Video
                 key={content[current].story_id}
                 source={{ uri: content[current].story_video }}
                 resizeMode="cover"
