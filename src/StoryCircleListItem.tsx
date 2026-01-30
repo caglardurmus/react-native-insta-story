@@ -75,7 +75,7 @@ const StoryCircleListItem = ({
             avatarImageStyle,
           ]}
           source={{ uri: item.user_image }}
-          defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : null}
+          defaultSource={Platform.OS === 'ios' ? DEFAULT_AVATAR : undefined}
         />
       </TouchableOpacity>
       {showText && (
