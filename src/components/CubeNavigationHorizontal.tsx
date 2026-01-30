@@ -155,6 +155,8 @@ export default class CubeNavigationHorizontal extends React.Component<
         onDoneSwiping(gestureState);
       },
     });
+
+    this.setState({});
   }
 
   componentDidUpdate(prevProps: CubeNavigationHorizontalProps) {
@@ -315,7 +317,7 @@ export default class CubeNavigationHorizontal extends React.Component<
         ref={(view) => {
           this._scrollView = view;
         }}
-        {...this._panResponder.panHandlers}
+        {...(this._panResponder ? this._panResponder.panHandlers : {})}
       >
         <Animated.View style={[styles.blackFullScreen, expandStyle]}>
           {children.map((child, i) =>

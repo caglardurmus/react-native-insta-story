@@ -162,6 +162,8 @@ export default class AndroidCubeEffect extends React.Component<
         onDoneSwiping(gestureState);
       },
     });
+
+    this.setState({});
   }
 
   componentDidUpdate(prevProps: AndroidCubeEffectProps) {
@@ -311,7 +313,7 @@ export default class AndroidCubeEffect extends React.Component<
         ref={(view) => {
           this._scrollView = view;
         }}
-        {...this._panResponder.panHandlers}
+        {...(this._panResponder ? this._panResponder.panHandlers : {})}
       >
         <Animated.View style={[styles.blackFullScreen, expandStyle]}>
           {children.map((child, i) =>
