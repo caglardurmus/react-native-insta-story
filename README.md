@@ -36,9 +36,10 @@ npm install react-native-video --save
 
 `react-native-insta-story` installs **react-native-reanimated** and **react-native-gesture-handler** automatically (cube swipe animation). After `npm install` / `yarn add`:
 
-1. Run `pod install` in the `ios` folder.
-2. **Reanimated:** Add the Babel plugin in `babel.config.js` (see [Reanimated docs](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)).
-3. **Gesture Handler:** Wrap your app with `GestureHandlerRootView` (see [RNGH docs](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/gesture-handler-root-view/)).
+1. **iOS:** Run `pod install` in the `ios` folder. The library’s podspec declares `RNReanimated` and `RNGestureHandler`, so CocoaPods will install these pods with your app.
+2. **Android:** No extra step. Reanimated and Gesture Handler are in `node_modules` as dependencies; React Native autolinking includes their native code when you build the app.
+3. **Reanimated:** Add the Babel plugin in `babel.config.js` (see [Reanimated docs](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)).
+4. **Gesture Handler:** Wrap your app with `GestureHandlerRootView` (see [RNGH docs](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/gesture-handler-root-view/)).
 
 ### Peer dependencies (optional)
 
