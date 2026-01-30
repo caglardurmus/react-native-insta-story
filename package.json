@@ -75,7 +75,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache --ignore-pattern node_modules --ignore-pattern lib",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --cache --ignore-pattern node_modules --ignore-pattern lib",
     "prepare": "husky install",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "npm run build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": "prettier --write",
