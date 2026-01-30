@@ -324,11 +324,12 @@ const CubeNavigationHorizontal = forwardRef<
   );
 
   const renderChild = useCallback(
-    (child: React.ReactElement<{ style?: unknown }>, i: number) => {
+    (child: React.ReactElement, i: number) => {
       const expandStyle = expandView
         ? { paddingTop: 100, paddingBottom: 100, height: height + 200 }
         : { width, height };
-      const style = [child.props.style, expandStyle].filter(Boolean);
+      const childStyle = (child.props as { style?: unknown }).style;
+      const style = [childStyle, expandStyle].filter(Boolean);
       const element = React.cloneElement(child, { i, style } as Record<
         string,
         unknown
