@@ -17,6 +17,23 @@ module.exports = {
         'react/jsx-props-no-spreading': 'off',
       },
     },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+      plugins: ['@typescript-eslint'],
+      rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+        ],
+      },
+    },
   ],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -29,5 +46,10 @@ module.exports = {
   rules: {
     'react/jsx-props-no-spreading': 'warn',
     'no-unused-vars': 'error',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
 };

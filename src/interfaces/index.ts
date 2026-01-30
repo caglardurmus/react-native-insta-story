@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
   ColorValue,
   FlatListProps,
@@ -50,7 +51,7 @@ export interface CustomButtonRenderProps<T = Record<string, any>> {
 
 export type RenderCustomButton<T = Record<string, any>> = (
   props: CustomButtonRenderProps<T>,
-) => React.ReactNode;
+) => ReactNode;
 
 export interface TextRenderProps<T = Record<string, any>> {
   /** Equivalent to `IUserStory.user_name` */
@@ -59,7 +60,7 @@ export interface TextRenderProps<T = Record<string, any>> {
   item: IUserStoryItem<T>;
 }
 
-export type RenderCustomText = (props: TextRenderProps) => React.ReactNode;
+export type RenderCustomText = (props: TextRenderProps) => ReactNode;
 
 interface SharedCircleListProps {
   handleStoryItemPress: (item: IUserStory, index?: number) => void;
