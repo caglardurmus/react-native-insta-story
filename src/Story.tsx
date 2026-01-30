@@ -66,15 +66,15 @@ export const Story = ({
   const handleSeen = () => {
     const seen = selectedData[currentPage];
     const seenIndex = dataState.indexOf(seen);
-    if (seenIndex > 0) {
-      if (!dataState[seenIndex]?.seen) {
-        let tempData = dataState;
-        dataState[seenIndex] = {
-          ...dataState[seenIndex],
+    if (seenIndex > 0 && !dataState[seenIndex]?.seen) {
+      setDataState((prev) => {
+        const next = [...prev];
+        next[seenIndex] = {
+          ...next[seenIndex],
           seen: true,
         };
-        setDataState(tempData);
-      }
+        return next;
+      });
     }
   };
 
