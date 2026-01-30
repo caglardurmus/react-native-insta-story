@@ -4,7 +4,9 @@ import Modal from 'react-native-modalbox';
 
 import StoryCircleListView from './StoryCircleListView';
 import StoryListItem from './StoryListItem';
-import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
+import CubeNavigationHorizontal, {
+  CubeNavigationHorizontalRef,
+} from './components/CubeNavigationHorizontal';
 import { isNullOrWhitespace } from './helpers';
 import { IUserStory, NextOrPrevious, StoryProps } from './interfaces';
 
@@ -43,7 +45,7 @@ export const Story = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
-  const cube = useRef<CubeNavigationHorizontal | null>(null);
+  const cube = useRef<CubeNavigationHorizontalRef | null>(null);
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
