@@ -1,12 +1,11 @@
-import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Dimensions, View, Platform, StyleSheet } from 'react-native';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modalbox';
 
-import StoryListItem from './StoryListItem';
 import StoryCircleListView from './StoryCircleListView';
-import { isNullOrWhitespace } from './helpers';
-import AndroidCubeEffect from './components/AndroidCubeEffect';
+import StoryListItem from './StoryListItem';
 import CubeNavigationHorizontal from './components/CubeNavigationHorizontal';
+import { isNullOrWhitespace } from './helpers';
 import { IUserStory, NextOrPrevious, StoryProps } from './interfaces';
 
 const { height, width } = Dimensions.get('window');
@@ -44,9 +43,7 @@ export const Story = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
-  const cube = useRef<AndroidCubeEffect | CubeNavigationHorizontal | null>(
-    null
-  );
+  const cube = useRef<CubeNavigationHorizontal | null>(null);
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
@@ -142,35 +139,18 @@ export const Story = ({
       );
     });
 
-  const renderCube = () => {
-    if (Platform.OS == 'ios') {
-      return (
-        <CubeNavigationHorizontal
-          ref={cube as React.RefObject<CubeNavigationHorizontal>}
-          callBackAfterSwipe={(x: string | number) => {
-            if (Number(x) !== currentPage) {
-              setCurrentPage(Number(x));
-            }
-          }}
-        >
-          {renderStoryList()}
-        </CubeNavigationHorizontal>
-      );
-    } else {
-      return (
-        <AndroidCubeEffect
-          ref={cube as React.RefObject<AndroidCubeEffect>}
-          callBackAfterSwipe={(x: string | number) => {
-            if (Number(x) !== currentPage) {
-              setCurrentPage(Number(x));
-            }
-          }}
-        >
-          {renderStoryList()}
-        </AndroidCubeEffect>
-      );
-    }
-  };
+  const renderCube = () => (
+    <CubeNavigationHorizontal
+      ref={cube}
+      callBackAfterSwipe={(x: string | number) => {
+        if (Number(x) !== currentPage) {
+          setCurrentPage(Number(x));
+        }
+      }}
+    >
+      {renderStoryList()}
+    </CubeNavigationHorizontal>
+  );
 
   return (
     <Fragment>
