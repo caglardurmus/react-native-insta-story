@@ -225,25 +225,23 @@ export const StoryListItem = ({
         <View
           style={[styles.animationBarContainer, animationBarContainerStyle]}
         >
-          {content.map((index, key) => {
-            return (
-              <View
-                key={key}
-                style={[styles.animationBackground, unloadedAnimationBarStyle]}
-              >
-                <Animated.View
-                  style={[
-                    {
-                      flex: current == key ? progress : content[key].finish,
-                      height: 2,
-                      backgroundColor: 'white',
-                    },
-                    loadedAnimationBarStyle,
-                  ]}
-                />
-              </View>
-            );
-          })}
+          {content.map((storyItem, idx) => (
+            <View
+              key={storyItem.story_id}
+              style={[styles.animationBackground, unloadedAnimationBarStyle]}
+            >
+              <Animated.View
+                style={[
+                  {
+                    flex: current === idx ? progress : storyItem.finish,
+                    height: 2,
+                    backgroundColor: 'white',
+                  },
+                  loadedAnimationBarStyle,
+                ]}
+              />
+            </View>
+          ))}
         </View>
         <View style={[styles.userContainer, storyUserContainerStyle]}>
           <View style={styles.flexRowCenter}>
