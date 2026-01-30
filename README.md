@@ -30,6 +30,16 @@ cd ios && pod install
 import InstaStory from 'react-native-insta-story';
 ```
 
+## Building (for contributors)
+
+The package is built from TypeScript to `lib/`. Before publishing, run:
+
+```bash
+npm run build
+```
+
+This compiles to `lib/index.js` and generates `lib/index.d.ts` (and declaration maps). The published `main` and `types` point to these built files.
+
 ## Props
 
 | Name                       | Description                                         | Type          | Default Value |

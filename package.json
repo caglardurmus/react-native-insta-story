@@ -3,13 +3,13 @@
   "title": "React Native Insta Story",
   "version": "1.1.9",
   "description": "Story component for React Native.",
-  "main": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "README.md",
     "android",
-    "index.ts",
     "ios",
-    "src",
+    "lib",
     "react-native-insta-story.podspec",
     "!ios/build",
     "!android/build",
@@ -48,6 +48,7 @@
     "@types/react-native-modalbox": "^1.4.10",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.0",
@@ -62,11 +63,13 @@
     "typescript": "^5.6.3"
   },
   "scripts": {
+    "build": "tsc && copyfiles -u 1 \"src/assets/**/*\" lib/src",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache --ignore-pattern node_modules --ignore-pattern lib",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --cache --ignore-pattern node_modules --ignore-pattern lib",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": "prettier --write",

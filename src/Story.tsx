@@ -44,7 +44,9 @@ export const Story = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedData, setSelectedData] = useState<IUserStory[]>([]);
-  const cube = useRef<CubeNavigationHorizontal | AndroidCubeEffect>();
+  const cube = useRef<AndroidCubeEffect | CubeNavigationHorizontal | null>(
+    null
+  );
 
   // Component Functions
   const _handleStoryItemPress = (item: IUserStory, index?: number) => {
@@ -144,10 +146,10 @@ export const Story = ({
     if (Platform.OS == 'ios') {
       return (
         <CubeNavigationHorizontal
-          ref={cube as React.LegacyRef<CubeNavigationHorizontal>}
-          callBackAfterSwipe={(x: any) => {
-            if (x != currentPage) {
-              setCurrentPage(parseInt(x));
+          ref={cube as React.RefObject<CubeNavigationHorizontal>}
+          callBackAfterSwipe={(x: string | number) => {
+            if (Number(x) !== currentPage) {
+              setCurrentPage(Number(x));
             }
           }}
         >
@@ -157,10 +159,10 @@ export const Story = ({
     } else {
       return (
         <AndroidCubeEffect
-          ref={cube as React.LegacyRef<AndroidCubeEffect>}
-          callBackAfterSwipe={(x: any) => {
-            if (x != currentPage) {
-              setCurrentPage(parseInt(x));
+          ref={cube as React.RefObject<AndroidCubeEffect>}
+          callBackAfterSwipe={(x: string | number) => {
+            if (Number(x) !== currentPage) {
+              setCurrentPage(Number(x));
             }
           }}
         >

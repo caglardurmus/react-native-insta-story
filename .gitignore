@@ -47,3 +47,6 @@ buck-out/
 
 # eslint
 .eslintcache
+
+# build output
+lib/
