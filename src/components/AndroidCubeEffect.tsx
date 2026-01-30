@@ -50,6 +50,10 @@ export default class AndroidCubeEffect extends React.Component<
     this.pages = children.map((_, index) => width * -index);
     this.fullWidth = (children.length - 1) * width;
 
+    this._animatedValue = new Animated.ValueXY();
+    this._animatedValue.setValue({ x: 0, y: 0 });
+    this._value = { x: 0, y: 0 };
+
     this.state = {
       currentPage: 0,
       scrollLockPage:
@@ -60,10 +64,6 @@ export default class AndroidCubeEffect extends React.Component<
   }
 
   componentDidMount() {
-    this._animatedValue = new Animated.ValueXY();
-    this._animatedValue.setValue({ x: 0, y: 0 });
-    this._value = { x: 0, y: 0 };
-
     this._animatedValue.addListener((value: { x: number; y: number }) => {
       this._value = value;
     });
