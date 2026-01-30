@@ -14,12 +14,19 @@ import {
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
-import { usePrevious, isNullOrWhitespace } from './helpers';
+import { usePrevious, isNullOrWhitespace, getStoryMediaType } from './helpers';
 import {
   IUserStoryItem,
   NextOrPrevious,
   StoryListItemProps,
 } from './interfaces';
+
+let VideoComponent: React.ComponentType<any> | null = null;
+try {
+  VideoComponent = require('react-native-video').default;
+} catch {
+  VideoComponent = null;
+}
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,6 +56,9 @@ export const StoryListItem = ({
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
   const [pressed, setPressed] = useState<boolean>(false);
+  const [isInteractionPaused, setIsInteractionPaused] =
+    useState<boolean>(false);
+  const videoDurationRef = useRef<number>(1);
   const [content, setContent] = useState<IUserStoryItem[]>(
     stories.map((x) => ({
       ...x,
@@ -107,10 +117,27 @@ export const StoryListItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
+  // When going back to a previous story (cached image may not fire onLoadEnd again), start explicitly
+  const prevCurrentRef = useRef(current);
+  useEffect(() => {
+    if (current < prevCurrentRef.current) {
+      start();
+    }
+    prevCurrentRef.current = current;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  const currentMediaType = getStoryMediaType(content[current]);
+  const isVideo = currentMediaType === 'video' && VideoComponent;
+
   function start() {
     setLoad(false);
     progress.setValue(0);
-    startAnimation();
+    const isCurrentVideo =
+      getStoryMediaType(content[current]) === 'video' && VideoComponent;
+    if (!isCurrentVideo) {
+      startAnimation();
+    }
   }
 
   function startAnimation() {
@@ -197,6 +224,7 @@ export const StoryListItem = ({
         story: content[current],
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-run when page/index/current change
   }, [currentPage, index, onStorySeen, current]);
 
   return (
@@ -209,11 +237,45 @@ export const StoryListItem = ({
     >
       <SafeAreaView>
         <View style={styles.backgroundContainer}>
-          <Image
-            onLoadEnd={() => start()}
-            source={{ uri: content[current].story_image }}
-            style={[styles.image, storyImageStyle]}
-          />
+          {isVideo && content[current].story_video ? (
+            VideoComponent && (
+              <VideoComponent
+                key={content[current].story_id}
+                source={{ uri: content[current].story_video }}
+                resizeMode="cover"
+                poster={content[current].story_image}
+                posterResizeMode="cover"
+                style={[styles.image, storyImageStyle]}
+                onLoad={(e: { duration: number }) => {
+                  const d = e?.duration ?? 1;
+                  videoDurationRef.current = d;
+                  start();
+                }}
+                onProgress={(e: { currentTime: number }) => {
+                  const dur = videoDurationRef.current;
+                  if (dur > 0) {
+                    progress.setValue(e.currentTime / dur);
+                  }
+                }}
+                onEnd={() => next()}
+                paused={isInteractionPaused}
+                repeat={false}
+              />
+            )
+          ) : content[current].story_image ? (
+            <Image
+              key={content[current].story_id}
+              onLoadEnd={() => start()}
+              source={{ uri: content[current].story_image }}
+              style={[styles.image, storyImageStyle]}
+            />
+          ) : (
+            <View
+              key={content[current].story_id}
+              style={[styles.image, { backgroundColor: '#000' }]}
+              onLayout={() => start()}
+            />
+          )}
           {load && (
             <View style={styles.spinnerContainer}>
               <ActivityIndicator size="large" color={'white'} />
@@ -279,11 +341,17 @@ export const StoryListItem = ({
         </View>
         <View style={styles.pressContainer}>
           <TouchableWithoutFeedback
-            onPressIn={() => progress.stopAnimation()}
+            onPressIn={() => {
+              setIsInteractionPaused(true);
+              progress.stopAnimation();
+            }}
             onLongPress={() => setPressed(true)}
             onPressOut={() => {
+              setIsInteractionPaused(false);
               setPressed(false);
-              startAnimation();
+              if (!isVideo) {
+                startAnimation();
+              }
             }}
             onPress={() => {
               if (!pressed && !load) {
@@ -294,11 +362,17 @@ export const StoryListItem = ({
             <View style={styles.flex} />
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
-            onPressIn={() => progress.stopAnimation()}
+            onPressIn={() => {
+              setIsInteractionPaused(true);
+              progress.stopAnimation();
+            }}
             onLongPress={() => setPressed(true)}
             onPressOut={() => {
+              setIsInteractionPaused(false);
               setPressed(false);
-              startAnimation();
+              if (!isVideo) {
+                startAnimation();
+              }
             }}
             onPress={() => {
               if (!pressed && !load) {

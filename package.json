@@ -33,7 +33,13 @@
   "readmeFilename": "README.md",
   "peerDependencies": {
     "react": ">=16.8.1",
-    "react-native": ">=0.60.0"
+    "react-native": ">=0.60.0",
+    "react-native-video": ">=6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-video": {
+      "optional": true
+    }
   },
   "dependencies": {
     "prop-types": "^15.8.1",
