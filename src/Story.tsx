@@ -141,6 +141,7 @@ export const Story = ({
           profileImage={x.user_image}
           stories={x.stories}
           currentPage={currentPage}
+          isModalOpen={isModalOpen}
           onFinish={onStoryFinish}
           swipeText={swipeText}
           renderSwipeUpComponent={renderSwipeUpComponent}

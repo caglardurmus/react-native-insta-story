@@ -143,6 +143,8 @@ export interface StoryListItemProps {
   /** An array of stories from one user */
   stories: IUserStoryItem[];
   currentPage: number;
+  /** Whether the story modal is open; video only plays when true */
+  isModalOpen?: boolean;
   /** Custom style for the animation bar when it is loading */
   loadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bar when unloaded */

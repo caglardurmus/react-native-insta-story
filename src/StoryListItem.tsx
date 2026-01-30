@@ -35,6 +35,7 @@ export const StoryListItem = ({
   onClosePress,
   stories,
   currentPage,
+  isModalOpen = true,
   onStorySeen,
   renderCloseComponent,
   renderSwipeUpComponent,
@@ -210,6 +211,10 @@ export const StoryListItem = ({
   const swipeText =
     content?.[current]?.swipeText || props.swipeText || 'Swipe Up';
 
+  const isActiveCubePage = currentPage === index;
+  const shouldRenderVideo =
+    isModalOpen && isActiveCubePage && isVideo && content[current].story_video;
+
   React.useEffect(() => {
     if (onStorySeen && currentPage === index) {
       onStorySeen({
@@ -230,17 +235,21 @@ export const StoryListItem = ({
       config={config}
       style={[styles.container, storyContainerStyle]}
     >
-      <SafeAreaView>
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.backgroundContainer}>
-          {isVideo && content[current].story_video ? (
-            Video && (
+          {shouldRenderVideo && Video ? (
+            <View style={styles.videoWrapper}>
               <Video
                 key={content[current].story_id}
                 source={{ uri: content[current].story_video }}
                 resizeMode="cover"
-                poster={content[current].story_image}
+                poster={
+                  content[current].story_image
+                    ? { uri: content[current].story_image }
+                    : undefined
+                }
                 posterResizeMode="cover"
-                style={[styles.image, storyImageStyle]}
+                style={StyleSheet.absoluteFillObject}
                 onLoad={(e: { duration: number }) => {
                   const d = e?.duration ?? 1;
                   videoDurationRef.current = d;
@@ -253,10 +262,26 @@ export const StoryListItem = ({
                   }
                 }}
                 onEnd={() => next()}
+                onError={() => start()}
                 paused={isInteractionPaused}
                 repeat={false}
+                controls={false}
+                showNotificationControls={false}
+                hideShutterView
+                {...(Platform.OS === 'android' && {
+                  useTextureView: true,
+                })}
               />
-            )
+            </View>
+          ) : isVideo &&
+            content[current].story_video &&
+            content[current].story_image ? (
+            <Image
+              key={content[current].story_id}
+              source={{ uri: content[current].story_image }}
+              style={[styles.image, storyImageStyle]}
+              resizeMode="cover"
+            />
           ) : content[current].story_image ? (
             <Image
               key={content[current].story_id}
@@ -420,6 +445,18 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
     resizeMode: 'cover',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  videoWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width,
+    height,
   },
   backgroundContainer: {
     position: 'absolute',
