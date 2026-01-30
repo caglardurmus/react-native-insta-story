@@ -302,108 +302,108 @@ export const StoryListItem = ({
             </View>
           )}
         </View>
-      </SafeAreaView>
-      <View style={styles.flexCol}>
-        <View
-          style={[styles.animationBarContainer, animationBarContainerStyle]}
-        >
-          {content.map((storyItem, idx) => (
-            <View
-              key={storyItem.story_id}
-              style={[styles.animationBackground, unloadedAnimationBarStyle]}
-            >
-              <Animated.View
-                style={[
-                  {
-                    flex: current === idx ? progress : storyItem.finish,
-                    height: 2,
-                    backgroundColor: 'white',
-                  },
-                  loadedAnimationBarStyle,
-                ]}
-              />
-            </View>
-          ))}
-        </View>
-        <View style={[styles.userContainer, storyUserContainerStyle]}>
-          <View style={styles.flexRowCenter}>
-            <Image
-              style={[styles.avatarImage, storyAvatarImageStyle]}
-              source={{ uri: profileImage }}
-            />
-            {typeof renderTextComponent === 'function' ? (
-              renderTextComponent({
-                item: content[current],
-                profileName,
-              })
-            ) : (
-              <Text style={styles.avatarText}>{profileName}</Text>
-            )}
-          </View>
-          <View style={styles.closeIconContainer}>
-            {typeof renderCloseComponent === 'function' ? (
-              renderCloseComponent({
-                onPress: onClosePress,
-                item: content[current],
-              })
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  if (onClosePress) {
-                    onClosePress();
-                  }
-                }}
+        <View style={styles.flexCol}>
+          <View
+            style={[styles.animationBarContainer, animationBarContainerStyle]}
+          >
+            {content.map((storyItem, idx) => (
+              <View
+                key={storyItem.story_id}
+                style={[styles.animationBackground, unloadedAnimationBarStyle]}
               >
-                <Text style={styles.whiteText}>X</Text>
-              </TouchableOpacity>
-            )}
+                <Animated.View
+                  style={[
+                    {
+                      flex: current === idx ? progress : storyItem.finish,
+                      height: 2,
+                      backgroundColor: 'white',
+                    },
+                    loadedAnimationBarStyle,
+                  ]}
+                />
+              </View>
+            ))}
+          </View>
+          <View style={[styles.userContainer, storyUserContainerStyle]}>
+            <View style={styles.flexRowCenter}>
+              <Image
+                style={[styles.avatarImage, storyAvatarImageStyle]}
+                source={{ uri: profileImage }}
+              />
+              {typeof renderTextComponent === 'function' ? (
+                renderTextComponent({
+                  item: content[current],
+                  profileName,
+                })
+              ) : (
+                <Text style={styles.avatarText}>{profileName}</Text>
+              )}
+            </View>
+            <View style={styles.closeIconContainer}>
+              {typeof renderCloseComponent === 'function' ? (
+                renderCloseComponent({
+                  onPress: onClosePress,
+                  item: content[current],
+                })
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (onClosePress) {
+                      onClosePress();
+                    }
+                  }}
+                >
+                  <Text style={styles.whiteText}>X</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          <View style={styles.pressContainer}>
+            <TouchableWithoutFeedback
+              onPressIn={() => {
+                setIsInteractionPaused(true);
+                progress.stopAnimation();
+              }}
+              onLongPress={() => setPressed(true)}
+              onPressOut={() => {
+                setIsInteractionPaused(false);
+                setPressed(false);
+                if (!isVideo) {
+                  startAnimation();
+                }
+              }}
+              onPress={() => {
+                if (!pressed && !load) {
+                  previous();
+                }
+              }}
+            >
+              <View style={styles.flex} />
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              onPressIn={() => {
+                setIsInteractionPaused(true);
+                progress.stopAnimation();
+              }}
+              onLongPress={() => setPressed(true)}
+              onPressOut={() => {
+                setIsInteractionPaused(false);
+                setPressed(false);
+                if (!isVideo) {
+                  startAnimation();
+                }
+              }}
+              onPress={() => {
+                if (!pressed && !load) {
+                  next();
+                }
+              }}
+            >
+              <View style={styles.flex} />
+            </TouchableWithoutFeedback>
           </View>
         </View>
-        <View style={styles.pressContainer}>
-          <TouchableWithoutFeedback
-            onPressIn={() => {
-              setIsInteractionPaused(true);
-              progress.stopAnimation();
-            }}
-            onLongPress={() => setPressed(true)}
-            onPressOut={() => {
-              setIsInteractionPaused(false);
-              setPressed(false);
-              if (!isVideo) {
-                startAnimation();
-              }
-            }}
-            onPress={() => {
-              if (!pressed && !load) {
-                previous();
-              }
-            }}
-          >
-            <View style={styles.flex} />
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPressIn={() => {
-              setIsInteractionPaused(true);
-              progress.stopAnimation();
-            }}
-            onLongPress={() => setPressed(true)}
-            onPressOut={() => {
-              setIsInteractionPaused(false);
-              setPressed(false);
-              if (!isVideo) {
-                startAnimation();
-              }
-            }}
-            onPress={() => {
-              if (!pressed && !load) {
-                next();
-              }
-            }}
-          >
-            <View style={styles.flex} />
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
+      </SafeAreaView>
       {typeof renderSwipeUpComponent === 'function' ? (
         renderSwipeUpComponent({
           onPress: onSwipeUp,
