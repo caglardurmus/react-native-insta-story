@@ -30,46 +30,39 @@ cd ios && pod install
 import InstaStory from 'react-native-insta-story';
 ```
 
-## Building (for contributors)
-
-The package is built from TypeScript to `lib/`. Before publishing, run:
-
-```bash
-npm run build
-```
-
-This compiles to `lib/index.js` and generates `lib/index.d.ts` (and declaration maps). The published `main` and `types` point to these built files.
+TypeScript types and interfaces (`IUserStory`, `IUserStoryItem`, etc.) are exported from the package.
 
 ## Props
 
-| Name                       | Description                                         | Type          | Default Value |
-| :------------------------- | :-------------------------------------------------- | :------------ | :-----------: |
-| data                       | Array of IUserStory. You can check from interfaces. | object        |               |
-| unPressedBorderColor       | Unpressed border color of profile circle            | color         |      red      |
-| pressedBorderColor         | Pressed border color of profile circle              | color         |     grey      |
-| unPressedAvatarTextColor   | Unpressed avatar text color                         | color         |      red      |
-| pressedAvatarTextColor     | Pressed avatar text color                           | color         |     grey      |
-| onStorySeen                | Called each time story is seen                      | function      |     null      |
-| onClose                    | Called when close                                   | function      |     null      |
-| onStart                    | Called when start                                   | function      |     null      |
-| duration                   | Per story duration seconds                          | number        |      10       |
-| swipeText                  | Text of swipe component                             | string        |   Swipe Up    |
-| renderSwipeUpComponent     | Render a custom swipe up component                  | function      |               |
-| renderCloseComponent       | Render a custom close button                        | function      |               |
-| renderTextComponent        | Render custom avatar text component                 | function      |               |
-| avatarSize                 | Size of avatar circle                               | number        |      60       |
-| showAvatarText             | For show or hide avatar text.                       | bool          |     true      |
-| avatarTextStyle            | For avatar text style                               | TextStyle     |               |
-| avatarImageStyle           | For avatar image style                              | ImageStyle    |               |
-| avatarWrapperStyle         | For individual avatar wrapper style                 | ViewStyle     |               |
-| avatarFlatListProps        | Horizontal avatar flat list props                   | FlatListProps |               |
-| loadedAnimationBarStyle    | For loaded animation bar style                      | ViewStyle     |               |
-| unloadedAnimationBarStyle  | For unloaded animation bar style                    | ViewStyle     |               |
-| animationBarContainerStyle | For animation bar container style                   | ViewStyle     |               |
-| storyUserContainerStyle    | For story item user container style                 | ViewStyle     |               |
-| storyImageStyle            | For story image style                               | ImageStyle    |               |
-| storyAvatarImageStyle      | For story avatar image style                        | ImageStyle    |               |
-| storyContainerStyle        | For story container style                           | ViewStyle     |               |
+| Name                       | Description                                                                      | Type          | Default Value |
+| :------------------------- | :------------------------------------------------------------------------------- | :------------ | :-----------: |
+| data                       | Array of user stories (`IUserStory[]`). See exported TypeScript interfaces.      | IUserStory[]  |               |
+| unPressedBorderColor       | Unpressed border color of profile circle                                         | ColorValue    |      red      |
+| pressedBorderColor         | Pressed border color of profile circle                                           | ColorValue    |     grey      |
+| unPressedAvatarTextColor   | Unpressed avatar text color                                                      | ColorValue    |      red      |
+| pressedAvatarTextColor     | Pressed avatar text color                                                        | ColorValue    |     grey      |
+| onStorySeen                | Called when a story is viewed (receives `IUserSingleStory`).                     | function      |     null      |
+| onClose                    | Called when modal is closed (receives the current user `IUserStory`).            | function      |     null      |
+| onStart                    | Called when a story is opened (receives `IUserStory`).                           | function      |     null      |
+| duration                   | Per-story duration in seconds                                                    | number        |      10       |
+| swipeText                  | Text for the swipe-up hint                                                       | string        |   Swipe Up    |
+| renderSwipeUpComponent     | Render a custom swipe-up component                                               | function      |               |
+| renderCloseComponent       | Render a custom close button                                                     | function      |               |
+| renderTextComponent        | Render custom text next to the avatar on the story screen                        | function      |               |
+| avatarSize                 | Size of the avatar circle in the list                                            | number        |      60       |
+| showAvatarText             | Show or hide username below avatars                                              | boolean       |     true      |
+| avatarTextStyle            | Style for the username text below avatars                                        | TextStyle     |               |
+| avatarImageStyle           | Style for the avatar image in the list                                           | ImageStyle    |               |
+| avatarWrapperStyle         | Style for each avatar wrapper in the list                                        | ViewStyle     |               |
+| avatarFlatListProps        | Props for the avatar FlatList (`data`, `renderItem`, `keyExtractor` are omitted) | FlatListProps |               |
+| loadedAnimationBarStyle    | Style for the progress bar when loaded                                           | ViewStyle     |               |
+| unloadedAnimationBarStyle  | Style for the progress bar when not yet loaded                                   | ViewStyle     |               |
+| animationBarContainerStyle | Style for the container of the progress bars                                     | ViewStyle     |               |
+| storyUserContainerStyle    | Style for the header (user + close button) on the story screen                   | ViewStyle     |               |
+| storyImageStyle            | Style for the story image                                                        | ImageStyle    |               |
+| storyAvatarImageStyle      | Style for the small avatar on the story screen                                   | ImageStyle    |               |
+| storyContainerStyle        | Style for the story content container                                            | ViewStyle     |               |
+| style                      | Style for the root container (avatar list wrapper)                               | ViewStyle     |               |
 
 ## Usage
 
@@ -83,7 +76,7 @@ const data = [
     user_id: 1,
     user_image:
       'https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg',
-    user_name: 'Ahmet Çağlar Durmuş',
+    user_name: 'User 1',
     stories: [
       {
         story_id: 1,
@@ -128,11 +121,10 @@ const data = [
 
 ### Custom components
 
-The render component functions are all passed `item` as a prop which is the current [IUserStoryItem](./src/interfaces/index.ts#L15) being displayed.
+The library exports TypeScript interfaces (`IUserStory`, `IUserStoryItem`, `IUserSingleStory`, etc.) for typing your data and render props.
 
-`renderSwipeUpComponent` and `renderCloseComponent` are both passed the `onPress` prop which is a function that closes the current story item modal and calls the `IUserStoryItem.onPress` function. `onPress` is passed so you could add other buttons. This is useful when adding a button which has it's own `onPress` prop, eg. a share button, next to the close button.
-
-`renderTextComponent` is passed the `profileName` of the current story's user.
+- **renderSwipeUpComponent** and **renderCloseComponent** receive `{ item, onPress }`: `item` is the current story item (`IUserStoryItem`), and `onPress` closes the modal and triggers `IUserStoryItem.onPress` if defined. Use `onPress` for your close (or other) buttons.
+- **renderTextComponent** receives `{ item, profileName }`: the current story item and the display name of the user.
 
 ```javascript
 const data = [...sameDataAsBasicExampleAbove];
@@ -141,23 +133,21 @@ const [seenStories, setSeenStories] = useState(new Set());
 
 const updateSeenStories = ({ story: { story_id } }) => {
   setSeenStories((prevSet) => {
-    prevSet.add(storyId);
-    return prevSet;
+    const next = new Set(prevSet);
+    next.add(story_id);
+    return next;
   });
 };
 
 const handleSeenStories = async (item) => {
-  console.log(item);
-  const storyIds = [];
-  seenStories.forEach((storyId) => {
-    if (storyId) storyIds.push(storyId);
-  });
+  console.log('Closed story for user:', item);
+  const storyIds = Array.from(seenStories);
   if (storyIds.length > 0) {
     await fetch('myApi', {
       method: 'POST',
       body: JSON.stringify({ storyIds }),
     });
-    seenStories.clear();
+    setSeenStories(new Set());
   }
 };
 
