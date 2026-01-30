@@ -29,7 +29,7 @@ export const StoryListItem = ({
   userId,
   profileImage,
   profileName,
-  duration,
+  duration = 10000,
   onFinish,
   onClosePress,
   stories,
@@ -330,10 +330,6 @@ export const StoryListItem = ({
 };
 
 export default StoryListItem;
-
-StoryListItem.defaultProps = {
-  duration: 10000,
-};
 
 const styles = StyleSheet.create({
   container: {
