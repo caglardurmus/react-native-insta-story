@@ -14,12 +14,13 @@ import {
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
-import { usePrevious, isNullOrWhitespace } from './helpers';
+import { usePrevious, isNullOrWhitespace, getStoryMediaType } from './helpers';
 import {
   IUserStoryItem,
   NextOrPrevious,
   StoryListItemProps,
 } from './interfaces';
+import Video from 'react-native-video';
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,6 +35,7 @@ export const StoryListItem = ({
   onClosePress,
   stories,
   currentPage,
+  isModalOpen = true,
   onStorySeen,
   renderCloseComponent,
   renderSwipeUpComponent,
@@ -49,6 +51,9 @@ export const StoryListItem = ({
 }: StoryListItemProps) => {
   const [load, setLoad] = useState<boolean>(true);
   const [pressed, setPressed] = useState<boolean>(false);
+  const [isInteractionPaused, setIsInteractionPaused] =
+    useState<boolean>(false);
+  const videoDurationRef = useRef<number>(1);
   const [content, setContent] = useState<IUserStoryItem[]>(
     stories.map((x) => ({
       ...x,
@@ -63,7 +68,8 @@ export const StoryListItem = ({
   const prevCurrentPage = usePrevious(currentPage);
 
   useEffect(() => {
-    let isPrevious = !!prevCurrentPage && prevCurrentPage > currentPage;
+    let isPrevious =
+      typeof prevCurrentPage === 'number' && prevCurrentPage > currentPage;
     if (isPrevious) {
       setCurrent(content.length - 1);
     } else {
@@ -90,7 +96,7 @@ export const StoryListItem = ({
 
   useEffect(() => {
     if (!isNullOrWhitespace(prevCurrent)) {
-      if (prevCurrent) {
+      if (typeof prevCurrent === 'number') {
         if (
           current > prevCurrent &&
           content[current - 1].story_image == content[current].story_image
@@ -107,10 +113,27 @@ export const StoryListItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
+  // When going back to a previous story (cached image may not fire onLoadEnd again), start explicitly
+  const prevCurrentRef = useRef(current);
+  useEffect(() => {
+    if (current < prevCurrentRef.current) {
+      start();
+    }
+    prevCurrentRef.current = current;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  const currentMediaType = getStoryMediaType(content[current]);
+  const isVideo = currentMediaType === 'video' && Video;
+
   function start() {
     setLoad(false);
     progress.setValue(0);
-    startAnimation();
+    const isCurrentVideo =
+      getStoryMediaType(content[current]) === 'video' && Video;
+    if (!isCurrentVideo) {
+      startAnimation();
+    }
   }
 
   function startAnimation() {
@@ -188,6 +211,10 @@ export const StoryListItem = ({
   const swipeText =
     content?.[current]?.swipeText || props.swipeText || 'Swipe Up';
 
+  const isActiveCubePage = currentPage === index;
+  const shouldRenderVideo =
+    isModalOpen && isActiveCubePage && isVideo && content[current].story_video;
+
   React.useEffect(() => {
     if (onStorySeen && currentPage === index) {
       onStorySeen({
@@ -197,6 +224,7 @@ export const StoryListItem = ({
         story: content[current],
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-run when page/index/current change
   }, [currentPage, index, onStorySeen, current]);
 
   return (
@@ -207,109 +235,175 @@ export const StoryListItem = ({
       config={config}
       style={[styles.container, storyContainerStyle]}
     >
-      <SafeAreaView>
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.backgroundContainer}>
-          <Image
-            onLoadEnd={() => start()}
-            source={{ uri: content[current].story_image }}
-            style={[styles.image, storyImageStyle]}
-          />
+          {shouldRenderVideo && Video ? (
+            <View style={styles.videoWrapper}>
+              <Video
+                key={content[current].story_id}
+                source={{ uri: content[current].story_video }}
+                resizeMode="cover"
+                poster={
+                  content[current].story_image
+                    ? { uri: content[current].story_image }
+                    : undefined
+                }
+                posterResizeMode="cover"
+                style={StyleSheet.absoluteFillObject}
+                onLoad={(e: { duration: number }) => {
+                  const d = e?.duration ?? 1;
+                  videoDurationRef.current = d;
+                  start();
+                }}
+                onProgress={(e: { currentTime: number }) => {
+                  const dur = videoDurationRef.current;
+                  if (dur > 0) {
+                    progress.setValue(e.currentTime / dur);
+                  }
+                }}
+                onEnd={() => next()}
+                onError={() => start()}
+                paused={isInteractionPaused}
+                repeat={false}
+                controls={false}
+                showNotificationControls={false}
+                hideShutterView
+                {...(Platform.OS === 'android' && {
+                  useTextureView: true,
+                })}
+              />
+            </View>
+          ) : isVideo &&
+            content[current].story_video &&
+            content[current].story_image ? (
+            <Image
+              key={content[current].story_id}
+              source={{ uri: content[current].story_image }}
+              style={[styles.image, storyImageStyle]}
+              resizeMode="cover"
+            />
+          ) : content[current].story_image ? (
+            <Image
+              key={content[current].story_id}
+              onLoadEnd={() => start()}
+              source={{ uri: content[current].story_image }}
+              style={[styles.image, storyImageStyle]}
+            />
+          ) : (
+            <View
+              key={content[current].story_id}
+              style={[styles.image, { backgroundColor: '#000' }]}
+              onLayout={() => start()}
+            />
+          )}
           {load && (
             <View style={styles.spinnerContainer}>
               <ActivityIndicator size="large" color={'white'} />
             </View>
           )}
         </View>
-      </SafeAreaView>
-      <View style={styles.flexCol}>
-        <View
-          style={[styles.animationBarContainer, animationBarContainerStyle]}
-        >
-          {content.map((storyItem, idx) => (
-            <View
-              key={storyItem.story_id}
-              style={[styles.animationBackground, unloadedAnimationBarStyle]}
-            >
-              <Animated.View
-                style={[
-                  {
-                    flex: current === idx ? progress : storyItem.finish,
-                    height: 2,
-                    backgroundColor: 'white',
-                  },
-                  loadedAnimationBarStyle,
-                ]}
-              />
-            </View>
-          ))}
-        </View>
-        <View style={[styles.userContainer, storyUserContainerStyle]}>
-          <View style={styles.flexRowCenter}>
-            <Image
-              style={[styles.avatarImage, storyAvatarImageStyle]}
-              source={{ uri: profileImage }}
-            />
-            {typeof renderTextComponent === 'function' ? (
-              renderTextComponent({
-                item: content[current],
-                profileName,
-              })
-            ) : (
-              <Text style={styles.avatarText}>{profileName}</Text>
-            )}
-          </View>
-          <View style={styles.closeIconContainer}>
-            {typeof renderCloseComponent === 'function' ? (
-              renderCloseComponent({
-                onPress: onClosePress,
-                item: content[current],
-              })
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  if (onClosePress) {
-                    onClosePress();
-                  }
-                }}
+        <View style={styles.flexCol}>
+          <View
+            style={[styles.animationBarContainer, animationBarContainerStyle]}
+          >
+            {content.map((storyItem, idx) => (
+              <View
+                key={storyItem.story_id}
+                style={[styles.animationBackground, unloadedAnimationBarStyle]}
               >
-                <Text style={styles.whiteText}>X</Text>
-              </TouchableOpacity>
-            )}
+                <Animated.View
+                  style={[
+                    {
+                      flex: current === idx ? progress : storyItem.finish,
+                      height: 2,
+                      backgroundColor: 'white',
+                    },
+                    loadedAnimationBarStyle,
+                  ]}
+                />
+              </View>
+            ))}
+          </View>
+          <View style={[styles.userContainer, storyUserContainerStyle]}>
+            <View style={styles.flexRowCenter}>
+              <Image
+                style={[styles.avatarImage, storyAvatarImageStyle]}
+                source={{ uri: profileImage }}
+              />
+              {typeof renderTextComponent === 'function' ? (
+                renderTextComponent({
+                  item: content[current],
+                  profileName,
+                })
+              ) : (
+                <Text style={styles.avatarText}>{profileName}</Text>
+              )}
+            </View>
+            <View style={styles.closeIconContainer}>
+              {typeof renderCloseComponent === 'function' ? (
+                renderCloseComponent({
+                  onPress: onClosePress,
+                  item: content[current],
+                })
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (onClosePress) {
+                      onClosePress();
+                    }
+                  }}
+                >
+                  <Text style={styles.whiteText}>X</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          <View style={styles.pressContainer}>
+            <TouchableWithoutFeedback
+              onPressIn={() => {
+                setIsInteractionPaused(true);
+                progress.stopAnimation();
+              }}
+              onLongPress={() => setPressed(true)}
+              onPressOut={() => {
+                setIsInteractionPaused(false);
+                setPressed(false);
+                if (!isVideo) {
+                  startAnimation();
+                }
+              }}
+              onPress={() => {
+                if (!pressed && !load) {
+                  previous();
+                }
+              }}
+            >
+              <View style={styles.flex} />
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              onPressIn={() => {
+                setIsInteractionPaused(true);
+                progress.stopAnimation();
+              }}
+              onLongPress={() => setPressed(true)}
+              onPressOut={() => {
+                setIsInteractionPaused(false);
+                setPressed(false);
+                if (!isVideo) {
+                  startAnimation();
+                }
+              }}
+              onPress={() => {
+                if (!pressed && !load) {
+                  next();
+                }
+              }}
+            >
+              <View style={styles.flex} />
+            </TouchableWithoutFeedback>
           </View>
         </View>
-        <View style={styles.pressContainer}>
-          <TouchableWithoutFeedback
-            onPressIn={() => progress.stopAnimation()}
-            onLongPress={() => setPressed(true)}
-            onPressOut={() => {
-              setPressed(false);
-              startAnimation();
-            }}
-            onPress={() => {
-              if (!pressed && !load) {
-                previous();
-              }
-            }}
-          >
-            <View style={styles.flex} />
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPressIn={() => progress.stopAnimation()}
-            onLongPress={() => setPressed(true)}
-            onPressOut={() => {
-              setPressed(false);
-              startAnimation();
-            }}
-            onPress={() => {
-              if (!pressed && !load) {
-                next();
-              }
-            }}
-          >
-            <View style={styles.flex} />
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
+      </SafeAreaView>
       {typeof renderSwipeUpComponent === 'function' ? (
         renderSwipeUpComponent({
           onPress: onSwipeUp,
@@ -351,6 +445,18 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
     resizeMode: 'cover',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  videoWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width,
+    height,
   },
   backgroundContainer: {
     position: 'absolute',

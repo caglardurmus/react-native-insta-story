@@ -21,6 +21,8 @@ export interface IUserStory<T = Record<string, any>> {
 export interface IUserStoryItem<T = Record<string, any>> {
   story_id: number;
   story_image: string | undefined;
+  /** Optional video URI; when set, the story is rendered as video instead of image */
+  story_video?: string;
   /** Function that gets called when the swipe up button is pressed */
   onPress?: (props?: any) => any;
   swipeText?: string;
@@ -141,6 +143,8 @@ export interface StoryListItemProps {
   /** An array of stories from one user */
   stories: IUserStoryItem[];
   currentPage: number;
+  /** Whether the story modal is open; video only plays when true */
+  isModalOpen?: boolean;
   /** Custom style for the animation bar when it is loading */
   loadedAnimationBarStyle?: ViewStyle;
   /** Custom styles for the animation bar when unloaded */

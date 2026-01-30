@@ -33,7 +33,13 @@
   "readmeFilename": "README.md",
   "peerDependencies": {
     "react": ">=16.8.1",
-    "react-native": ">=0.60.0"
+    "react-native": ">=0.60.0",
+    "react-native-video": ">=6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-video": {
+      "optional": true
+    }
   },
   "dependencies": {
     "prop-types": "^15.8.1",
@@ -63,13 +69,14 @@
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "build": "tsc && copyfiles -u 1 \"src/assets/**/*\" lib/src",
+    "build": "npx tsc && npx copyfiles -u 1 \"src/assets/**/*\" lib/src",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache --ignore-pattern node_modules --ignore-pattern lib",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --cache --ignore-pattern node_modules --ignore-pattern lib",
     "prepare": "husky install",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "npm run build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": "prettier --write",

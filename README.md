@@ -24,6 +24,29 @@ yarn add react-native-insta-story
 cd ios && pod install
 ```
 
+#### 3. Step (optional – for video stories)
+
+To show video in stories, install [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) in your app and link it (e.g. run `pod install` again). Story items with `story_video` set will then be rendered as video; others continue to use `story_image`.
+
+```javascript
+npm install react-native-video --save
+```
+
+### Peer dependencies
+
+| Package            | Required | Description                                                                                      |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| react-native-video | No       | **Video stories:** Install only if you use `story_video`. Without it, video items will not play. |
+
+```bash
+# Only if you use video in stories (story_video)
+npm install react-native-video --save
+# or
+yarn add react-native-video
+```
+
+Then run `pod install` in the `ios` folder.
+
 ## Import
 
 ```javascript
@@ -89,6 +112,8 @@ const data = [
         story_id: 2,
         story_image:
           'https://image.freepik.com/free-vector/mobile-wallpaper-with-fluid-shapes_79603-601.jpg',
+        // Optional: set story_video to show a video instead of an image (requires react-native-video)
+        // story_video: 'https://example.com/short-video.mp4',
       },
     ],
   },
