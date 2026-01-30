@@ -40,8 +40,8 @@ import InstaStory from 'react-native-insta-story';
 | unPressedAvatarTextColor   | Unpressed avatar text color                         | color         |      red      |
 | pressedAvatarTextColor     | Pressed avatar text color                           | color         |     grey      |
 | onStorySeen                | Called each time story is seen                      | function      |     null      |
-| onClose                    | Todo when close                                     | function      |     null      |
-| onStart                    | Todo when start                                     | function      |     null      |
+| onClose                    | Called when close                                   | function      |     null      |
+| onStart                    | Called when start                                   | function      |     null      |
 | duration                   | Per story duration seconds                          | number        |      10       |
 | swipeText                  | Text of swipe component                             | string        |   Swipe Up    |
 | renderSwipeUpComponent     | Render a custom swipe up component                  | function      |               |
@@ -113,12 +113,7 @@ const data = [
   },
 ];
 
-<InstaStory
-  data={data}
-  duration={10}
-/>
-
-
+<InstaStory data={data} duration={10} />;
 ```
 
 ### Custom components
@@ -175,5 +170,5 @@ const handleSeenStories = async (item) => {
     </View>
   )}
   style={{ marginTop: 30 }}
-/>
+/>;
 ```
